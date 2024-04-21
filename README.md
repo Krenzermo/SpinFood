@@ -87,6 +87,7 @@ You can also document commands to lint the code or run tests. These steps help t
 <!---Show your appreciation to those who have contributed to the project.-->
 - Finn Brecher
 - Daniel Hinkelmann
+- Moritz Ole Krenzer
 - Davide Piacenza
 
 
