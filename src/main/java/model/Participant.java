@@ -2,21 +2,32 @@ package model;
 
 public class Participant {
 
-    private int id;
+    private String id;
     private String name;
-    private FoodPreference foodPreference;
-    private int age;
-    private Sex sex;
-    private String email;
+    private FoodType foodType;
+    private AgeRange ageRange;
+    private Gender gender;
+    private boolean hasKitchen;
+    private Kitchen kitchen;
 
-    public Participant(String name, int age, String email) {
+    public Participant(String id, String name, FoodType foodType, byte age, Gender gender, boolean hasKitchen, int kitchenStory, double kitchenLongitude, double kitchenLatitude) {
+        this.id = id;
         this.name = name;
-        this.age = age;
-        this.email = email;
+        this.foodType = foodType;
+        this.ageRange = AgeRange.calcRange(age);
+        this.gender = gender;
+        this.hasKitchen = hasKitchen;
+        this.kitchen = new Kitchen(kitchenLongitude, kitchenLatitude, kitchenStory);
+
     }
 
     @Override
     public String toString() {
-        return "Name: " + name + ", Age: " + age + ", Email: " + email;
+        return "ID: " + id + ", Name: " + name + ", FoodType: " + foodType + ", Age: " + ageRange + ", Gender: " + gender + ", HasKitchen: " + hasKitchen + ", Kitchen: " + kitchen.toString();
     }
+
+    public AgeRange getAge() {
+        return ageRange;
+    }
+
 }
