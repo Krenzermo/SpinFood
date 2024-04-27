@@ -10,6 +10,7 @@ public class Pair implements IParticipantCollection {
     private final Participant[] participants = new Participant[2];
     private Kitchen kitchen;
     private Course course;
+    //TODO: change type to Group
     private IParticipantCollection[] groups = new IParticipantCollection[3];
     public final boolean signedUpTogether;
 
@@ -68,6 +69,9 @@ public class Pair implements IParticipantCollection {
     }
 
     public void setGroups(IParticipantCollection[] groups) {
+        if (groups.length != 3) {
+            throw new RuntimeException("Groups must have exactly 3 pairs!");
+        }
         this.groups = groups;
     }
 
@@ -95,7 +99,6 @@ public class Pair implements IParticipantCollection {
         }
 
         return participants[0].kitchen;
-
     }
 
     @Override

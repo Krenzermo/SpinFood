@@ -49,7 +49,7 @@ public enum AgeRange {
 			}
 		}
 
-		throw new RuntimeException("This should never happen"); // instead of: return null;
+		throw new RuntimeException("This should never happen!"); // instead of: return null;
 	}
 
 	/**
