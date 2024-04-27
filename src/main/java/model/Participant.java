@@ -14,7 +14,7 @@ public class Participant {
         this.id = id;
         this.name = name;
         this.foodType = foodType;
-        this.ageRange = AgeRange.calcRange(age);
+        this.ageRange = AgeRange.getAgeRange(age);
         this.gender = gender;
         this.hasKitchen = hasKitchen;
         this.kitchen = new Kitchen(kitchenLongitude, kitchenLatitude, kitchenStory);
