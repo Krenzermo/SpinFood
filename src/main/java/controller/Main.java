@@ -1,6 +1,6 @@
 package controller;
 
-import model.AgeRange;
+import model.person.AgeRange;
 
 public class Main {
 	public static void main(String[] args) {

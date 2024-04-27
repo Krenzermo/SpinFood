@@ -1,4 +1,6 @@
-package model;
+package model.person;
+
+import model.Kitchen;
 
 public class Participant {
 

@@ -1,5 +1,7 @@
 package model;
 
+import model.person.Participant;
+
 public class Pair {
 
     private Participant[] participants = new Participant[2];
