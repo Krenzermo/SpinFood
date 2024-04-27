@@ -4,13 +4,13 @@ import model.Kitchen;
 
 public class Participant {
 
-    private final String id;
-    private final Name name;
-    private final FoodType foodType;
-    private final AgeRange ageRange;
-    private final Gender gender;
-    private final boolean hasKitchen;
-    private final Kitchen kitchen;
+    public final String id;
+    public final Name name;
+    public final FoodType foodType;
+    public final AgeRange ageRange;
+    public final Gender gender;
+    public final boolean hasKitchen;
+    public final Kitchen kitchen;
 
     public Participant(String id, Name name, FoodType foodType, byte age, Gender gender, boolean hasKitchen, int kitchenStory, double kitchenLongitude, double kitchenLatitude) {
         this.id = id;
