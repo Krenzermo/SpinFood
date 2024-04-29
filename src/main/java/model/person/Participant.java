@@ -28,8 +28,36 @@ public class Participant {
         return "ID: " + id + ", Name: " + name.toString() + ", FoodType: " + foodType + ", Age: " + ageRange + ", Gender: " + gender + ", HasKitchen: " + hasKitchen + ", Kitchen: " + kitchen.toString();
     }
 
+
     public AgeRange getAge() {
         return ageRange;
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public Name getName() {
+        return name;
+    }
+
+    public FoodType getFoodType() {
+        return foodType;
+    }
+
+    public AgeRange getAgeRange() {
+        return ageRange;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public boolean isHasKitchen() {
+        return hasKitchen;
+    }
+
+    public Kitchen getKitchen() {
+        return kitchen;
+    }
 }
