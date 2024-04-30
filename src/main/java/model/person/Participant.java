@@ -2,7 +2,7 @@ package model.person;
 
 import model.Kitchen;
 
-public class Participant {
+public class Participant implements Comparable<Participant>{
 
     private final String id;
     private final Name name;
@@ -28,6 +28,10 @@ public class Participant {
         return "ID: " + id + ", Name: " + name.toString() + ", FoodType: " + foodType + ", Age: " + ageRange + ", Gender: " + gender + ", HasKitchen: " + hasKitchen + ", Kitchen: " + kitchen.toString();
     }
 
+    @Override
+    public int compareTo(Participant o) {
+        return this.kitchen.compareTo(o.kitchen);
+    }
 
     public AgeRange getAge() {
         return ageRange;

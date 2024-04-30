@@ -34,22 +34,25 @@ public enum AgeRange {
 	}
 
 	/**
+	 * Returns the AgeRange constant, given a specific age.
+	 * this method relies on the correct (ascending) order of the AgeRange.
+	 *
 	 * @param age the age of the participant
 	 * @return the AgeRange of the participant
 	 *
-	 * this method relies on the correct (ascending) order of the AgeRanges
 	 */
 	public static AgeRange getAgeRange(int age) {
 		List<AgeRange> values = Arrays.asList(AgeRange.values());
 		Collections.reverse(values);
 
+		AgeRange ret = AgeRange.ONE;
 		for(AgeRange range: values) {
 			if (age >= range.min) {
-				return range;
+				ret = range;
 			}
 		}
 
-		throw new RuntimeException("This should never happen"); // instead of: return null;
+		return ret;
 	}
 
 	/**
