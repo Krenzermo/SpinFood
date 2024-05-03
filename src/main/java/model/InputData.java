@@ -4,8 +4,6 @@ import model.person.Gender;
 import model.person.Name;
 import model.person.Participant;
 
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import java.nio.file.Paths;
@@ -14,18 +12,18 @@ public class InputData {
     private ArrayList<Participant> participantInputData;
     private ArrayList<Pair> pairInputData;
     private Location eventLocation;
-    private final String participantDataFileName;
-    private final String eventLocationDataFileName;
-    public InputData(String participantDataFileName, String eventLocationDataFileName){
-        this.participantDataFileName = participantDataFileName;
-        this.eventLocationDataFileName = eventLocationDataFileName;
+    private String participantDataFilePath;
+    private String eventLocationDataFilePath;
+    public InputData(String participantDataFilePath, String eventLocationDataFilePath){
+        this.participantDataFilePath = participantDataFilePath;
+        this.eventLocationDataFilePath = eventLocationDataFilePath;
         this.participantInputData = new ArrayList<>(); // Initialize participantInputData
         this.pairInputData = new ArrayList<>(); // Initialize pairInputData
         saveLocation();
         saveParticipants();
     }
     public void saveLocation(){
-        try (Scanner scanner = new Scanner(Paths.get(this.eventLocationDataFileName))) {
+        try (Scanner scanner = new Scanner(Paths.get(this.eventLocationDataFilePath))) {
             scanner.nextLine(); //skip headline
 
             String line = scanner.nextLine();
@@ -36,12 +34,12 @@ public class InputData {
             this.eventLocation = new Location (latitude, longitude);
 
         } catch (Exception e) {
-            System.out.println("Error: " + e.getMessage());
+            System.out.println("Error Partylocation: " + e.getMessage());
         }
     }
     public void saveParticipants(){
 
-        try (Scanner scanner = new Scanner(Paths.get(this.participantDataFileName))) {
+        try (Scanner scanner = new Scanner(Paths.get(this.participantDataFilePath))) {
             scanner.nextLine();       //skip headline
 
             while (scanner.hasNextLine()) {
@@ -63,23 +61,28 @@ public class InputData {
                     //todo make participant with no kitchen, neuen konstruktor machen?
                     continue;       //zurück zum start von while schleife, da linier fertig
                 }
-                int kitchenStory = Integer.parseInt(parts[7]);
+                int kitchenStory;
+                if(parts[7].isEmpty()){
+                    kitchenStory = 0;
+                } else {
+                    kitchenStory = (int) Double.parseDouble(parts[7]);
+                }
                 double kitchenLongitude = Double.parseDouble(parts[8]);
                 double kitchenLatitude = Double.parseDouble(parts[9]);
 
 
-                if (parts.length < 10){      // bei parts > 10  ist es eine einzelperson
+                if (parts.length < 11){      // bei parts < 11  ist es eine einzelperson
                     Participant participant = new Participant (id, name, foodType, age, gender, hasKitchen, kitchenStory, kitchenLongitude, kitchenLatitude);
                     participantInputData.add(participant);
                     //todo muss man jeden neu hinzugefügten participant neu bennenen?
 
-                } else{          //hier werte von 2. person initalisieren und paar bauen
+                } else{          //hier werte von 2. person initalisieren und paar gebaut
                     String idTwo = parts[10];
                     Name nameTwo = new Name (parts[11],"");
-                    FoodType foodTypeTwo = FoodType.valueOf(parts[12].toUpperCase());
-                    byte ageTwo = Byte.parseByte(parts[13]);
+                    byte ageTwo = (byte) Double.parseDouble(parts[12]);
+                    Gender genderTwo = Gender.valueOf(parts[13].toUpperCase());
                     Participant participant1 = new Participant (id, name, foodType, age, gender, hasKitchen, kitchenStory, kitchenLongitude, kitchenLatitude);
-                    Participant participant2 = new Participant (idTwo, nameTwo, foodTypeTwo, ageTwo, gender, hasKitchen, kitchenStory, kitchenLongitude, kitchenLatitude);
+                    Participant participant2 = new Participant (idTwo, nameTwo, foodType, ageTwo, genderTwo, hasKitchen, kitchenStory, kitchenLongitude, kitchenLatitude);
                     Pair pair = new Pair(participant1, participant2, true);
                     pairInputData.add(pair);
                     //todo same wie oben mit namen
@@ -88,11 +91,22 @@ public class InputData {
             }
 
         } catch (Exception e) {
-            System.out.println("Error; " + e.getMessage());
+            System.out.println("Error ParticipantInput; " + e.getMessage());
         }
     }
     public Location getEventLocation(){
         return eventLocation;
     }
-
+    public ArrayList<Participant> getParticipantInputData(){
+        return participantInputData;
+    }
+    public ArrayList<Pair> getPairInputData(){
+        return pairInputData;
+    }
+    public String getParticipantDataFilePath(){
+        return participantDataFilePath;
+    }
+    public String getEventLocationDataFilePath(){
+        return eventLocationDataFilePath;
+    }
 }
