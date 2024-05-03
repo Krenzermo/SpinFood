@@ -42,38 +42,38 @@ public class InputData {
     public void saveParticipants(){
 
         try (Scanner scanner = new Scanner(Paths.get(this.participantDataFileName))) {
-            scanner.nextLine(); //skip headline
+            scanner.nextLine();       //skip headline
 
             while (scanner.hasNextLine()) {
                 String line = scanner.nextLine();
                 String[] parts = line.split(",(?=\\S)|(?<=\\S),"); //split while excluding empty spaces
 
-                String id = parts[1];
+                String id = parts[1];     //Werte für den Konstrukteur zuweisen
                 Name name = new Name(parts[2],"");
                 FoodType foodType = FoodType.valueOf(parts[3].toUpperCase());
                 byte age = Byte.parseByte(parts[4]);
                 Gender gender = Gender.valueOf(parts[5].toUpperCase());
                 boolean hasKitchen = parts[6].equals("yes"); //todo enum machen?
-                if (!(hasKitchen)){
+                if (!(hasKitchen)){         //wenn keine Küche vorhanden, küchenwerte mit 0 initialisieren
                     int kitchenStory = 0;
                     double kitchenLongitude = 0;
                     double kitchenLatitude = 0;
                     Participant participant = new Participant (id, name, foodType, age, gender, hasKitchen, kitchenStory, kitchenLongitude, kitchenLatitude);
                     participantInputData.add(participant);
                     //todo make participant with no kitchen, neuen konstruktor machen?
-                    continue;
+                    continue;       //zurück zum start von while schleife, da linier fertig
                 }
                 int kitchenStory = Integer.parseInt(parts[7]);
                 double kitchenLongitude = Double.parseDouble(parts[8]);
                 double kitchenLatitude = Double.parseDouble(parts[9]);
 
 
-                if (parts.length < 10){
+                if (parts.length < 10){      // bei parts > 10  ist es eine einzelperson
                     Participant participant = new Participant (id, name, foodType, age, gender, hasKitchen, kitchenStory, kitchenLongitude, kitchenLatitude);
                     participantInputData.add(participant);
                     //todo muss man jeden neu hinzugefügten participant neu bennenen?
 
-                } else{
+                } else{          //hier werte von 2. person initalisieren und paar bauen
                     String idTwo = parts[10];
                     Name nameTwo = new Name (parts[11],"");
                     FoodType foodTypeTwo = FoodType.valueOf(parts[12].toUpperCase());
