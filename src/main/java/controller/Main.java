@@ -2,10 +2,13 @@ package controller;
 
 import model.InputData;
 
+import java.nio.file.Paths;
+
 public class Main {
 	public static void main(String[] args) {
 
-		InputData inputData = new InputData ("C:\\Users\\morit\\Gitlab\\sp24_gruppex_brecher_hinkelma_krenzerm_piacenza\\src\\main\\java\\data\\teilnehmerliste.csv","C:\\Users\\morit\\Gitlab\\sp24_gruppex_brecher_hinkelma_krenzerm_piacenza\\src\\main\\java\\data\\partylocation.csv");
+		// path should directly lead to files from data directory
+		InputData inputData = new InputData (Paths.get("src/main/java/data/teilnehmerliste.csv").toString(), Paths.get("src/main/java/data/partylocation.csv").toString());
 
 		System.out.println(inputData);
 	}
