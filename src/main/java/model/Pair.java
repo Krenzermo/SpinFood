@@ -92,7 +92,7 @@ public class Pair implements IParticipantCollection {
             return participants[0].kitchen;
         }
 
-        Location eventLocation = InputData.getInstance().getEventLocation();
+        Location eventLocation = InputData.getEventLocation();
 
         if (participants[0].kitchen.location().getDistance(eventLocation) <= participants[1].kitchen.location().getDistance(eventLocation)) {
             return participants[1].kitchen;
