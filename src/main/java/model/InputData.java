@@ -16,22 +16,32 @@ import java.nio.file.Paths;
 public class InputData {
     private ArrayList<Participant> participantInputData; // list of only the unpaired participants
     private ArrayList<Pair> pairInputData; // list of all pairs
-    private static Location eventLocation; // location of the event
-    private String participantDataFilePath; // file path for participant file
-    private String eventLocationDataFilePath; // file path for event location file
+    private Location eventLocation; // location of the event
+    // TODO: add more robust logic for receiving the data
+    private static final String participantDataFilePath = "src/main/java/data/partylocation.csv"; // file path for participant file
+    private static final String eventLocationDataFilePath = "src/main/java/data/teilnehmerliste.csv"; // file path for event location file
+
+    private static InputData inputData; // Singleton
 
     /**
      * constructor for InputData
-     * @param participantDataFilePath file path for the participants file
-     * @param eventLocationDataFilePath file path for event location file
      */
-    public InputData(String participantDataFilePath, String eventLocationDataFilePath) {
-        this.participantDataFilePath = participantDataFilePath;
-        this.eventLocationDataFilePath = eventLocationDataFilePath;
+    private InputData() {
         this.participantInputData = new ArrayList<>(); // initialize ArrayList for unpaired participants
         this.pairInputData = new ArrayList<>(); // initialize ArrayList for pairs
         saveLocation();
         saveParticipants();
+    }
+
+    /**
+     * @return InputData instance
+     */
+    public static InputData getInstance() {
+        if (inputData == null) {
+            inputData = new InputData();
+        }
+
+        return inputData;
     }
 
     /**
@@ -114,7 +124,7 @@ public class InputData {
      * method to get the event location
      * @return the Location eventLocation
      */
-    public static Location getEventLocation() {
+    public Location getEventLocation() {
         return eventLocation;
     }
 

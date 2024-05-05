@@ -14,6 +14,8 @@ public class Pair implements IParticipantCollection {
     private IParticipantCollection[] groups = new IParticipantCollection[3];
     public final boolean signedUpTogether;
 
+    private final InputData inputData = InputData.getInstance();
+
     public Pair(Participant participant1, Participant participant2) {
         this(participant1, participant2, false);
     }
@@ -92,7 +94,7 @@ public class Pair implements IParticipantCollection {
             return participants[0].getKitchen();
         }
 
-        Location eventLocation = InputData.getEventLocation();
+        Location eventLocation = inputData.getEventLocation();
 
         if (participants[0].getKitchen().location().getDistance(eventLocation) <= participants[1].getKitchen().location().getDistance(eventLocation)) {
             return participants[1].getKitchen();

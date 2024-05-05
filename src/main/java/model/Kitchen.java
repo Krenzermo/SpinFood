@@ -1,6 +1,7 @@
 package model;
 
 public record Kitchen(Location location, int story) implements Comparable<Kitchen>{
+
     @Override
     public String toString() {
         return "Location: " + location + ", Story: " + story;
@@ -8,8 +9,8 @@ public record Kitchen(Location location, int story) implements Comparable<Kitche
 
     @Override
     public int compareTo(Kitchen o) {
-        return (int) (location.getDistance(InputData.getEventLocation())
-                - o.location.getDistance(InputData.getEventLocation()));
+        return (int) (location.getDistance(InputData.getInstance().getEventLocation())
+                - o.location.getDistance(InputData.getInstance().getEventLocation()));
     }
 
     @Override
