@@ -113,10 +113,10 @@ public class Pair implements IParticipantCollection {
 
         // select the one closest to the eventLocation
         if (participants[0].getKitchen().location().getDistance(eventLocation) <= participants[1].getKitchen().location().getDistance(eventLocation)) {
-            return participants[1].getKitchen();
+            return participants[0].getKitchen();
         }
 
-        return participants[0].getKitchen();
+        return participants[1].getKitchen();
     }
 
     @Override
