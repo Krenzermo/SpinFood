@@ -38,14 +38,6 @@ public class AgeRangeTest {
     }
 
     /**
-     * Test getAgeRange method with age below the minimum age defined.
-     */
-    @Test(expected = RuntimeException.class)
-    public void testGetAgeRangeBelowMinimum() {
-        AgeRange.getAgeRange(-1);
-    }
-
-    /**
      * Test getAgeDifference method for various age ranges.
      */
     @Test

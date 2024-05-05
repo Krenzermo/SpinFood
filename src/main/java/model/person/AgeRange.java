@@ -42,10 +42,9 @@ public enum AgeRange {
 	 *
 	 */
 	public static AgeRange getAgeRange(int age) {
-		List<AgeRange> values = Arrays.asList(AgeRange.values());
-		Collections.reverse(values);
+		AgeRange[] values = AgeRange.values();
 
-		AgeRange ret = AgeRange.ONE;
+		AgeRange ret = AgeRange.ZERO;
 		for(AgeRange range: values) {
 			if (age >= range.min) {
 				ret = range;
