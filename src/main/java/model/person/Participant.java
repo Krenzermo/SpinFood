@@ -9,10 +9,10 @@ public class Participant implements Comparable<Participant>{
     private final FoodType foodType;
     private final AgeRange ageRange;
     private final Gender gender;
-    private final boolean hasKitchen;
+    private final Boolean hasKitchen;
     private final Kitchen kitchen;
 
-    public Participant(String id, Name name, FoodType foodType, byte age, Gender gender, boolean hasKitchen, int kitchenStory, double kitchenLongitude, double kitchenLatitude) {
+    public Participant(String id, Name name, FoodType foodType, byte age, Gender gender, Boolean hasKitchen, int kitchenStory, double kitchenLongitude, double kitchenLatitude) {
         this.id = id;
         this.name = name;
         this.foodType = foodType;
@@ -21,6 +21,16 @@ public class Participant implements Comparable<Participant>{
         this.hasKitchen = hasKitchen;
         this.kitchen = new Kitchen(kitchenLongitude, kitchenLatitude, kitchenStory);
 
+    }
+
+    public Participant(String id, Name name, FoodType foodType, byte age, Gender gender) {
+        this.id = id;
+        this.name = name;
+        this.foodType = foodType;
+        this.ageRange = AgeRange.getAgeRange(age);
+        this.gender = gender;
+        this.hasKitchen = false;
+        this.kitchen = null;
     }
 
     @Override
