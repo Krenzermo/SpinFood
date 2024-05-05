@@ -78,24 +78,40 @@ public class Pair implements IParticipantCollection {
     }
 
     private Kitchen autoAssignKitchen() {
-        if (!participants[0].isHasKitchen() && !participants[1].isHasKitchen()) {
+        if (Boolean.FALSE.equals(participants[0].isHasKitchen()) && Boolean.FALSE.equals(participants[1].isHasKitchen())) {
             throw new RuntimeException("No kitchen assigned to either participant!");
         }
 
-        //TODO: Teil mit maybe einbauen
-
+        // assign kitchen if signedUpTogether or one does not have a kitchen
         if (signedUpTogether) {
             return participants[0].getKitchen();
         }
-        if (!participants[0].isHasKitchen()) {
+        if (Boolean.FALSE.equals(participants[0].isHasKitchen())) {
             return participants[1].getKitchen();
         }
-        if (!participants[1].isHasKitchen()) {
+        if (Boolean.FALSE.equals(participants[1].isHasKitchen())) {
             return participants[0].getKitchen();
         }
 
+        // isHasKitchen() == Null if maybe has kitchen
+
+        // if exactly one participant maybe has a kitchen
+        if (Objects.isNull(participants[0].isHasKitchen()) ^ Objects.isNull(participants[1].isHasKitchen())) {
+            if (Boolean.TRUE.equals(participants[0].isHasKitchen())) {
+                return participants[0].getKitchen();
+            }
+            if (Boolean.TRUE.equals(participants[1].isHasKitchen())) {
+                return participants[1].getKitchen();
+            }
+
+            return Objects.isNull(participants[0].isHasKitchen()) ? participants[0].getKitchen() : participants[1].getKitchen();
+        }
+
+        // here if both have a kitchen or both maybe have a kitchen
+
         Location eventLocation = inputData.getEventLocation();
 
+        // select the one closest to the eventLocation
         if (participants[0].getKitchen().location().getDistance(eventLocation) <= participants[1].getKitchen().location().getDistance(eventLocation)) {
             return participants[1].getKitchen();
         }
