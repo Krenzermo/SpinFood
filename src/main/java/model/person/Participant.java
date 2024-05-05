@@ -1,6 +1,7 @@
 package model.person;
 
 import model.Kitchen;
+import model.Location;
 
 public class Participant implements Comparable<Participant>{
 
@@ -19,7 +20,7 @@ public class Participant implements Comparable<Participant>{
         this.ageRange = AgeRange.getAgeRange(age);
         this.gender = gender;
         this.hasKitchen = hasKitchen;
-        this.kitchen = new Kitchen(kitchenLongitude, kitchenLatitude, kitchenStory);
+        this.kitchen = new Kitchen(new Location(kitchenLongitude, kitchenLatitude), kitchenStory);
 
     }
 

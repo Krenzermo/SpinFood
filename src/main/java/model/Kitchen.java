@@ -1,14 +1,15 @@
 package model;
 
-public record Kitchen(double longitude, double latitude, int story) implements Comparable<Kitchen>{
+public record Kitchen(Location location, int story) implements Comparable<Kitchen>{
     @Override
     public String toString() {
-        return "Longitude: " + longitude + ", Latitude: " + latitude + ", Story: " + story;
+        return "Location: " + location + ", Story: " + story;
     }
 
     @Override
     public int compareTo(Kitchen o) {
-        return 0; //TODO Calc distances of both kitchens to the after party. The Kitchen with the shorter distance, is the smaller one.
+        return (int) (location.getDistance(InputData.getEventLocation())
+                - o.location.getDistance(InputData.getEventLocation()));
     }
 
     @Override
@@ -19,8 +20,8 @@ public record Kitchen(double longitude, double latitude, int story) implements C
         } else {
             return false;
         }
-        return  this.longitude == other.longitude &&
-                this.latitude == other.latitude &&
+        return  this.location.longitude() == other.location.longitude() &&
+                this.location.latitude() == other.location.latitude() &&
                 this.story == other.story;
     }
 }

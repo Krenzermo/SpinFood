@@ -1,9 +1,8 @@
 package model.person;
 
-import java.util.List;
 public enum FoodType {
     VEGAN,
-    VEGETARIAN,
+    VEGGIE,
     MEAT,
     NONE
 }

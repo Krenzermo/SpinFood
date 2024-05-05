@@ -76,29 +76,29 @@ public class Pair implements IParticipantCollection {
     }
 
     private Kitchen autoAssignKitchen() {
-        if (!participants[0].hasKitchen && !participants[1].hasKitchen) {
+        if (!participants[0].isHasKitchen() && !participants[1].isHasKitchen()) {
             throw new RuntimeException("No kitchen assigned to either participant!");
         }
 
         //TODO: Teil mit maybe einbauen
 
         if (signedUpTogether) {
-            return participants[0].kitchen;
+            return participants[0].getKitchen();
         }
-        if (!participants[0].hasKitchen) {
-            return participants[1].kitchen;
+        if (!participants[0].isHasKitchen()) {
+            return participants[1].getKitchen();
         }
-        if (!participants[1].hasKitchen) {
-            return participants[0].kitchen;
+        if (!participants[1].isHasKitchen()) {
+            return participants[0].getKitchen();
         }
 
         Location eventLocation = InputData.getEventLocation();
 
-        if (participants[0].kitchen.location().getDistance(eventLocation) <= participants[1].kitchen.location().getDistance(eventLocation)) {
-            return participants[1].kitchen;
+        if (participants[0].getKitchen().location().getDistance(eventLocation) <= participants[1].getKitchen().location().getDistance(eventLocation)) {
+            return participants[1].getKitchen();
         }
 
-        return participants[0].kitchen;
+        return participants[0].getKitchen();
     }
 
     @Override
