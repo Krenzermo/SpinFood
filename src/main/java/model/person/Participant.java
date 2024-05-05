@@ -68,7 +68,10 @@ public class Participant implements Comparable<Participant>{
         return gender;
     }
 
-    public boolean isHasKitchen() {
+    /**
+     * @return true if hasKitchen, false if not hasKitchen, null if maybe hasKitchen
+     */
+    public Boolean isHasKitchen() {
         return hasKitchen;
     }
 
