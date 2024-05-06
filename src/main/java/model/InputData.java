@@ -18,8 +18,8 @@ public class InputData {
     private ArrayList<Pair> pairInputData; // list of all pairs
     private Location eventLocation; // location of the event
     // TODO: add more robust logic for receiving the data
-    private static final String participantDataFilePath = "src/main/java/data/partylocation.csv"; // file path for participant file
-    private static final String eventLocationDataFilePath = "src/main/java/data/teilnehmerliste.csv"; // file path for event location file
+    private static final String participantDataFilePath = "src/main/java/data/teilnehmerliste.csv"; // file path for participant file
+    private static final String eventLocationDataFilePath = "src/main/java/data/partylocation.csv"; // file path for event location file
 
     private static InputData inputData; // Singleton
 
@@ -27,6 +27,7 @@ public class InputData {
      * constructor for InputData
      */
     private InputData() {
+        inputData = this; // important
         this.participantInputData = new ArrayList<>(); // initialize ArrayList for unpaired participants
         this.pairInputData = new ArrayList<>(); // initialize ArrayList for pairs
         saveLocation();
@@ -36,7 +37,7 @@ public class InputData {
     /**
      * @return InputData instance
      */
-    public static InputData getInstance() {
+    public static synchronized InputData getInstance() {
         if (inputData == null) {
             inputData = new InputData();
         }
@@ -59,6 +60,7 @@ public class InputData {
             eventLocation = new Location(latitude, longitude);        //initialize eventLocation
 
         } catch (Exception e) {
+            e.printStackTrace();
             System.out.println("Fehler bei Veranstaltungsort: " + e.getMessage());
         }
     }
