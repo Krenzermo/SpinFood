@@ -1,4 +1,7 @@
-package model;
+package model.kitchen;
+
+import model.InputData;
+import model.Location;
 
 public record Kitchen(Location location, int story) implements Comparable<Kitchen>{
 

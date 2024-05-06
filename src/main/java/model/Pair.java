@@ -1,5 +1,6 @@
 package model;
 
+import model.kitchen.Kitchen;
 import model.person.Participant;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public class Pair implements IParticipantCollection {
     private IParticipantCollection[] groups = new IParticipantCollection[3];
     public final boolean signedUpTogether;
 
-    private final InputData inputData = InputData.getInstance();
+    private final InputData inputData = InputData.getInstance(); //TODO: Possible to delete?
 
     public Pair(Participant participant1, Participant participant2) {
         this(participant1, participant2, false);
@@ -76,7 +77,7 @@ public class Pair implements IParticipantCollection {
         }
         this.groups = groups;
     }
-
+    //TODO: Use KitchenAvailability for hasKitchen
     private Kitchen autoAssignKitchen() {
         if (Boolean.FALSE.equals(participants[0].isHasKitchen()) && Boolean.FALSE.equals(participants[1].isHasKitchen())) {
             throw new RuntimeException("No kitchen assigned to either participant!");
