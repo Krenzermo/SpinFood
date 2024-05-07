@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="Software Praktikum SS24" company="Philipps-Universität Marburg" webLink="https://gitlab.uni-marburg.de/hinkelma/sp24_gruppex_brecher_hinkelma_krenzerm_piacenza" view-date="2024-05-17" view-index="0" gantt-divider-location="395" resource-divider-location="300" version="3.3.3307" locale="de_DE">
+    <description/>
+    <view zooming-state="default:2" id="gantt-chart">
+        <field id="tpd3" name="Name" width="216" order="0"/>
+        <field id="tpd4" name="Begin date" width="81" order="1"/>
+        <field id="tpd5" name="End date" width="82" order="2"/>
+        <field id="tpd15" name="Notizen" width="20" order="3"/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Ressource" width="210" order="0"/>
+        <field id="1" name="Rolle" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="0" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="1" uid="387cebf21857425b8d75b18d64ea3521" name="1. Phase" meeting="false" project="true" start="2024-04-18" duration="7" complete="100" expand="true">
+            <task id="0" uid="e39f12f9e8f6470489059bc27f70281b" name="Einführung" meeting="false" start="2024-04-18" duration="1" complete="100" expand="true"/>
+            <task id="2" uid="9c9915c97a7742049eca1edfb696b0c8" name="Installation und Aufsetzten der Entwicklungsumgebung" meeting="false" start="2024-04-18" duration="7" complete="100" expand="true"/>
+        </task>
+        <task id="3" uid="31aa7492e2f6456a9df04772390691d3" name="2.Phase" meeting="false" start="2024-04-25" duration="21" complete="63" expand="true">
+            <task id="4" uid="58c34472e6f54b41a47fb14f4fa8c14d" name="Programmcode schreiben + teilweise testen" meeting="false" start="2024-04-25" duration="11" complete="100" expand="true"/>
+            <task id="5" uid="26c0f0df776e40818acd479a6691e533" name="Code finalisieren und refaktoren + Tests für alle Klassen anfertigen + Dokumentation weiterführen" meeting="false" start="2024-05-06" duration="6" complete="40" expand="true"/>
+            <task id="6" uid="3f221b4dcb884b32a644922a84a70255" name="letzte Tests und Dokumentation hinzufügen + Feinschliff" meeting="false" start="2024-05-12" duration="4" complete="0" expand="true"/>
+        </task>
+        <task id="7" uid="8c57527528b6488caf17355fbe116829" name="Meilenstein 1" meeting="true" start="2024-05-16" duration="0" complete="0" priority="2" expand="true"/>
+        <task id="8" uid="a15df410978d443c9dd3fbb7d515c375" name="3.Phase" meeting="false" start="2024-05-16" duration="28" complete="0" expand="true">
+            <task id="9" uid="c3aa2c9d38884b068af0855c65cbf742" name="2. Ausbaustufe" meeting="false" start="2024-05-16" duration="28" complete="0" expand="true"/>
+        </task>
+        <task id="11" uid="2321074f07ae44f799881a264f3ca092" name="Meilenstein 2" meeting="true" start="2024-06-13" duration="0" complete="0" priority="2" expand="true"/>
+        <task id="10" uid="b56629a97c4049d4ba7147a59e458f9a" name="4.Phase" meeting="false" start="2024-06-13" duration="35" complete="0" expand="true">
+            <task id="12" uid="50c5c214bb27446cbc31552aac6ae846" name="3. Ausbaustufe" meeting="false" start="2024-06-13" duration="35" complete="0" expand="true"/>
+        </task>
+        <task id="13" uid="25f7d431380a4e55981e717e24898a6f" name="Meilenstein 3" meeting="true" start="2024-07-18" duration="0" complete="0" expand="true"/>
+        <task id="14" uid="91b7fd6796a649bbaa91d7364b4be43a" name="Projektende" meeting="true" start="2024-07-19" duration="0" complete="0" expand="true"/>
+    </tasks>
+    <resources/>
+    <allocations/>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>
