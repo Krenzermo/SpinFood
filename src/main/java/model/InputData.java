@@ -28,6 +28,7 @@ public class InputData {
      * constructor for InputData
      */
     private InputData() {
+        inputData = this;
         this.participantInputData = new ArrayList<>(); // initialize ArrayList for unpaired participants
         this.pairInputData = new ArrayList<>(); // initialize ArrayList for pairs
         saveLocation();
@@ -37,7 +38,7 @@ public class InputData {
     /**
      * @return InputData instance
      */
-    public static InputData getInstance() {
+    public synchronized static InputData getInstance() {
         if (inputData == null) {
             inputData = new InputData();
         }
@@ -96,7 +97,7 @@ public class InputData {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Fehler bei Teilnehmerdaten: " + e.getMessage());
+            e.printStackTrace();
         }
     }
 
@@ -156,9 +157,9 @@ public class InputData {
         KitchenAvailability hasKitchen = KitchenAvailability.getAvailability(parts[6]);
 
         //Extract data of Kitchen Location
-        int kitchenStory = parts[7].isEmpty() ? 0 : (int) Double.parseDouble(parts[7]);
-        double kitchenLongitude = parts[8].isEmpty() ? 0 : Double.parseDouble(parts[8]);
-        double kitchenLatitude = parts[9].isEmpty() ? 0 : Double.parseDouble(parts[9]);
+        int kitchenStory = parts.length > 7 && !parts[7].isEmpty() ? (int) Double.parseDouble(parts[7]) : 0;
+        double kitchenLongitude = parts.length > 8 ? Double.parseDouble(parts[8]) : 0;
+        double kitchenLatitude = parts.length > 9 ? Double.parseDouble(parts[9]) : 0;
 
         //Extract data of possible Participant 2
         if (parts.length < 11) {
@@ -252,9 +253,9 @@ public class InputData {
      */
     public String getParticipants() {
         String participantString = "";
-        for (Participant participantInputDatum : participantInputData) {
+        for (Participant participant : participantInputData) {
 
-            participantString = participantString + participantInputDatum.toString() +"\n";
+            participantString = participantString + participant.toString() +"\n";
         }
         return participantString;
     }
@@ -265,9 +266,9 @@ public class InputData {
      */
     public String getPairs() {
         String pairString = "";
-        for (Pair pairInputDatum : pairInputData) {
+        for (Pair pair : pairInputData) {
 
-            pairString = pairString + pairInputDatum.toString() +"\n";
+            pairString = pairString + pair.toString() +"\n";
         }
         return pairString;
     }

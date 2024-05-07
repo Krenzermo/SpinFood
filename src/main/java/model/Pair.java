@@ -15,7 +15,7 @@ public class Pair implements IParticipantCollection {
     private IParticipantCollection[] groups = new IParticipantCollection[3];
     public final boolean signedUpTogether;
 
-    private final InputData inputData = InputData.getInstance(); //TODO: Possible to delete?
+    private final InputData inputData = InputData.getInstance();
 
     public Pair(Participant participant1, Participant participant2) {
         this(participant1, participant2, false);
@@ -25,7 +25,12 @@ public class Pair implements IParticipantCollection {
         participants[0] = participant1;
         participants[1] = participant2;
         this.signedUpTogether = signedUpTogether;
-        this.kitchen = autoAssignKitchen();
+        if (!signedUpTogether) {
+            this.kitchen = autoAssignKitchen();
+        } else {
+            //Both participants have the same kitchen if signedUpTogether
+            this.kitchen = participant1.getKitchen();
+        }
     }
 
     @Override

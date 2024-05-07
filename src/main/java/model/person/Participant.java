@@ -37,7 +37,8 @@ public class Participant implements Comparable<Participant>{
 
     @Override
     public String toString() {
-        return "ID: " + id + ", Name: " + name.toString() + ", FoodType: " + foodType + ", Age: " + ageRange + ", Gender: " + gender + ", HasKitchen: " + hasKitchen.toString() + ", Kitchen: " + kitchen.toString();
+        //Don't call kitchen.toString explicitly
+        return "ID: " + id + ", Name: " + name.toString() + ", FoodType: " + foodType + ", Age: " + ageRange + ", Gender: " + gender + ", HasKitchen: " + hasKitchen.toString() + ", Kitchen: " + kitchen;
     }
 
     @Override
