@@ -1,6 +1,7 @@
 package model;
 
 import model.kitchen.Kitchen;
+import model.kitchen.KitchenAvailability;
 import model.person.Participant;
 
 import java.util.List;
@@ -25,12 +26,7 @@ public class Pair implements IParticipantCollection {
         participants[0] = participant1;
         participants[1] = participant2;
         this.signedUpTogether = signedUpTogether;
-        if (!signedUpTogether) {
-            this.kitchen = autoAssignKitchen();
-        } else {
-            //Both participants have the same kitchen if signedUpTogether
-            this.kitchen = participant1.getKitchen();
-        }
+        this.kitchen = autoAssignKitchen();
     }
 
     @Override
@@ -82,9 +78,9 @@ public class Pair implements IParticipantCollection {
         }
         this.groups = groups;
     }
-    //TODO: Use KitchenAvailability for hasKitchen
+
     private Kitchen autoAssignKitchen() {
-        if (Boolean.FALSE.equals(participants[0].isHasKitchen()) && Boolean.FALSE.equals(participants[1].isHasKitchen())) {
+        if (KitchenAvailability.NO.equals(participants[0].isHasKitchen()) && KitchenAvailability.NO.equals(participants[1].isHasKitchen())) {
             throw new RuntimeException("No kitchen assigned to either participant!");
         }
 
@@ -92,25 +88,23 @@ public class Pair implements IParticipantCollection {
         if (signedUpTogether) {
             return participants[0].getKitchen();
         }
-        if (Boolean.FALSE.equals(participants[0].isHasKitchen())) {
+        if (KitchenAvailability.NO.equals(participants[0].isHasKitchen())) {
             return participants[1].getKitchen();
         }
-        if (Boolean.FALSE.equals(participants[1].isHasKitchen())) {
+        if (KitchenAvailability.NO.equals(participants[1].isHasKitchen())) {
             return participants[0].getKitchen();
         }
 
-        // isHasKitchen() == Null if maybe has kitchen
-
         // if exactly one participant maybe has a kitchen
-        if (Objects.isNull(participants[0].isHasKitchen()) ^ Objects.isNull(participants[1].isHasKitchen())) {
-            if (Boolean.TRUE.equals(participants[0].isHasKitchen())) {
+        if (KitchenAvailability.MAYBE.equals(participants[0].isHasKitchen()) ^ KitchenAvailability.MAYBE.equals(participants[1].isHasKitchen())) {
+            if (KitchenAvailability.YES.equals(participants[0].isHasKitchen())) {
                 return participants[0].getKitchen();
             }
-            if (Boolean.TRUE.equals(participants[1].isHasKitchen())) {
+            if (KitchenAvailability.YES.equals(participants[1].isHasKitchen())) {
                 return participants[1].getKitchen();
             }
 
-            return Objects.isNull(participants[0].isHasKitchen()) ? participants[0].getKitchen() : participants[1].getKitchen();
+            return KitchenAvailability.MAYBE.equals(participants[0].isHasKitchen()) ? participants[0].getKitchen() : participants[1].getKitchen();
         }
 
         // here if both have a kitchen or both maybe have a kitchen
