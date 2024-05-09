@@ -1,5 +1,7 @@
 package model;
 
+import model.kitchen.Kitchen;
+import model.kitchen.KitchenAvailability;
 import model.person.Participant;
 
 import java.util.List;
@@ -13,6 +15,8 @@ public class Pair implements IParticipantCollection {
     //TODO: change type to Group
     private IParticipantCollection[] groups = new IParticipantCollection[3];
     public final boolean signedUpTogether;
+
+    private static final InputData inputData = InputData.getInstance();
 
     public Pair(Participant participant1, Participant participant2) {
         this(participant1, participant2, false);
@@ -76,29 +80,43 @@ public class Pair implements IParticipantCollection {
     }
 
     private Kitchen autoAssignKitchen() {
-        if (!participants[0].isHasKitchen() && !participants[1].isHasKitchen()) {
+        if (KitchenAvailability.NO.equals(participants[0].isHasKitchen()) && KitchenAvailability.NO.equals(participants[1].isHasKitchen())) {
             throw new RuntimeException("No kitchen assigned to either participant!");
         }
 
-        //TODO: Teil mit maybe einbauen
-
+        // assign kitchen if signedUpTogether or one does not have a kitchen
         if (signedUpTogether) {
             return participants[0].getKitchen();
         }
-        if (!participants[0].isHasKitchen()) {
+        if (KitchenAvailability.NO.equals(participants[0].isHasKitchen())) {
             return participants[1].getKitchen();
         }
-        if (!participants[1].isHasKitchen()) {
+        if (KitchenAvailability.NO.equals(participants[1].isHasKitchen())) {
             return participants[0].getKitchen();
         }
 
-        Location eventLocation = InputData.getEventLocation();
+        // if exactly one participant maybe has a kitchen
+        if (KitchenAvailability.MAYBE.equals(participants[0].isHasKitchen()) ^ KitchenAvailability.MAYBE.equals(participants[1].isHasKitchen())) {
+            if (KitchenAvailability.YES.equals(participants[0].isHasKitchen())) {
+                return participants[0].getKitchen();
+            }
+            if (KitchenAvailability.YES.equals(participants[1].isHasKitchen())) {
+                return participants[1].getKitchen();
+            }
 
-        if (participants[0].getKitchen().location().getDistance(eventLocation) <= participants[1].getKitchen().location().getDistance(eventLocation)) {
-            return participants[1].getKitchen();
+            return KitchenAvailability.MAYBE.equals(participants[0].isHasKitchen()) ? participants[0].getKitchen() : participants[1].getKitchen();
         }
 
-        return participants[0].getKitchen();
+        // here if both have a kitchen or both maybe have a kitchen
+
+        Location eventLocation = inputData.getEventLocation();
+
+        // select the one closest to the eventLocation
+        if (participants[0].getKitchen().location().getDistance(eventLocation) <= participants[1].getKitchen().location().getDistance(eventLocation)) {
+            return participants[0].getKitchen();
+        }
+
+        return participants[1].getKitchen();
     }
 
     @Override
