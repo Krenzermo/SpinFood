@@ -66,7 +66,6 @@ public class KitchenTest {
 
     @Test
     public void testCompareTo_SameLocation() {
-        InputData inputData = InputData.getInstance();
         Location location1 = new Location(1, 0); // Example location values
         int story1 = 0;
         Kitchen kitchen1 = new Kitchen(location1, story1);
@@ -91,7 +90,6 @@ public class KitchenTest {
 
     @Test
     public void testCompareTo_Kitchen2Closer() {
-        InputData inputData = InputData.getInstance();
         Location location1 = new Location(0, 0); // Example location values
         int story1 = 0;
         Kitchen kitchen1 = new Kitchen(location1, story1);
