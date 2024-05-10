@@ -4,7 +4,7 @@ import model.kitchen.Kitchen;
 import model.Location;
 import model.kitchen.KitchenAvailability;
 
-public class Participant implements Comparable<Participant>{
+public class Participant {
 
     private final String id;
     private final Name name;
@@ -41,8 +41,8 @@ public class Participant implements Comparable<Participant>{
         return "ID: " + id + ", Name: " + name.toString() + ", FoodType: " + foodType + ", Age: " + ageRange + ", Gender: " + gender + ", HasKitchen: " + hasKitchen.toString() + ", Kitchen: " + kitchen;
     }
 
-    @Override
-    public int compareTo(Participant o) {
+
+    public double compareTo(Participant o) {
         return this.kitchen.compareTo(o.kitchen);
     }
 

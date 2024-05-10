@@ -72,7 +72,7 @@ public class KitchenTest {
         Location location2 = new Location(1, 0); // Example location values
         int story2 = 0;
         Kitchen kitchen2 = new Kitchen(location2, story2);
-        assertEquals(0, kitchen1.compareTo(kitchen2));
+        assertEquals(0, kitchen1.compareTo(kitchen2),0);
     }
 
     @Test
@@ -83,9 +83,9 @@ public class KitchenTest {
         Location location2 = new Location(0, 0); // Example location values
         int story2 = 0;
         Kitchen kitchen2 = new Kitchen(location2, story2);
-        int distance = (int) (location1.getDistance(InputData.getInstance().getEventLocation())
+        double distance = (location1.getDistance(InputData.getInstance().getEventLocation())
                 - location2.getDistance(InputData.getInstance().getEventLocation()));
-        assertEquals(distance, kitchen1.compareTo(kitchen2));
+        assertEquals(distance, kitchen1.compareTo(kitchen2),0);
     }
 
     @Test
@@ -96,9 +96,9 @@ public class KitchenTest {
         Location location2 = new Location(1, 0); // Example location values
         int story2 = 0;
         Kitchen kitchen2 = new Kitchen(location2, story2);
-        int distance = (int) (location1.getDistance(InputData.getInstance().getEventLocation())
+        double distance = (location1.getDistance(InputData.getInstance().getEventLocation())
                 - location2.getDistance(InputData.getInstance().getEventLocation()));
-        assertEquals(distance, kitchen1.compareTo(kitchen2));
+        assertEquals(distance, kitchen1.compareTo(kitchen2),0);
     }
 
 }

@@ -3,16 +3,15 @@ package model.kitchen;
 import model.InputData;
 import model.Location;
 
-public record Kitchen(Location location, int story) implements Comparable<Kitchen>{
+public record Kitchen(Location location, int story){
 
     @Override
     public String toString() {
         return "Location: " + location + ", Story: " + story;
     }
 
-    @Override
-    public int compareTo(Kitchen o) {
-        return (int) (location.getDistance(InputData.getInstance().getEventLocation())
+    public double compareTo(Kitchen o) {
+        return (location.getDistance(InputData.getInstance().getEventLocation())
                 - o.location.getDistance(InputData.getInstance().getEventLocation()));
     }
 
