@@ -1,0 +1,5 @@
+,ID,Name,FoodPreference,Age,Sex,Kitchen,Kitchen_Story,Kitchen_Longitude,Kitchen_Latitude,ID_2,Name_2,Age_2,Sex_2
+001,John Doe,Vegan,21,Male,yes,2,13.4050,52.5200
+002,Jane Doe,Vegetarian,29,Female,no,1,8.7189,50.5908
+003,Bob Smith,Meat,twentytwo,Male,yes,1,8.6813,50.5820
+004,Alice Johnson,Vegan,24,Female,yes,0,xxx,50.5767

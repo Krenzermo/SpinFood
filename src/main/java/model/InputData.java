@@ -50,6 +50,7 @@ public class InputData {
 
         } catch (Exception e) {
             System.out.println("Fehler bei Veranstaltungsort: " + e.getMessage());
+            throw new RuntimeException(e);  // Wrap and rethrow the exception
         }
     }
 
@@ -107,7 +108,9 @@ public class InputData {
             }
         } catch (Exception e) {
             System.out.println("Fehler bei Teilnehmerdaten: " + e.getMessage());
+            throw new RuntimeException(e);  // Wrap and rethrow the exception
         }
+
     }
 
     /**
