@@ -19,7 +19,7 @@ public class InputDataTest {
     @Test
     public void testEventLocationLoading() {
         Location expectedLocation = new Location(50.5909317660173, 8.6746166676233); // Expected values based on test data
-        assertEquals(expectedLocation, InputData.getEventLocation());
+        assertEquals(expectedLocation, InputData.getInstance().getEventLocation());
     }
 
     @Test

@@ -1,11 +1,15 @@
 package model;
 
 import model.kitchen.Kitchen;
+import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class KitchenTest {
-
+    @Before
+    public void setUp() {
+        InputData inputData = InputData.getInstance("src/test/java/testData/teilnehmerlisteTest.csv", "src/test/java/testData/partylocationTest.csv");
+    }
     @Test
     public void testConstruction() {
         Location location = new Location(-8.668413178974852, 50.574996578974854); // Example location values
