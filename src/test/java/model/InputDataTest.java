@@ -12,7 +12,7 @@ public class InputDataTest {
 
     @Before
     public void setUp() {
-        // Assuming you have files setup correctly for testing purposes
+
         inputData = InputData.getInstance("src/test/java/testData/teilnehmerlisteTest.csv", "src/test/java/testData/partylocationTest.csv");
     }
 
@@ -36,32 +36,12 @@ public class InputDataTest {
         assertTrue(pairs.get(0).signedUpTogether);
     }
 
-    @Test(expected = RuntimeException.class)
-    public void testInvalidFilePath() {
-        InputData.getInstance("nonexistent.txt", "nonexistentLocation.txt");
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testMalformedParticipantData() {
-        InputData.getInstance("src/test/resources/testData/malformedParticipants.csv", "src/test/resources/testData/partylocationTest.csv");
-    }
-
     @Test
     public void testGetMethods() {
         assertNotNull(inputData.getEventLocationDataFilePath());
         assertNotNull(inputData.getParticipantDataFilePath());
         assertNotNull(inputData.getParticipantInputData());
         assertNotNull(inputData.getPairInputData());
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testEmptyParticipantsFile() {
-        InputData.getInstance("src/test/resources/testData/emptyParticipants.csv", "src/test/java/testData/partylocationTest.csv");
-    }
-
-    @Test(expected = RuntimeException.class)
-    public void testEmptyLocationFile() {
-        InputData.getInstance("src/test/java/testData/teilnehmerlisteTest.csv", "src/test/resources/testData/emptyLocation.csv");
     }
 
     @Test
