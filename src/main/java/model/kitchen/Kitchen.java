@@ -16,7 +16,7 @@ public record Kitchen(Location location, int story){
 
     @Override
     public String toString() {
-        return "Location: " + location + ", Story: " + story;
+        return "@Kitchen{" + location + ", Story: " + story + "}";
     }
 
     public double compareTo(Kitchen o) {

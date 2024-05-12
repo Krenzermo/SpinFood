@@ -26,6 +26,6 @@ public enum KitchenAvailability {
 
     @Override
     public String toString() {
-        return text;
+        return "KitchenAvailability: " + this.name();
     }
 }

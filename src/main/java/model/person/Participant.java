@@ -1,8 +1,11 @@
 package model.person;
 
+import model.Pair;
 import model.kitchen.Kitchen;
 import model.Location;
 import model.kitchen.KitchenAvailability;
+
+import java.util.Objects;
 
 /**
  * @author Daniel Hinkelmann
@@ -42,9 +45,27 @@ public class Participant {
     }
 
     @Override
+    public int hashCode() {
+        return Objects.hash(id, name, foodType, ageRange, gender, hasKitchen, kitchen);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Participant other = (Participant) obj;
+        return this.id.equals(other.id) && this.name.equals(other.name) && this.foodType.equals(other.foodType) && this.ageRange.equals(other.ageRange)
+                && this.gender.equals(other.gender) && this.hasKitchen.equals(other.hasKitchen) && this.kitchen.equals(other.kitchen);
+    }
+
+    @Override
     public String toString() {
         //Don't call kitchen.toString explicitly
-        return "ID: " + id + ", Name: " + name.toString() + ", FoodType: " + foodType + ", Age: " + ageRange + ", Gender: " + gender + ", HasKitchen: " + hasKitchen.toString() + ", Kitchen: " + kitchen;
+        return "@Participant{ID: " + id + ", Name: " + name.toString() + ", " + foodType + ", " + ageRange + ", " + gender + ", " + hasKitchen + ", " + kitchen + "}";
     }
 
 

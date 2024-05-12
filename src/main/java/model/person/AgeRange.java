@@ -65,4 +65,9 @@ public enum AgeRange {
 	public int getAgeDifference(AgeRange other) {
 		return Math.abs(this.value - other.value);
 	}
+
+	@Override
+	public String toString() {
+		return "AgeRange: " + this.value;
+	}
 }

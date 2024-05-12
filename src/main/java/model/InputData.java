@@ -46,7 +46,8 @@ public class InputData {
     /**
      * @return InputData instance
      */
-    public synchronized static InputData getInstance() {
+    public static synchronized InputData getInstance() {
+        // TODO: make this prettier and more useful
         if (inputData == null) {
             throw new RuntimeException("Paths have to be initialized: Use other getInstance method before using this");
         }
@@ -54,7 +55,7 @@ public class InputData {
         return inputData;
     }
 
-    public synchronized static InputData getInstance(String participantDataFilePath, String eventLocationDataFilePath) {
+    public static synchronized InputData getInstance(String participantDataFilePath, String eventLocationDataFilePath) {
         if (inputData == null) {
             inputData = new InputData(participantDataFilePath, eventLocationDataFilePath);
         }
