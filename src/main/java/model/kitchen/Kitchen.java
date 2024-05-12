@@ -1,15 +1,18 @@
-package model;
+package model.kitchen;
 
-public record Kitchen(Location location, int story) implements Comparable<Kitchen>{
+import model.InputData;
+import model.Location;
+
+public record Kitchen(Location location, int story){
+
     @Override
     public String toString() {
         return "Location: " + location + ", Story: " + story;
     }
 
-    @Override
-    public int compareTo(Kitchen o) {
-        return (int) (location.getDistance(InputData.getEventLocation())
-                - o.location.getDistance(InputData.getEventLocation()));
+    public double compareTo(Kitchen o) {
+        return (location.getDistance(InputData.getInstance().getEventLocation())
+                - o.location.getDistance(InputData.getInstance().getEventLocation()));
     }
 
     @Override

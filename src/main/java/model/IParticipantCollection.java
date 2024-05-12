@@ -1,5 +1,6 @@
 package model;
 
+import model.kitchen.Kitchen;
 import model.person.Participant;
 
 import java.util.*;
