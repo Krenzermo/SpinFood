@@ -19,18 +19,21 @@ public class InputData {
     private final ArrayList<Pair> pairInputData;
     private Location eventLocation;
     // TODO: add more robust logic for receiving the data
-    private static final String participantDataFilePath = "src/main/java/data/teilnehmerliste.csv";
-    private static final String eventLocationDataFilePath = "src/main/java/data/partylocation.csv";
+    private final String participantDataFilePath;
+    private final String eventLocationDataFilePath;
 
     private static InputData inputData; // Singleton
 
     /**
-     * constructor for InputData
+     * constructor for InputDat
      */
-    private InputData() {
+
+    private InputData(String participantDataFilePath, String eventLocationDataFilePath) {
         inputData = this;
-        this.participantInputData = new ArrayList<>(); // initialize ArrayList for unpaired participants
-        this.pairInputData = new ArrayList<>(); // initialize ArrayList for pairs
+        this.participantInputData = new ArrayList<>();
+        this.pairInputData = new ArrayList<>();
+        this.eventLocationDataFilePath = eventLocationDataFilePath;
+        this.participantDataFilePath = participantDataFilePath;
         saveLocation();
         saveParticipants();
     }
@@ -40,7 +43,15 @@ public class InputData {
      */
     public synchronized static InputData getInstance() {
         if (inputData == null) {
-            inputData = new InputData();
+            throw new RuntimeException("Paths have to be initialized: Use other getInstance method before using this");
+        }
+
+        return inputData;
+    }
+
+    public synchronized static InputData getInstance(String participantDataFilePath, String eventLocationDataFilePath) {
+        if (inputData == null) {
+            inputData = new InputData(participantDataFilePath, eventLocationDataFilePath);
         }
 
         return inputData;
