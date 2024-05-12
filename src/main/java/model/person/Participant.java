@@ -4,6 +4,12 @@ import model.kitchen.Kitchen;
 import model.Location;
 import model.kitchen.KitchenAvailability;
 
+/**
+ * @author Daniel Hinkelmann
+ * @author Davide Piacenza
+ * @author Finn Brecher
+ * @author Ole Krenzer
+ */
 public class Participant {
 
     private final String id;

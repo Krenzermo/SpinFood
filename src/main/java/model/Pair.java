@@ -7,6 +7,11 @@ import model.person.Participant;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * @author Finn Brecher
+ * @author Davide Piacenza
+ * @author Daniel Hinkelmann
+ */
 public class Pair implements IParticipantCollection {
 
     private final Participant[] participants = new Participant[2];

@@ -1,5 +1,11 @@
 package model;
 
+/**
+ * @author Finn Brecher
+ *
+ * @param latitude the latitude
+ * @param longitude the longitude
+ */
 public record Location(double latitude, double longitude) {
 	public double getDistance(Location other) {
 		return Math.sqrt(

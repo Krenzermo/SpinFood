@@ -4,6 +4,12 @@ import model.InputData;
 
 import java.nio.file.Paths;
 
+/**
+ * @author Finn Brecher
+ * @author Ole Krenzer
+ * @author Davide Piacenza
+ * @author Daniel Hinkelmann
+ */
 public class Main {
 	public static void main(String[] args) {
 

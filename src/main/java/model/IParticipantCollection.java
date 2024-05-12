@@ -5,6 +5,9 @@ import model.person.Participant;
 
 import java.util.*;
 
+/**
+ * @author Finn Brecher
+ */
 public interface IParticipantCollection extends List<Participant> {
 	IIdentNumber getIdentNumber();
 	List<Participant> getParticipants();

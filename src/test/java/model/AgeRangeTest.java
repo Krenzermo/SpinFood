@@ -5,6 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 /**
+ * @author Davide Piacenza
  * Test class for AgeRange Enum.
  */
 public class AgeRangeTest {

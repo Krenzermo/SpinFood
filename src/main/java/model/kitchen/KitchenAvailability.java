@@ -1,5 +1,8 @@
 package model.kitchen;
 
+/**
+ * @author Daniel Hinkelmann
+ */
 public enum KitchenAvailability {
     YES("yes"),
     MAYBE("maybe"),

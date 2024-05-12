@@ -5,6 +5,10 @@ import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.*;
 
+/**
+ * @author Ole Krenzer
+ * @author Daniel Hinkelmann
+ */
 public class KitchenTest {
     @Before
     public void setUp() {

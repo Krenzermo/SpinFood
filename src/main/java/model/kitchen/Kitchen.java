@@ -3,6 +3,15 @@ package model.kitchen;
 import model.InputData;
 import model.Location;
 
+/**
+ * @author Davide Piacenza
+ * @author Daniel Hinkelmann
+ * @author Finn Brecher
+ * @author Ole Krenzer
+ *
+ * @param location The location of the kitchen
+ * @param story the story of the kitchen
+ */
 public record Kitchen(Location location, int story){
 
     @Override

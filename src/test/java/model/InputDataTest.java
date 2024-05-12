@@ -7,6 +7,10 @@ import org.junit.*;
 
 import java.util.ArrayList;
 
+/**
+ * @author Davide Piacenza
+ * @author Daniel Hinkelmann
+ */
 public class InputDataTest {
     private InputData inputData;
 

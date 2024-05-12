@@ -11,6 +11,11 @@ import java.util.Scanner;
 import java.nio.file.Paths;
 
 /**
+ * @author Ole Krenzer
+ * @author Finn Brecher
+ * @author Daniel Hinkelmann
+ * @author Davide Piacenza
+ *
  * class to save an event location from an external file and save participants and pairs from another external file
  * in the corresponding classes in ArrayLists to return them all together
  */
