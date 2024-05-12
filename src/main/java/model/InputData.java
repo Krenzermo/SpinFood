@@ -17,7 +17,7 @@ import java.nio.file.Paths;
 public class InputData {
     private final ArrayList<Participant> participantInputData;
     private final ArrayList<Pair> pairInputData;
-    private static Location eventLocation;
+    private Location eventLocation;
     // TODO: add more robust logic for receiving the data
     private final String participantDataFilePath;
     private final String eventLocationDataFilePath;
@@ -210,7 +210,7 @@ public class InputData {
      * method to get the event location
      * @return the Location eventLocation
      */
-    public static Location getEventLocation() {
+    public Location getEventLocation() {
         return eventLocation;
     }
 
