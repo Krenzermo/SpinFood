@@ -1,5 +1,6 @@
 package model.person;
 
+import model.IParticipantCollection;
 import model.Pair;
 import model.kitchen.Kitchen;
 import model.Location;
@@ -22,6 +23,9 @@ public class Participant {
     private final Gender gender;
     private final KitchenAvailability hasKitchen;
     private final Kitchen kitchen;
+    private Pair pair;
+    //TODO: change type to Group
+    private IParticipantCollection[] groups = new IParticipantCollection[3];
 
     public Participant(String id, Name name, FoodType foodType, byte age, Gender gender, KitchenAvailability hasKitchen, int kitchenStory, double kitchenLongitude, double kitchenLatitude) {
         this.id = id;
@@ -31,7 +35,8 @@ public class Participant {
         this.gender = gender;
         this.hasKitchen = hasKitchen;
         this.kitchen = new Kitchen(new Location(kitchenLongitude, kitchenLatitude), kitchenStory);
-
+        this.pair = null;
+        this.groups = null;
     }
 
     public Participant(String id, Name name, FoodType foodType, byte age, Gender gender) {
@@ -106,5 +111,39 @@ public class Participant {
 
     public Kitchen getKitchen() {
         return kitchen;
+    }
+
+    public Pair getPair() {
+        return pair;
+    }
+
+    // TODO: change return type to Group
+    public IParticipantCollection[] getGroups() {
+        return groups;
+    }
+
+    public void setPair(Pair pair) {
+        if (!pair.contains(this))
+            throw new RuntimeException("The pair does not contain this participant. " + "Pair: " + pair + ", Participant: " + this);
+
+        this.pair = pair;
+    }
+
+    public void setGroups(IParticipantCollection[] groups) {
+        if (pair == null) {
+            throw new RuntimeException("cannot assign Groups to this Participant if no Pair is assigned.");
+        }
+
+        for (IParticipantCollection group: groups)  {
+            // TODO: may need to be changed once group is implemented.
+            if (!group.contains(pair)) {
+                throw new RuntimeException("cannot assign a Group to this Participant if the group does not contain the Participant");
+            }
+        }
+
+        if (groups.length != 3) {
+            throw new RuntimeException("Groups must have exactly 3 pairs!");
+        }
+        this.groups = groups;
     }
 }

@@ -101,12 +101,12 @@ public class InputData {
                     Participant participant = new Participant(data.id, data.name, data.foodType, data.age, data.gender);
                     participantInputData.add(participant);
 
-                } else if (parts.length < 11) {
+                } else if (parts.length < 11) { // Singular participant (signed up alone)
 
                     Participant participant = new Participant(data.id, data.name, data.foodType, data.age, data.gender, data.hasKitchen, data.kitchenStory, data.kitchenLongitude, data.kitchenLatitude);
                     participantInputData.add(participant);
 
-                } else {
+                } else { // Pair (signed up together)
 
                     Pair pair = getPair(data);
                     pairInputData.add(pair);
@@ -127,7 +127,12 @@ public class InputData {
     private Pair getPair(Data data) {
         Participant participant1 = new Participant(data.id, data.name, data.foodType, data.age, data.gender, data.hasKitchen, data.kitchenStory, data.kitchenLongitude, data.kitchenLatitude);
         Participant participant2 = new Participant(data.idTwo, data.nameTwo, data.foodType, data.ageTwo, data.genderTwo, data.hasKitchen, data.kitchenStory, data.kitchenLongitude, data.kitchenLatitude);
-        return new Pair(participant1, participant2, true);
+
+        Pair pair = new Pair(participant1, participant2, true);
+        participant1.setPair(pair);
+        participant2.setPair(pair);
+
+        return pair;
     }
 
     /**

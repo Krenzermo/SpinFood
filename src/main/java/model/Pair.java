@@ -156,7 +156,7 @@ public class Pair implements IParticipantCollection {
 
     @Override
     public String toString() {
-        // TODO: add groups to output
+        // TODO: maybe add groups to output
         return "@Pair{" + participants[0].toString() + ", " + participants[1].toString() + ", signedUpTogether: " + signedUpTogether + "}";
     }
 }
