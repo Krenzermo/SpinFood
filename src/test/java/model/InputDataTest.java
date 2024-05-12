@@ -82,12 +82,4 @@ public class InputDataTest {
             assertTrue(participant.getAge().value > 0);  // Assuming age should be positive
         }
     }
-
-
-
-
-    @After
-    public void tearDown() {
-        // Clean up or reset operations if necessary
-    }
 }
