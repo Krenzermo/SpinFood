@@ -38,12 +38,12 @@ public class InputDataTest {
 
     @Test(expected = RuntimeException.class)
     public void testInvalidFilePath() {
-        new InputData("nonexistent.txt", "nonexistentLocation.txt");
+        InputData.getInstance("nonexistent.txt", "nonexistentLocation.txt");
     }
 
     @Test(expected = RuntimeException.class)
     public void testMalformedParticipantData() {
-        new InputData("src/test/resources/testData/malformedParticipants.csv", "src/test/resources/testData/partylocationTest.csv");
+        InputData.getInstance("src/test/resources/testData/malformedParticipants.csv", "src/test/resources/testData/partylocationTest.csv");
     }
 
     @Test
@@ -56,12 +56,12 @@ public class InputDataTest {
 
     @Test(expected = RuntimeException.class)
     public void testEmptyParticipantsFile() {
-        new InputData("src/test/resources/testData/emptyParticipants.csv", "src/test/java/testData/partylocationTest.csv");
+        InputData.getInstance("src/test/resources/testData/emptyParticipants.csv", "src/test/java/testData/partylocationTest.csv");
     }
 
     @Test(expected = RuntimeException.class)
     public void testEmptyLocationFile() {
-        new InputData("src/test/java/testData/teilnehmerlisteTest.csv", "src/test/resources/testData/emptyLocation.csv");
+        InputData.getInstance("src/test/java/testData/teilnehmerlisteTest.csv", "src/test/resources/testData/emptyLocation.csv");
     }
 
     @Test
