@@ -61,8 +61,7 @@ public class InputData {
             eventLocation = new Location(latitude, longitude);        //initialize eventLocation
 
         } catch (Exception e) {
-            e.printStackTrace();
-            System.out.println("Fehler bei Veranstaltungsort: " + e.getMessage());
+            throw new RuntimeException();
         }
     }
 
@@ -98,7 +97,7 @@ public class InputData {
                 }
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException();
         }
     }
 

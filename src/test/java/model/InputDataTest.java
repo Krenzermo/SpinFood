@@ -13,7 +13,7 @@ public class InputDataTest {
     @Before
     public void setUp() {
         // Assuming you have files setup correctly for testing purposes
-        inputData = new InputData("src/test/java/testData/teilnehmerlisteTest.csv", "src/test/java/testData/partylocationTest.csv");
+        inputData = InputData.getInstance("src/test/java/testData/teilnehmerlisteTest.csv", "src/test/java/testData/partylocationTest.csv");
     }
 
     @Test
