@@ -49,8 +49,7 @@ public class InputData {
             eventLocation = new Location(latitude, longitude);        //initialize eventLocation
 
         } catch (Exception e) {
-            System.out.println("Fehler bei Veranstaltungsort: " + e.getMessage());
-            throw new RuntimeException(e);  // Wrap and rethrow the exception
+           throw new RuntimeException(e);
         }
     }
 
@@ -107,8 +106,7 @@ public class InputData {
                 }
             }
         } catch (Exception e) {
-            System.out.println("Fehler bei Teilnehmerdaten: " + e.getMessage());
-            throw new RuntimeException(e);  // Wrap and rethrow the exception
+            throw new RuntimeException(e);
         }
 
     }
