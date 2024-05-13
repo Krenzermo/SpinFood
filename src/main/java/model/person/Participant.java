@@ -103,7 +103,9 @@ public class Participant {
     }
 
     /**
-     * @return true if hasKitchen, false if not hasKitchen, null if maybe hasKitchen
+     * @return  {@link KitchenAvailability#YES} if there is a kitchen,
+     *          {@link KitchenAvailability#NO} if there is no kitchen
+     *          and {@link KitchenAvailability#MAYBE} if there may be a kitchen.
      */
     public KitchenAvailability isHasKitchen() {
         return hasKitchen;
