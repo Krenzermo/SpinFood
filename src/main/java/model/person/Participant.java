@@ -138,7 +138,7 @@ public class Participant {
         for (IParticipantCollection group: groups)  {
             // TODO: may need to be changed once group is implemented.
             if (!group.contains(pair)) {
-                throw new RuntimeException("cannot assign a Group to this Participant if the group does not contain the Participant");
+                throw new RuntimeException("cannot assign a Group to this Participant if the Group does not contain the Participants Pair.");
             }
         }
 
