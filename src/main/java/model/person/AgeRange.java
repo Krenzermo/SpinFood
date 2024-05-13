@@ -1,12 +1,9 @@
 package model.person;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * @author Finn Brecher
  * @author Daniel Hinkelmann
+ *
  * the AgeRange of a participant
  */
 public enum AgeRange {

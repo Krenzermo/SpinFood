@@ -22,7 +22,7 @@ public class Participant {
     private final AgeRange ageRange;
     private final Gender gender;
     private final KitchenAvailability hasKitchen;
-    private final Kitchen kitchen;
+    private final Kitchen kitchen; // kitchen may be null
     private Pair pair;
     //TODO: change type to Group
     private IParticipantCollection[] groups = new IParticipantCollection[3];
@@ -69,7 +69,7 @@ public class Participant {
 
     @Override
     public String toString() {
-        //Don't call kitchen.toString explicitly
+        //Don't call kitchen.toString() explicitly as kitchen may be null and this would yield a NullPointerException
         return "@Participant{ID: " + id + ", Name: " + name.toString() + ", " + foodType + ", " + ageRange + ", " + gender + ", " + hasKitchen + ", " + kitchen + "}";
     }
 
@@ -129,6 +129,7 @@ public class Participant {
         this.pair = pair;
     }
 
+    // TODO: change type to Group
     public void setGroups(IParticipantCollection[] groups) {
         if (pair == null) {
             throw new RuntimeException("cannot assign Groups to this Participant if no Pair is assigned.");
