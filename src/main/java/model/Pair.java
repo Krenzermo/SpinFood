@@ -88,7 +88,7 @@ public class Pair implements IParticipantCollection {
         for (IParticipantCollection group: groups)  {
             // TODO: may need to be changed once group is implemented.
             if (!group.contains(this)) {
-                throw new RuntimeException("cannot assign a Group to this Participant if the group does not contain the Participant");
+                throw new RuntimeException("cannot assign a Group to this Pair if the group does not contain the Pair");
             }
         }
 
