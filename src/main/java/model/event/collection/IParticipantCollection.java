@@ -1,5 +1,7 @@
-package model;
+package model.event.collection;
 
+import model.event.Course;
+import model.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.person.Participant;
 
@@ -9,7 +11,7 @@ import java.util.*;
  * @author Finn Brecher
  */
 public interface IParticipantCollection extends List<Participant> {
-	IIdentNumber getIdentNumber();
+	IdentNumber getIdentNumber();
 	List<Participant> getParticipants();
 	Kitchen getKitchen();
 	double evaluate();

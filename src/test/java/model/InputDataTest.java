@@ -2,6 +2,9 @@ package model;
 
 import static org.junit.Assert.*;
 
+import model.event.InputData;
+import model.event.Location;
+import model.event.collection.Pair;
 import model.person.Participant;
 import org.junit.*;
 

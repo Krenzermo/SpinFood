@@ -1,5 +1,9 @@
-package model;
+package model.event.collection;
 
+import model.event.Course;
+import model.event.InputData;
+import model.event.Location;
+import model.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.kitchen.KitchenAvailability;
 import model.person.Participant;
@@ -35,7 +39,7 @@ public class Pair implements IParticipantCollection {
     }
 
     @Override
-    public IIdentNumber getIdentNumber() {
+    public IdentNumber getIdentNumber() {
         return null;
     }
 

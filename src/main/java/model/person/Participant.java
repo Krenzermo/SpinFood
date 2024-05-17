@@ -1,7 +1,7 @@
 package model.person;
 
 import model.kitchen.Kitchen;
-import model.Location;
+import model.event.Location;
 import model.kitchen.KitchenAvailability;
 
 /**

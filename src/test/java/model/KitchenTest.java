@@ -1,5 +1,7 @@
 package model;
 
+import model.event.InputData;
+import model.event.Location;
 import model.kitchen.Kitchen;
 import org.junit.Before;
 import org.junit.Test;

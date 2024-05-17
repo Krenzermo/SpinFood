@@ -1,4 +1,4 @@
-package model;
+package model.event;
 
 /**
  * @author Finn Brecher

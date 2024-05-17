@@ -1,7 +1,7 @@
 package model.kitchen;
 
-import model.InputData;
-import model.Location;
+import model.event.InputData;
+import model.event.Location;
 
 /**
  * @author Davide Piacenza
