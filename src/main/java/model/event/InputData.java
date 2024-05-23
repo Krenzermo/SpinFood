@@ -1,5 +1,6 @@
-package model;
+package model.event;
 
+import model.event.collection.Pair;
 import model.kitchen.KitchenAvailability;
 import model.person.FoodType;
 import model.person.Gender;

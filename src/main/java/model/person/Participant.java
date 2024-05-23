@@ -1,9 +1,9 @@
 package model.person;
 
-import model.IParticipantCollection;
-import model.Pair;
+import model.event.collection.IParticipantCollection;
+import model.event.collection.Pair;
 import model.kitchen.Kitchen;
-import model.Location;
+import model.event.Location;
 import model.kitchen.KitchenAvailability;
 
 import java.util.Objects;

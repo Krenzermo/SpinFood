@@ -1,8 +1,6 @@
 package controller;
 
-import model.InputData;
-
-import java.nio.file.Paths;
+import model.event.InputData;
 
 /**
  * @author Finn Brecher

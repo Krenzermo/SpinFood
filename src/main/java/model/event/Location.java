@@ -1,4 +1,4 @@
-package model;
+package model.event;
 
 import model.person.Participant;
 

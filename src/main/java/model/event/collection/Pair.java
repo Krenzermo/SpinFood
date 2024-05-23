@@ -1,8 +1,12 @@
-package model;
+package model.event.collection;
 
+import model.event.Location;
+import model.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.kitchen.KitchenAvailability;
 import model.person.Participant;
+import model.event.Course;
+import model.event.InputData;
 
 import java.util.List;
 import java.util.Objects;
@@ -35,17 +39,12 @@ public class Pair implements IParticipantCollection {
     }
 
     @Override
-    public IIdentNumber getIdentNumber() {
-        // TODO: this
+    public IdentNumber getIdentNumber() {
         return null;
     }
 
-    /**
-     * @return an unmodifiable list containing all instances of {@link Participant} in this Pair
-     */
     @Override
     public List<Participant> getParticipants() {
-        // TODO: maybe return a modifiable list instead
         return List.of(participants);
     }
 
@@ -70,7 +69,6 @@ public class Pair implements IParticipantCollection {
         return course;
     }
 
-    // TODO: change type to Group
     public List<IParticipantCollection> getGroups() {
         return List.of(groups);
     }
@@ -83,29 +81,13 @@ public class Pair implements IParticipantCollection {
         this.course = course;
     }
 
-    // TODO: change type to Group
     public void setGroups(IParticipantCollection[] groups) {
-        for (IParticipantCollection group: groups)  {
-            // TODO: may need to be changed once group is implemented.
-            if (!group.contains(this)) {
-                throw new RuntimeException("cannot assign a Group to this Pair if the group does not contain the Pair");
-            }
-        }
-
         if (groups.length != 3) {
             throw new RuntimeException("Groups must have exactly 3 pairs!");
         }
-
         this.groups = groups;
     }
 
-    /**
-     * Automatically assigns a kitchen to this Pair.
-     * When it is not clear whose kitchen should be chosen,
-     * the on closer to {@link InputData#getEventLocation()} gets chosen.
-     *
-     * @return the kitchen this Pair was assigned
-     */
     private Kitchen autoAssignKitchen() {
         if (KitchenAvailability.NO.equals(participants[0].isHasKitchen()) && KitchenAvailability.NO.equals(participants[1].isHasKitchen())) {
             throw new RuntimeException("No kitchen assigned to either participant!");
@@ -148,27 +130,14 @@ public class Pair implements IParticipantCollection {
 
     @Override
     public boolean add(Participant participant) {
-        if (contains(participant)) {
-            return false;
-        }
         //TODO: this
         return false;
     }
 
     @Override
     public boolean remove(Object o) {
-        if (!(o instanceof Participant)) {
-            return false;
-        }
         //TODO: this
         return false;
-    }
-
-    @Override
-    public Participant set(int index, Participant participant) {
-        // TODO: maybe this
-
-        return null;
     }
 
     @Override
@@ -191,7 +160,6 @@ public class Pair implements IParticipantCollection {
 
     @Override
     public String toString() {
-        // TODO: maybe add groups to output
-        return "@Pair{" + participants[0] + ", " + participants[1] + ", signedUpTogether: " + signedUpTogether + "}";
+        return "{Participant 1: " + participants[0].toString() + ", Participant 2: " + participants[1].toString() + "}";
     }
 }
