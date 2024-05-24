@@ -21,8 +21,7 @@ public class Pair implements ParticipantCollection {
     private final Participant[] participants = new Participant[2];
     private Kitchen kitchen;
     private Course course;
-    //TODO: change type to Group
-    private ParticipantCollection[] groups = new ParticipantCollection[3];
+    private Group[] groups = new Group[3];
     public final boolean signedUpTogether;
 
     private static final InputData inputData = InputData.getInstance();
@@ -71,8 +70,7 @@ public class Pair implements ParticipantCollection {
         return course;
     }
 
-    // TODO: change type to Group
-    public List<ParticipantCollection> getGroups() {
+    public List<Group> getGroups() {
         return List.of(groups);
     }
 
@@ -84,10 +82,9 @@ public class Pair implements ParticipantCollection {
         this.course = course;
     }
 
-    // TODO: change type to Group
-    public void setGroups(ParticipantCollection[] groups) {
+    public void setGroups(Group[] groups) {
         for (ParticipantCollection group: groups)  {
-            // TODO: may need to be changed once group is implemented.
+            // TODO: may need to be changed once Group is implemented.
             if (!group.contains(this)) {
                 throw new RuntimeException("cannot assign a Group to this Pair if the group does not contain the Pair");
             }
@@ -148,10 +145,19 @@ public class Pair implements ParticipantCollection {
         return participants[1].getKitchen();
     }
 
+    /**
+     * @param participant element whose presence in this collection is to be ensured
+     * @return {@code true} if the operation was successful, {@code false} otherwise
+     * @throws IllegalArgumentException if this ParticipantCollection already contains the Element
+     * @throws NullPointerException if the element is null
+     */
     @Override
     public boolean add(Participant participant) {
+        if (participant == null) {
+            throw new NullPointerException("Participant must not be null");
+        }
         if (contains(participant)) {
-            return false;
+            throw new IllegalArgumentException("This Pair already contains participant " + participant);
         }
         //TODO: this
         return false;

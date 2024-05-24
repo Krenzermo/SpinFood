@@ -1,5 +1,6 @@
 package model.person;
 
+import model.event.collection.Group;
 import model.event.collection.ParticipantCollection;
 import model.event.collection.Pair;
 import model.kitchen.Kitchen;
@@ -24,8 +25,7 @@ public class Participant {
     private final KitchenAvailability hasKitchen;
     private final Kitchen kitchen; // kitchen may be null
     private Pair pair;
-    //TODO: change type to Group
-    private ParticipantCollection[] groups = new ParticipantCollection[3];
+    private Group[] groups = new Group[3];
 
     public Participant(String id, Name name, FoodType foodType, byte age, Gender gender, KitchenAvailability hasKitchen, int kitchenStory, double kitchenLongitude, double kitchenLatitude) {
         this.id = id;
@@ -119,8 +119,7 @@ public class Participant {
         return pair;
     }
 
-    // TODO: change return type to Group
-    public ParticipantCollection[] getGroups() {
+    public Group[] getGroups() {
         return groups;
     }
 
@@ -131,14 +130,13 @@ public class Participant {
         this.pair = pair;
     }
 
-    // TODO: change type to Group
-    public void setGroups(ParticipantCollection[] groups) {
+    public void setGroups(Group[] groups) {
         if (pair == null) {
             throw new RuntimeException("cannot assign Groups to this Participant if no Pair is assigned.");
         }
 
-        for (ParticipantCollection group: groups)  {
-            // TODO: may need to be changed once group is implemented.
+        for (Group group: groups)  {
+            // TODO: may need to be changed once Group is implemented.
             if (!group.contains(pair)) {
                 throw new RuntimeException("cannot assign a Group to this Participant if the Group does not contain the Participants Pair.");
             }
