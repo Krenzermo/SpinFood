@@ -25,8 +25,10 @@ public class InputData {
     private final ArrayList<Pair> pairInputData;
     private Location eventLocation;
     // TODO: add more robust logic for receiving the data
-    private final String participantDataFilePath;
-    private final String eventLocationDataFilePath;
+    private String participantDataFilePath;
+    private String eventLocationDataFilePath;
+    private static final String participantsPathTemp = "src/main/java/data/teilnehmerliste.csv";
+    private static final String eventLocationPathTemp = "src/main/java/data/partylocation.csv";
 
     private static InputData inputData; // Singleton
 
@@ -48,9 +50,8 @@ public class InputData {
      * @return InputData instance
      */
     public static synchronized InputData getInstance() {
-        // TODO: make this prettier and more useful
         if (inputData == null) {
-            throw new RuntimeException("Paths have to be initialized: Use other getInstance method before using this");
+            new InputData(participantsPathTemp, eventLocationPathTemp);
         }
 
         return inputData;
@@ -79,7 +80,7 @@ public class InputData {
             eventLocation = new Location(latitude, longitude);        //initialize eventLocation
 
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 
