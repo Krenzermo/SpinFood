@@ -6,8 +6,11 @@ import model.person.FoodType;
 import model.person.Gender;
 import model.person.Name;
 import model.person.Participant;
+import model.kitchen.Kitchen;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.nio.file.Paths;
 
@@ -23,6 +26,8 @@ import java.nio.file.Paths;
 public class InputData {
     private final ArrayList<Participant> participantInputData;
     private final ArrayList<Pair> pairInputData;
+    private final ArrayList<Participant> participantSuccessorList; // List to store participants with overused kitchens
+    private final ArrayList<Pair> pairSuccessorList; // List to store pairs with overused kitchens
     private Location eventLocation;
     // TODO: add more robust logic for receiving the data
     private String participantDataFilePath;
@@ -30,16 +35,20 @@ public class InputData {
     private static final String participantsPathTemp = "src/main/java/data/teilnehmerliste.csv";
     private static final String eventLocationPathTemp = "src/main/java/data/partylocation.csv";
 
+    private final Map<Kitchen, Integer> kitchenCountMap; // Map to count kitchen usage
+
     private static InputData inputData; // Singleton
 
     /**
-     * constructor for InputDat
+     * constructor for InputData
      */
-
     private InputData(String participantDataFilePath, String eventLocationDataFilePath) {
         inputData = this;
         this.participantInputData = new ArrayList<>();
         this.pairInputData = new ArrayList<>();
+        this.participantSuccessorList = new ArrayList<>();
+        this.pairSuccessorList = new ArrayList<>();
+        this.kitchenCountMap = new HashMap<>();
         this.eventLocationDataFilePath = eventLocationDataFilePath;
         this.participantDataFilePath = participantDataFilePath;
         saveLocation();
@@ -98,7 +107,7 @@ public class InputData {
 
                 // extract data from the parts Array into temporary variables to build the participant objects
                 Data data = extractData(parts);
-                if (data.hasKitchen == KitchenAvailability.NO) {  //Initialize participant without kitchen
+                if (data.hasKitchen == KitchenAvailability.NO) {  // Initialize participant without kitchen
 
                     Participant participant = new Participant(data.id, data.name, data.foodType, data.age, data.gender);
                     participantInputData.add(participant);
@@ -106,12 +115,12 @@ public class InputData {
                 } else if (parts.length < 11) { // Singular participant (signed up alone)
 
                     Participant participant = new Participant(data.id, data.name, data.foodType, data.age, data.gender, data.hasKitchen, data.kitchenStory, data.kitchenLongitude, data.kitchenLatitude);
-                    participantInputData.add(participant);
+                    handleParticipantWithKitchen(participant);
 
                 } else { // Pair (signed up together)
 
                     Pair pair = getPair(data);
-                    pairInputData.add(pair);
+                    handlePairWithKitchen(pair);
 
                 }
             }
@@ -158,7 +167,7 @@ public class InputData {
                         int kitchenStory, double kitchenLongitude, double kitchenLatitude, String idTwo, Name nameTwo,
                         byte ageTwo, Gender genderTwo) {
         public Data(String id, Name name, FoodType foodType, byte age, Gender gender, KitchenAvailability hasKitchen,
-                       int kitchenStory, double kitchenLongitude, double kitchenLatitude) {
+                    int kitchenStory, double kitchenLongitude, double kitchenLatitude) {
             this(id, name, foodType, age, gender, hasKitchen, kitchenStory, kitchenLongitude, kitchenLatitude,
                     null, null, (byte) 0, null);
         }
@@ -220,6 +229,38 @@ public class InputData {
     }
 
     /**
+     * Handles a participant with a kitchen. Adds them to the appropriate list based on kitchen usage.
+     *
+     * @param participant The participant to handle.
+     */
+    private void handleParticipantWithKitchen(Participant participant) {
+        Kitchen kitchen = participant.getKitchen();
+        kitchenCountMap.put(kitchen, kitchenCountMap.getOrDefault(kitchen, 0) + 1);
+
+        if (kitchenCountMap.get(kitchen) > 3) {
+            participantSuccessorList.add(participant);
+        } else {
+            participantInputData.add(participant);
+        }
+    }
+
+    /**
+     * Handles a pair with a kitchen. Adds them to the appropriate list based on kitchen usage.
+     *
+     * @param pair The pair to handle.
+     */
+    private void handlePairWithKitchen(Pair pair) {
+        Kitchen kitchen = pair.getKitchen();
+        kitchenCountMap.put(kitchen, kitchenCountMap.getOrDefault(kitchen, 0) + 1);
+
+        if (kitchenCountMap.get(kitchen) > 3) {
+            pairSuccessorList.add(pair);
+        } else {
+            pairInputData.add(pair);
+        }
+    }
+
+    /**
      * method to get the event location
      * @return the Location eventLocation
      */
@@ -244,6 +285,22 @@ public class InputData {
     }
 
     /**
+     * method to get the list of participant successors from the inputData
+     * @return Arraylist of participant successors
+     */
+    public ArrayList<Participant> getParticipantSuccessorList() {
+        return participantSuccessorList;
+    }
+
+    /**
+     * method to get the list of pair successors from the inputData
+     * @return Arraylist of pair successors
+     */
+    public ArrayList<Pair> getPairSuccessorList() {
+        return pairSuccessorList;
+    }
+
+    /**
      * method to get the file path of the participants file.
      * @return a string that contains the file path of the Participants file
      */
@@ -263,12 +320,14 @@ public class InputData {
      * Returns a string representation of this object.
      *
      * @return A string containing information about participant data file path,
-     * event location data file path, event location, unpaired participants, and pairs.
+     * event location data file path, event location, unpaired participants, pairs, and successors.
      */
     public String toString() {
         return "ParticipantDataFilePath: " + participantDataFilePath + "\n" + "EventLocationDataFilePath: " +
                 eventLocationDataFilePath + "\n" +"EventLocation: " + eventLocation.toString() + "\n" +
-                "unpaired Participants:\n" + getParticipants() + "Pairs: \n" + getPairs();
+                "Unpaired Participants:\n" + getParticipants() + "Pairs: \n" + getPairs() +
+                "Participant Successors: \n" + getParticipantSuccessors() +
+                "Pair Successors: \n" + getPairSuccessors();
     }
 
     /**
@@ -276,12 +335,11 @@ public class InputData {
      * @return one string containing all unpaired participants
      */
     public String getParticipants() {
-        String participantString = "";
+        StringBuilder participantString = new StringBuilder();
         for (Participant participant : participantInputData) {
-
-            participantString = participantString + participant.toString() +"\n";
+            participantString.append(participant.toString()).append("\n");
         }
-        return participantString;
+        return participantString.toString();
     }
 
     /**
@@ -289,11 +347,43 @@ public class InputData {
      * @return one string containing all pairs
      */
     public String getPairs() {
-        String pairString = "";
+        StringBuilder pairString = new StringBuilder();
         for (Pair pair : pairInputData) {
-
-            pairString = pairString + pair.toString() +"\n";
+            pairString.append(pair.toString()).append("\n");
         }
-        return pairString;
+        return pairString.toString();
     }
+
+    /**
+     * helper method for toString to return one big string of all the participant successors
+     * @return one string containing all participant successors
+     */
+    public String getParticipantSuccessors() {
+        StringBuilder successorString = new StringBuilder();
+        for (Participant participant : participantSuccessorList) {
+            successorString.append(participant.toString()).append("\n");
+        }
+        return successorString.toString();
+    }
+
+    /**
+     * helper method for toString to return one big string of all the pair successors
+     * @return one string containing all pair successors
+     */
+    public String getPairSuccessors() {
+        StringBuilder successorString = new StringBuilder();
+        for (Pair pair : pairSuccessorList) {
+            successorString.append(pair.toString()).append("\n");
+        }
+        return successorString.toString();
+    }
+
+    /**
+     * method to get the kitchen count map
+     * @return the kitchen count map
+     */
+    public Map<Kitchen, Integer> getKitchenCountMap() {
+        return kitchenCountMap;
+    }
+
 }
