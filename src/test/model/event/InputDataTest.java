@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import model.event.collection.Pair;
 import model.kitchen.Kitchen;
+import model.kitchen.KitchenAvailability;
 import model.person.Participant;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
