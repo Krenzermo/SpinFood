@@ -17,7 +17,7 @@ public interface ParticipantCollection extends List<Participant> {
 	IdentNumber getIdentNumber();
 
 	/**
-	 * @return a list containing all instances of {@link Participant} in this ParticipantCollection
+	 * @return a modifiable List containing all instances of {@link Participant} in this ParticipantCollection
 	 */
 	List<Participant> getParticipants();
 
@@ -45,6 +45,8 @@ public interface ParticipantCollection extends List<Participant> {
 	/**
 	 * @param participant element whose presence in this collection is to be ensured
 	 * @return {@code true} if the operation was successful, {@code false} otherwise
+	 * @throws IllegalArgumentException if this list already contains the element and duplicates are not allowed
+	 * @throws NullPointerException if the element is null and this list does not permit null
 	 */
 	@Override
 	boolean add(Participant participant); // inherited from List interface
@@ -52,6 +54,8 @@ public interface ParticipantCollection extends List<Participant> {
 	/**
 	 * @param o element to be removed from this list, if present
 	 * @return {@code true} if the operation was successful, {@code false} otherwise
+	 * @throws NullPointerException if the element is null and this list does not permit null
+	 * @throws ClassCastException if the Object is not of type {@link Participant}
 	 */
 	@Override
 	boolean remove(Object o); // inherited from List interface
@@ -74,7 +78,9 @@ public interface ParticipantCollection extends List<Participant> {
 
 	/**
 	 * @param o element whose presence in this list is to be tested
-	 * @return {@code true} if the element is contained in this ParticipantCollection
+	 * @return {@code true} if the element is contained in this ParticipantCollection, {@link false} otherwise
+	 * @throws NullPointerException if the specified element is null and this collection does not permit null
+	 * @throws ClassCastException if the Object is not of type {@link Participant}
 	 */
 	@Override
 	default boolean contains(Object o) {
@@ -85,7 +91,7 @@ public interface ParticipantCollection extends List<Participant> {
 	}
 
 	/**
-	 * @return an Iterator over all Participants in this ParticipantCollection
+	 * @return an Iterator over all instances of {@link Participant} in this ParticipantCollection
 	 */
 	@Override
 	default Iterator<Participant> iterator() {
@@ -93,7 +99,7 @@ public interface ParticipantCollection extends List<Participant> {
 	}
 
 	/**
-	 * @return an array containing all Participants int this ParticipantCollection
+	 * @return an array containing all instances of {@link Participant} in this ParticipantCollection
 	 */
 	@Override
 	default Object[] toArray() {
@@ -106,6 +112,9 @@ public interface ParticipantCollection extends List<Participant> {
 	 *            same runtime type is allocated for this purpose.
 	 * @param <T> the type of the array
 	 * @return an array containing the elements of this list
+	 * @throws ArrayStoreException if the runtime type of the specified array
+	 *          is not a supertype of the runtime type of every element in this list
+	 * @throws NullPointerException if the specified array is null
 	 */
 	@Override
 	default <T> T[] toArray(T[] a) {
@@ -114,7 +123,9 @@ public interface ParticipantCollection extends List<Participant> {
 
 	/**
 	 * @param c collection to be checked for containment in this list
-	 * @return {@code true} if this ParticipantCollection contains all elements of c
+	 * @return {@code true} if this ParticipantCollection contains all elements of c, {@link false} otherwise
+	 * @throws ClassCastException if the types of one or more elements
+	 *          in the specified collection are incompatible with this list
 	 */
 	@Override
 	default boolean containsAll(Collection<?> c) {
@@ -128,6 +139,8 @@ public interface ParticipantCollection extends List<Participant> {
 	 * @return {@code true} if this list changed as a result of the call
 	 *
 	 * @throws UnsupportedOperationException this operation is not implemented
+	 * @throws NullPointerException if the specified element is null and this collection does not permit null
+	 * @throws IllegalArgumentException if this list already contains an element and duplicates are not allowed
 	 */
 	@Override
 	default boolean addAll(Collection<? extends Participant> c) {
@@ -140,9 +153,12 @@ public interface ParticipantCollection extends List<Participant> {
 	 * @param index index at which to insert the first element from the
 	 *              specified collection
 	 * @param c     collection containing elements to be added to this list
-	 * @return {@code true} if this list changed as a result of the call
+	 * @return {@code true} if this list changed as a result of the call, {@code false} otherwise
 	 *
 	 * @throws UnsupportedOperationException this operation is not implemented
+	 * @throws NullPointerException if the specified element is null and this collection does not permit null
+	 * @throws IllegalArgumentException if this list already contains an element and duplicates are not allowed
+	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
 	default boolean addAll(int index, Collection<? extends Participant> c) {
@@ -156,6 +172,7 @@ public interface ParticipantCollection extends List<Participant> {
 	 * @return {@code true} if this list changed as a result of the call
 	 *
 	 * @throws UnsupportedOperationException this operation is not implemented
+	 * @throws NullPointerException if the specified element is null and this collection does not permit null
 	 */
 	@Override
 	default boolean removeAll(Collection<?> c) {
@@ -169,6 +186,7 @@ public interface ParticipantCollection extends List<Participant> {
 	 * @return {@code true} if this list changed as a result of the call
 	 *
 	 * @throws UnsupportedOperationException this operation is not implemented
+	 * @throws NullPointerException if any element is null and this collection does not permit null
 	 */
 	@Override
 	default boolean retainAll(Collection<?> c) {
@@ -188,6 +206,7 @@ public interface ParticipantCollection extends List<Participant> {
 	/**
 	 * @param index index of the element to return
 	 * @return the element at the specified position in this list
+	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
 	default Participant get(int index) {
@@ -202,6 +221,8 @@ public interface ParticipantCollection extends List<Participant> {
 	 * @return the element previously at the specified position
 	 *
 	 * @throws UnsupportedOperationException this operation is not implemented
+	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
+	 * @throws NullPointerException if the specified element is null and this collection does not permit null
 	 */
 	@Override
 	default Participant set(int index, Participant element) {
@@ -215,6 +236,9 @@ public interface ParticipantCollection extends List<Participant> {
 	 * @param element element to be inserted
 	 *
 	 * @throws UnsupportedOperationException this operation is not implemented
+	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
+	 * @throws NullPointerException if the specified element is null and this collection does not permit null
+	 * @throws IllegalArgumentException if this list already contains the element and duplicates are not allowed
 	 */
 	@Override
 	default void add(int index, Participant element) {
@@ -228,6 +252,7 @@ public interface ParticipantCollection extends List<Participant> {
 	 * @return the element previously at the specified position
 	 *
 	 * @throws UnsupportedOperationException this operation is not implemented
+	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
 	default Participant remove(int index) {
@@ -242,6 +267,7 @@ public interface ParticipantCollection extends List<Participant> {
 	 *          or -1 if this list does not contain the element
 	 *
 	 * @throws UnsupportedOperationException this operation is not implemented
+	 * @throws NullPointerException if the specified element is null and this collection does not permit null
 	 */
 	@Override
 	default int indexOf(Object o) {
@@ -256,6 +282,7 @@ public interface ParticipantCollection extends List<Participant> {
 	 *          this list, or -1 if this list does not contain the element
 	 *
 	 * @throws UnsupportedOperationException this operation is not implemented
+	 * @throws NullPointerException if the specified element is null and this collection does not permit null
 	 */
 	@Override
 	default int lastIndexOf(Object o) {
@@ -273,8 +300,9 @@ public interface ParticipantCollection extends List<Participant> {
 	/**
 	 * @param index index of the first element to be returned from the
 	 *              list iterator (by a call to {@link ListIterator#next next})
-	 * @return  a list iterator over the elements in this list (in proper equence),
+	 * @return  a list iterator over the elements in this list (in proper sequence),
 	 *          starting at the specified position in the ParticipantCollection
+	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
 	default ListIterator<Participant> listIterator(int index) {
@@ -285,6 +313,7 @@ public interface ParticipantCollection extends List<Participant> {
 	 * @param fromIndex low endpoint (inclusive) of the subList
 	 * @param toIndex   high endpoint (exclusive) of the subList
 	 * @return a view of the specified range within this ParticipantCollection
+	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
 	default List<Participant> subList(int fromIndex, int toIndex) {
