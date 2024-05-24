@@ -16,13 +16,13 @@ import java.util.Objects;
  * @author Davide Piacenza
  * @author Daniel Hinkelmann
  */
-public class Pair implements IParticipantCollection {
+public class Pair implements ParticipantCollection {
 
     private final Participant[] participants = new Participant[2];
     private Kitchen kitchen;
     private Course course;
     //TODO: change type to Group
-    private IParticipantCollection[] groups = new IParticipantCollection[3];
+    private ParticipantCollection[] groups = new ParticipantCollection[3];
     public final boolean signedUpTogether;
 
     private static final InputData inputData = InputData.getInstance();
@@ -40,11 +40,13 @@ public class Pair implements IParticipantCollection {
 
     @Override
     public IdentNumber getIdentNumber() {
+        // TODO: this
         return null;
     }
 
     @Override
     public List<Participant> getParticipants() {
+        // TODO: maybe return a modifiable List instead
         return List.of(participants);
     }
 
@@ -69,7 +71,8 @@ public class Pair implements IParticipantCollection {
         return course;
     }
 
-    public List<IParticipantCollection> getGroups() {
+    // TODO: change type to Group
+    public List<ParticipantCollection> getGroups() {
         return List.of(groups);
     }
 
@@ -81,13 +84,30 @@ public class Pair implements IParticipantCollection {
         this.course = course;
     }
 
-    public void setGroups(IParticipantCollection[] groups) {
+    // TODO: change type to Group
+    public void setGroups(ParticipantCollection[] groups) {
+        for (ParticipantCollection group: groups)  {
+            // TODO: may need to be changed once group is implemented.
+            if (!group.contains(this)) {
+                throw new RuntimeException("cannot assign a Group to this Pair if the group does not contain the Pair");
+            }
+        }
+
         if (groups.length != 3) {
             throw new RuntimeException("Groups must have exactly 3 pairs!");
         }
+
         this.groups = groups;
+
     }
 
+    /**
+     * Automatically assigns a kitchen to this Pair.
+     * When it is not clear whose kitchen should be chosen,
+     * the on closer to {@link InputData#getEventLocation()} gets chosen.
+     *
+     * @return the kitchen this Pair was assigned
+     */
     private Kitchen autoAssignKitchen() {
         if (KitchenAvailability.NO.equals(participants[0].isHasKitchen()) && KitchenAvailability.NO.equals(participants[1].isHasKitchen())) {
             throw new RuntimeException("No kitchen assigned to either participant!");
@@ -130,14 +150,27 @@ public class Pair implements IParticipantCollection {
 
     @Override
     public boolean add(Participant participant) {
+        if (contains(participant)) {
+            return false;
+        }
         //TODO: this
         return false;
     }
 
     @Override
     public boolean remove(Object o) {
+        if (!(o instanceof Participant)) {
+            return false;
+        }
         //TODO: this
         return false;
+    }
+
+    @Override
+    public Participant set(int index, Participant participant) {
+        // TODO: maybe this
+
+        return null;
     }
 
     @Override
