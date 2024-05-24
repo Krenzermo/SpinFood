@@ -445,11 +445,15 @@ public interface ParticipantCollectionList extends List<ParticipantCollection> {
 	 * @return the index of the first occurrence of the specified element in this list,
 	 *          or -1 if this list does not contain the element
 	 * @throws NullPointerException if the specified element is null
+	 * @throws ClassCastException if the type of the specified element is incompatible with this list
 	 */
 	@Override
 	default int indexOf(Object o) {
-		if (o == null) {
-			throw new NullPointerException("ParticipantCollection must not be null!");
+		checkCollectionIsNotNull((ParticipantCollection) o);
+		try {
+			checkType((ParticipantCollection) o);
+		} catch (IllegalArgumentException e) {
+			throw new ClassCastException(e.getMessage());
 		}
 		return getParticipantCollections().indexOf(o);
 	}
@@ -459,11 +463,15 @@ public interface ParticipantCollectionList extends List<ParticipantCollection> {
 	 * @return the index of the last occurrence of the specified element in
 	 *          this list, or -1 if this list does not contain the element
 	 * @throws NullPointerException if the specified element is null
+	 * @throws ClassCastException if the type of the specified element is incompatible with this list
 	 */
 	@Override
 	default int lastIndexOf(Object o) {
-		if (o == null) {
-			throw new NullPointerException("ParticipantCollection must not be null!");
+		checkCollectionIsNotNull((ParticipantCollection) o);
+		try {
+			checkType((ParticipantCollection) o);
+		} catch (IllegalArgumentException e) {
+			throw new ClassCastException(e.getMessage());
 		}
 		return getParticipantCollections().lastIndexOf(o);
 	}
