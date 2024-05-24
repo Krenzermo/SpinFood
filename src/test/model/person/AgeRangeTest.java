@@ -1,8 +1,8 @@
-package model;
+package model.person;
 
-import model.person.AgeRange;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Davide Piacenza

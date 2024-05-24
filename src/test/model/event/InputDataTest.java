@@ -1,12 +1,11 @@
-package model;
+package model.event;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-import model.event.InputData;
-import model.event.Location;
 import model.event.collection.Pair;
 import model.person.Participant;
-import org.junit.*;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
 
@@ -15,12 +14,11 @@ import java.util.ArrayList;
  * @author Daniel Hinkelmann
  */
 public class InputDataTest {
-    private InputData inputData;
+    private static InputData inputData;
 
-    @Before
-    public void setUp() {
-
-        inputData = InputData.getInstance("src/test/java/testData/teilnehmerlisteTest.csv", "src/test/java/testData/partylocationTest.csv");
+    @BeforeAll
+    public static void setUp() {
+        inputData = InputData.getInstance();
     }
 
     @Test

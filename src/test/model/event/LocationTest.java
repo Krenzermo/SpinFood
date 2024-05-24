@@ -1,6 +1,5 @@
-package model;
+package model.event;
 
-import model.event.Location;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
