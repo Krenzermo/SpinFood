@@ -2,30 +2,42 @@ package model;
 
 import static org.junit.Assert.*;
 
+import model.kitchen.Kitchen;
+import model.kitchen.KitchenAvailability;
 import model.person.Participant;
 import org.junit.*;
 
 import java.util.ArrayList;
 
 /**
- * @author Davide Piacenza
- * @author Daniel Hinkelmann
+ * Test class for InputData
+ *
+ * This class contains unit tests for the InputData class, which ensures that participants, pairs, and event locations are
+ * correctly loaded from the provided data files, and verifies that successors are appropriately handled when kitchens are overused.
+ *
+ * @Author: Davide Piacenza
+ * @Author: Daniel Hinkelmann
  */
 public class InputDataTest {
     private InputData inputData;
 
     @Before
     public void setUp() {
-
         inputData = InputData.getInstance("src/test/java/testData/teilnehmerlisteTest.csv", "src/test/java/testData/partylocationTest.csv");
     }
 
+    /**
+     * Tests if the event location is correctly loaded from the data file.
+     */
     @Test
     public void testEventLocationLoading() {
         Location expectedLocation = new Location(50.5909317660173, 8.6746166676233); // Expected values based on test data
         assertEquals(expectedLocation, InputData.getInstance().getEventLocation());
     }
 
+    /**
+     * Tests if participants are correctly loaded from the data file.
+     */
     @Test
     public void testParticipantsLoading() {
         ArrayList<Participant> participants = inputData.getParticipantInputData();
@@ -33,6 +45,9 @@ public class InputDataTest {
         assertEquals("Person1", participants.get(0).getName().firstName());
     }
 
+    /**
+     * Tests if pairs are correctly loaded from the data file.
+     */
     @Test
     public void testPairsLoading() {
         ArrayList<Pair> pairs = inputData.getPairInputData();
@@ -40,6 +55,9 @@ public class InputDataTest {
         assertTrue(pairs.get(0).signedUpTogether);
     }
 
+    /**
+     * Tests if getter methods return non-null values.
+     */
     @Test
     public void testGetMethods() {
         assertNotNull(inputData.getEventLocationDataFilePath());
@@ -48,6 +66,9 @@ public class InputDataTest {
         assertNotNull(inputData.getPairInputData());
     }
 
+    /**
+     * Tests if pairs are correctly assigned and their participants are distinct.
+     */
     @Test
     public void testCorrectPairAssignment() {
         ArrayList<Pair> pairs = inputData.getPairInputData();
@@ -57,6 +78,9 @@ public class InputDataTest {
         }
     }
 
+    /**
+     * Tests if participants have valid data values.
+     */
     @Test
     public void testDataValueValidation() {
         ArrayList<Participant> participants = inputData.getParticipantInputData();
@@ -64,6 +88,53 @@ public class InputDataTest {
             assertNotNull(participant.getGender());
             assertNotNull(participant.getFoodType());
             assertTrue(participant.getAge().value > 0);  // Assuming age should be positive
+        }
+    }
+
+    /**
+     * Tests if participants with overused kitchens are correctly added to the successor list.
+     */
+    @Test
+    public void testParticipantSuccessorLoading() {
+        ArrayList<Participant> successorParticipants = inputData.getParticipantSuccessorList();
+        assertFalse(successorParticipants.isEmpty());
+        for (Participant participant : successorParticipants) {
+            assertTrue(participant.isHasKitchen() != KitchenAvailability.NO);
+        }
+    }
+
+    /**
+     * Tests if pairs with overused kitchens are correctly added to the successor list.
+     */
+    @Test
+    public void testPairSuccessorLoading() {
+        ArrayList<Pair> successorPairs = inputData.getPairSuccessorList();
+        assertFalse(successorPairs.isEmpty());
+        for (Pair pair : successorPairs) {
+            assertNotNull(pair.getKitchen());
+            assertTrue(pair.signedUpTogether);
+        }
+    }
+
+    /**
+     * Tests if participants and pairs are correctly assigned to the successor list when their kitchens are used more than three times.
+     */
+    @Test
+    public void testCorrectSuccessorAssignment() {
+        ArrayList<Participant> successorParticipants = inputData.getParticipantSuccessorList();
+        ArrayList<Pair> successorPairs = inputData.getPairSuccessorList();
+
+        // Check that all successors have kitchens that are used more than 3 times
+        for (Participant participant : successorParticipants) {
+            Kitchen kitchen = participant.getKitchen();
+            assertNotNull(kitchen);
+            assertTrue(inputData.getKitchenCountMap().get(kitchen) > 3);
+        }
+
+        for (Pair pair : successorPairs) {
+            Kitchen kitchen = pair.getKitchen();
+            assertNotNull(kitchen);
+            assertTrue(inputData.getKitchenCountMap().get(kitchen) > 3);
         }
     }
 }
