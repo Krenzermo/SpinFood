@@ -20,8 +20,6 @@ public class Main {
 
 		PairingWeights pairingWeights = new PairingWeights(1,1,1);
 		PairList pairList = new PairList(inputData,pairingWeights);
-		System.out.println(pairList.getPairs());
-		System.out.println(pairList.getSuccessors());
 		System.out.println(pairList);
 
 	}

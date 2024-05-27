@@ -59,7 +59,7 @@ public class PairList implements ParticipantCollectionList {
         successors.addAll(participantList);
         return bestPairList;
     }
-
+// requires List ordered by kitchen
     public double compareKitchen(Participant participant1, Participant testedParticipant){
         if (participant1.isHasKitchen() == KitchenAvailability.YES){
             if (testedParticipant.isHasKitchen() == KitchenAvailability.YES && participant1.getKitchen().equals(testedParticipant.getKitchen())) {
@@ -68,11 +68,21 @@ public class PairList implements ParticipantCollectionList {
                 return 0;
             }
 
-        } else {
+        } else if(participant1.isHasKitchen() == KitchenAvailability.NO) {
             if (testedParticipant.isHasKitchen() == KitchenAvailability.YES){
                 return 0;
+            } else if (testedParticipant.isHasKitchen() == KitchenAvailability.MAYBE) {
+                return -50;
             } else {
                 return -1000;
+            }
+        } else {
+            if (testedParticipant.isHasKitchen() == KitchenAvailability.YES) {
+                return 0;
+            } else {
+                return -50;
+
+
             }
         }
     }   //TODO was passiert wenn wir maybe einbinden wollen? einfach successors mit maybe als yes neu durchlaufen lassen?
