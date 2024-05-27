@@ -1,7 +1,7 @@
 package model.kitchen;
 
-import model.InputData;
-import model.Location;
+import model.event.InputData;
+import model.event.Location;
 
 /**
  * @author Davide Piacenza
@@ -16,7 +16,7 @@ public record Kitchen(Location location, int story){
 
     @Override
     public String toString() {
-        return "Location: " + location + ", Story: " + story;
+        return "@Kitchen{" + location + ", Story: " + story + "}";
     }
 
     public double compareTo(Kitchen o) {

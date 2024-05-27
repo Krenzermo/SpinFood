@@ -1,18 +1,22 @@
-package model;
+package model.kitchen;
 
-import model.kitchen.Kitchen;
-import org.junit.Before;
-import org.junit.Test;
-import static org.junit.Assert.*;
+import model.event.InputData;
+import model.event.Location;
+
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
+
 
 /**
  * @author Ole Krenzer
  * @author Daniel Hinkelmann
  */
 public class KitchenTest {
-    @Before
-    public void setUp() {
-        InputData inputData = InputData.getInstance("src/test/java/testData/teilnehmerlisteTest.csv", "src/test/java/testData/partylocationTest.csv");
+    @BeforeAll
+    public static void setUp() {
+        InputData inputData = InputData.getInstance();
     }
     @Test
     public void testConstruction() {
@@ -28,7 +32,7 @@ public class KitchenTest {
         Location location = new Location(-8.668413178974852, 50.574996578974854); // Example location values
         int story = 0;
         Kitchen kitchen = new Kitchen(location, story);
-        assertEquals("Location: " + location + ", Story: " + story,kitchen.toString());
+        assertEquals("@Kitchen{" + location + ", Story: " + story + "}", kitchen.toString());
     }
 
     @Test
