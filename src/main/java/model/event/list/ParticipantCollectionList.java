@@ -385,7 +385,7 @@ public interface ParticipantCollectionList extends List<ParticipantCollection> {
 	}
 
 	/**
-	 * Removes all the elements from this List (optional operation).
+	 * Removes all the elements from this List.
 	 * The list will be empty after this call returns.
 	 */
 	@Override

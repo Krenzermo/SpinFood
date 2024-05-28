@@ -15,6 +15,11 @@ public class PairList implements ParticipantCollectionList {
         this.pairs = new ArrayList<>();
     }
 
+    public PairList(List<ParticipantCollection> pairs) {
+        this();
+        this.pairs.addAll(pairs);
+    }
+
     /**
      * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollectionList
      */
@@ -36,7 +41,7 @@ public class PairList implements ParticipantCollectionList {
     /**
      * This method is used to change the underlying data structure.
      * It is used by the default implementations of {@link #add}, {@link #remove}, {@link #addUnsafe},
-     * {@link #addAll} and {@link #removeAll}methods.
+     * {@link #addAll} and {@link #removeAll} methods.
      *
      * @return the data structure that stores the instances of {@link ParticipantCollection}
      */
