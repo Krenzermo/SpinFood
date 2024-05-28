@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-//TODO identnumber methoden anders verbauen? gewichtung identnumber anpassen(insbesondere meat-none paarung die gewünscht ist)? gewichtung paarsortierung anpassen? alles genderweight >0.5 ergeben gleiches ergebnis
+//TODO identnumber methoden anders verbauen? gewichtung identnumber anpassen(insbesondere meat-none paarung die gewünscht ist)? gewichtung paarsortierung anpassen?
 //TODO in pair mit autoassign kitchen den küchenbesitzer festhalten? falls nötig maybe küchenwahl verbessern,   habe identnummer nicht mehr protected gemacht und doubles, ka
 public class PairList implements ParticipantCollectionList {
     private IdentNumber identNumber;
@@ -93,9 +93,9 @@ public class PairList implements ParticipantCollectionList {
     }   //TODO was passiert wenn wir maybe einbinden wollen? einfach successors mit maybe als yes neu durchlaufen lassen?
     public double compareGender(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights){
         if(participant1.getGender().equals(testedParticipant.getGender())) {
-            return -pairingWeights.getPairGenderDifferenceWeight();
+            return 0;
         } else {
-            return pairingWeights.getPairGenderDifferenceWeight();
+            return 0.5 * pairingWeights.getPairGenderDifferenceWeight();
         }
     }
 
