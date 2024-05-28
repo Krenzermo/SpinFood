@@ -1,5 +1,7 @@
 package model.identNumbers;
 
+import model.event.collection.Pair;
+import model.event.collection.ParticipantCollection;
 import model.event.list.GroupList;
 import model.event.list.PairList;
 import model.event.list.ParticipantCollectionList;
@@ -15,27 +17,24 @@ public abstract class IdentNumber {
 	//TODO: this
     private int numElems;
     private int numSuccessors;
-    private int genderDiversity;
-    private int ageDifference;
-    private int preferenceDeviation;
+    protected int genderDiversity;
+    protected int ageDifference;
+    protected int preferenceDeviation;
 
     protected IdentNumber(ParticipantCollectionList participantCollection) {
+        numElems = calcNumElems(participantCollection);
+        numElems = calcNumSuccessors(participantCollection);
     }
 
-    /** Calculates the number of Participants in this Collection
+    /** Calculates the number of ParticipantCollections in this List
      *
      * @param participantCollection The List
      * @return Number of Participants
      */
     private int calcNumElems(ParticipantCollectionList participantCollection) {
-        List<Participant> list;
-        if (participantCollection instanceof PairList pairList) {
-            list = pairList.getPairs();
-        } else {
-            GroupList groupList = (GroupList) participantCollection;
-            list = groupList.getGroups();
-        }
-
+        List<? extends ParticipantCollection> list;
+        list = participantCollection instanceof PairList pairList ? pairList.getPairs() :
+                                                                    ((GroupList)participantCollection).getGroups();
         return list.size();
     }
 
@@ -46,13 +45,8 @@ public abstract class IdentNumber {
      */
     private int calcNumSuccessors(ParticipantCollectionList participantCollection) {
         List<Participant> list;
-        if (participantCollection instanceof PairList pairList) {
-            list = pairList.getSuccessors();
-        } else {
-            GroupList groupList = (GroupList) participantCollection;
-            list = groupList.getSuccessors();
-        }
-
+        list = participantCollection instanceof PairList pairList ? pairList.getSuccessors() :
+                                                                    ((GroupList)participantCollection).getSuccessors();
         return list.size();
     }
 

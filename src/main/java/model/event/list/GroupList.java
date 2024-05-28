@@ -3,6 +3,7 @@ package model.event.list;
 import model.event.collection.Group;
 import model.event.collection.ParticipantCollection;
 import model.identNumbers.IdentNumber;
+import model.person.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,5 +56,14 @@ public class GroupList implements ParticipantCollectionList {
 		if (!collection.getClass().equals(Group.class)) {
 			throw new IllegalArgumentException("Collection is not a Group");
 		}
+	}
+
+	public List<ParticipantCollection> getGroups() {
+		return groups;
+	}
+
+	public List<Participant> getSuccessors() {
+		//todo
+		return null;
 	}
 }
