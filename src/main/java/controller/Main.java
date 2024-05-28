@@ -21,6 +21,7 @@ public class Main {
 		PairingWeights pairingWeights = new PairingWeights(1,1,1);
 		PairList pairList = new PairList(inputData,pairingWeights);
 		System.out.println(pairList);
+		System.out.println(pairList.getIdentNumber());
 
 	}
 }

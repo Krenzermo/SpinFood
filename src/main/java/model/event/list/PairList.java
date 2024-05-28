@@ -12,6 +12,9 @@ import model.person.Participant;
 import java.util.ArrayList;
 import java.util.List;
 
+
+//TODO identnumber methoden anders verbauen? gewichtung identnumber anpassen(insbesondere meat-none paarung die gewünscht ist)? gewichtung paarsortierung anpassen? alles genderweight >0.5 ergeben gleiches ergebnis
+//TODO in pair mit autoassign kitchen den küchenbesitzer festhalten? falls nötig maybe küchenwahl verbessern,   habe identnummer nicht mehr protected gemacht und doubles, ka
 public class PairList implements ParticipantCollectionList {
     private IdentNumber identNumber;
     private final ArrayList<Pair> pairs;
@@ -19,9 +22,11 @@ public class PairList implements ParticipantCollectionList {
 
     public PairList(InputData inputData, PairingWeights pairingWeights) {
 
-        ArrayList<Participant> sortedParticipantList= sortByKitchen(inputData.getParticipantInputData());
+        ArrayList<Participant> sortedParticipantList= sortParticipants(inputData.getParticipantInputData());
 
-        this.pairs = buildBestPairs(sortedParticipantList, pairingWeights);
+        this.pairs = (buildBestPairs(sortedParticipantList, pairingWeights));
+        pairs.addAll(inputData.getPairInputData());
+        this.identNumber = deriveIdentNumber(pairs);
 
     }
     public ArrayList<Pair> buildBestPairs(ArrayList<Participant> participantList, PairingWeights pairingWeights){
@@ -93,6 +98,7 @@ public class PairList implements ParticipantCollectionList {
             return pairingWeights.getPairGenderDifferenceWeight();
         }
     }
+
     public double compareFoodPreference(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights){
         if(participant1.getFoodType() == FoodType.MEAT){
             if (testedParticipant.getFoodType() == FoodType.MEAT) {
@@ -138,37 +144,47 @@ public class PairList implements ParticipantCollectionList {
 
     }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-    public ArrayList<Participant> sortByKitchen(ArrayList<Participant> participantList) {
+    public ArrayList<Participant> sortParticipants(ArrayList<Participant> participantList) {
+        ArrayList<Participant> sortedNoKitchenList = new ArrayList<>();
+        ArrayList<Participant> sortedMaybeKitchenList = new ArrayList<>();
+        ArrayList<Participant> sortedYesKitchenList = new ArrayList<>();
         ArrayList<Participant> sortedParticipantList = new ArrayList<>();
 
         for (Participant participant : participantList) {
             if (participant.isHasKitchen() == KitchenAvailability.NO) {
-                sortedParticipantList.add(participant);
+                sortedNoKitchenList.add(participant);
             }
         }
 
         for (Participant participant : participantList) {
             if (participant.isHasKitchen() == KitchenAvailability.MAYBE) {
-                sortedParticipantList.add(participant);
+                sortedMaybeKitchenList.add(participant);
             }
         }
 
         for (Participant participant : participantList) {
             if (participant.isHasKitchen() == KitchenAvailability.YES) {
+                sortedYesKitchenList.add(participant);
+            }
+        }
+
+        sortedParticipantList.addAll(sortByFoodType(sortedNoKitchenList));
+        sortedParticipantList.addAll(sortByFoodType(sortedMaybeKitchenList));
+        sortedParticipantList.addAll(sortByFoodType(sortedYesKitchenList));
+        return sortedParticipantList;
+    }
+
+    public ArrayList<Participant> sortByFoodType(ArrayList<Participant> participantList) {
+        ArrayList<Participant> sortedParticipantList = new ArrayList<>();
+
+        for (Participant participant : participantList) {
+            if (participant.getFoodType() != FoodType.NONE) {
+                sortedParticipantList.add(participant);
+            }
+        }
+
+        for (Participant participant : participantList) {
+            if (participant.getFoodType() == FoodType.NONE) {
                 sortedParticipantList.add(participant);
             }
         }
@@ -184,13 +200,51 @@ public class PairList implements ParticipantCollectionList {
         return pairs;
     }
 
+    public IdentNumber deriveIdentNumber (ArrayList<Pair> pairs) {
+        int numElems = pairs.size();
+        int numSuccessors = successors.size();
+        double genderDiversity = calculateGenderDiversity(pairs);
+        double ageDifference = calculateAverageAgeDifference(pairs);
+        double preferenceDeviation = calculateFoodPreferenceDeviation(pairs);
+
+
+        return new IdentNumber(numElems, numSuccessors,genderDiversity, ageDifference, preferenceDeviation);
+    }
+
+    private double calculateGenderDiversity(ArrayList<Pair> pairs) {
+        double diversityCount = 0;
+        for (Pair pair : pairs) {
+            if (!pair.getParticipants().get(0).getGender().equals(pair.getParticipants().get(1).getGender())) {
+                diversityCount++;
+            }
+        }
+        return diversityCount/pairs.size();
+    }
+
+    private double calculateAverageAgeDifference(ArrayList<Pair> pairs) {
+        double totalAgeDifference = 0;
+        for (Pair pair : pairs) {
+            totalAgeDifference += pair.getParticipants().get(0).getAge().getAgeDifference(pair.getParticipants().get(1).getAge());
+        }
+        return !pairs.isEmpty() ? totalAgeDifference / pairs.size(): 0;
+    }
+
+    private double calculateFoodPreferenceDeviation(ArrayList<Pair> pairs) {
+        double deviationCount = 0;
+        for (Pair pair : pairs) {
+            if (pair.getParticipants().get(0).getFoodType() != pair.getParticipants().get(1).getFoodType()) {
+                deviationCount++;
+            }
+        }
+        return deviationCount/pairs.size();
+    }
+
     /**
      * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollectionList
      */
     @Override
     public IdentNumber getIdentNumber() {
-        // TODO: this
-        return null;
+        return identNumber;
     }
 
     /**

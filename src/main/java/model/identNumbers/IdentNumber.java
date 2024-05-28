@@ -4,20 +4,30 @@ package model.identNumbers;
  * @author Finn Brecher
  * @author Daniel Hinkelmann
  */
-public abstract class IdentNumber {
+public class IdentNumber {
 	//TODO: this
     private int numElems;
     private int numSuccessors;
-    private int genderDiversity;
-    private int ageDifference;
-    private int preferenceDeviation;
+    private double genderDiversity;
+    private double ageDifference;
+    private double preferenceDeviation;
 
-    protected IdentNumber(int numElems, int numSuccessors, int genderDiversity, int ageDifference, int preferenceDeviation) {
+    public IdentNumber(int numElems, int numSuccessors, double genderDiversity, double ageDifference, double preferenceDeviation) {
         this.numElems = numElems;
         this.numSuccessors = numSuccessors;
         this.genderDiversity = genderDiversity;
         this.ageDifference = ageDifference;
         this.preferenceDeviation = preferenceDeviation;
+    }
+
+    public String toString() {
+        return "IdentNumber {" +
+                "\nnumElems=" + numElems +
+                "\nnumSuccessors=" + numSuccessors +
+                "\ngenderDiversity(higher=better)=" + genderDiversity +
+                "\nageDifference(lower=better)=" + ageDifference +
+                "\npreferenceDeviation(lower=better)=" + preferenceDeviation +
+                "\n}";
     }
 
 
