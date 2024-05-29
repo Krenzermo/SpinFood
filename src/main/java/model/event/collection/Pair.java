@@ -201,4 +201,8 @@ public class Pair implements ParticipantCollection {
     public String toString() {
         return "{Participant 1: " + participants[0].toString() + ", Participant 2: " + participants[1].toString() + "}";
     }
+
+    public int getPreferenceDeviation() {
+        return participants[0].getFoodType().deviation.apply(participants[1].getFoodType());
+    }
 }

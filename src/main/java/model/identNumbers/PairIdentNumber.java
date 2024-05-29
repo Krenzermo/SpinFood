@@ -42,7 +42,7 @@ public class PairIdentNumber extends IdentNumber{
 
     @Override
     protected int calcPreferenceDeviation(ParticipantCollectionList participantCollection) {
-        //todo
-        return 0;
+        PairList pairList = (PairList) participantCollection;
+        return pairList.getPairs().stream().mapToInt(Pair::getPreferenceDeviation).sum() / numElems;
     }
 }

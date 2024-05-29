@@ -15,8 +15,8 @@ import java.util.List;
  */
 public abstract class IdentNumber {
 	//TODO: this
-    private int numElems;
-    private int numSuccessors;
+    protected int numElems;
+    protected int numSuccessors;
     protected int genderDiversity;
     protected int ageDifference;
     protected int preferenceDeviation;
