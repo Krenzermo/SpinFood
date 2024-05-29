@@ -57,7 +57,7 @@ public abstract class IdentNumber {
      */
     protected abstract int calcGenderDiversity(ParticipantCollectionList participantCollection);
 
-    /** Calculates the age difference for a ParticipantCollectionList
+    /** Calculates the average age difference for a ParticipantCollectionList
      *
      * @param participantCollection The List
      * @return The age difference

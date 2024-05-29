@@ -9,7 +9,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class PairIdentNumber extends IdentNumber{
 
-    protected PairIdentNumber(PairList participantCollection) {
+    public PairIdentNumber(PairList participantCollection) {
         super(participantCollection);
         genderDiversity = calcGenderDiversity(participantCollection);
         ageDifference = calcAgeDifference(participantCollection);
@@ -37,7 +37,7 @@ public class PairIdentNumber extends IdentNumber{
     @Override
     protected int calcAgeDifference(ParticipantCollectionList participantCollection) {
         PairList pairList = (PairList) participantCollection;
-        return pairList.getPairs().stream().mapToInt(Pair::getAgeDifference).sum();
+        return pairList.getPairs().stream().mapToInt(Pair::getAgeDifference).sum() / numElems;
     }
 
     @Override

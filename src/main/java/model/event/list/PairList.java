@@ -5,6 +5,7 @@ import model.event.PairingWeights;
 import model.event.collection.Pair;
 import model.event.collection.ParticipantCollection;
 import model.identNumbers.IdentNumber;
+import model.identNumbers.PairIdentNumber;
 import model.kitchen.KitchenAvailability;
 import model.person.FoodType;
 import model.person.Participant;
@@ -29,6 +30,7 @@ public class PairList implements ParticipantCollectionList {
         this.identNumber = deriveIdentNumber(pairs);
 
     }
+
     public ArrayList<Pair> buildBestPairs(ArrayList<Participant> participantList, PairingWeights pairingWeights){
         ArrayList<Pair> bestPairList = new ArrayList<>();
 
@@ -178,13 +180,13 @@ public class PairList implements ParticipantCollectionList {
         ArrayList<Participant> sortedParticipantList = new ArrayList<>();
 
         for (Participant participant : participantList) {
-            if (participant.getFoodType() != FoodType.NONE) {
+            if (participant.getFoodType() != FoodType.ANY) {
                 sortedParticipantList.add(participant);
             }
         }
 
         for (Participant participant : participantList) {
-            if (participant.getFoodType() == FoodType.NONE) {
+            if (participant.getFoodType() == FoodType.ANY) {
                 sortedParticipantList.add(participant);
             }
         }
@@ -201,42 +203,7 @@ public class PairList implements ParticipantCollectionList {
     }
 
     public IdentNumber deriveIdentNumber (ArrayList<Pair> pairs) {
-        int numElems = pairs.size();
-        int numSuccessors = successors.size();
-        double genderDiversity = calculateGenderDiversity(pairs);
-        double ageDifference = calculateAverageAgeDifference(pairs);
-        double preferenceDeviation = calculateFoodPreferenceDeviation(pairs);
-
-
-        return new IdentNumber(numElems, numSuccessors,genderDiversity, ageDifference, preferenceDeviation);
-    }
-
-    private double calculateGenderDiversity(ArrayList<Pair> pairs) {
-        double diversityCount = 0;
-        for (Pair pair : pairs) {
-            if (!pair.getParticipants().get(0).getGender().equals(pair.getParticipants().get(1).getGender())) {
-                diversityCount++;
-            }
-        }
-        return diversityCount/pairs.size();
-    }
-
-    private double calculateAverageAgeDifference(ArrayList<Pair> pairs) {
-        double totalAgeDifference = 0;
-        for (Pair pair : pairs) {
-            totalAgeDifference += pair.getParticipants().get(0).getAge().getAgeDifference(pair.getParticipants().get(1).getAge());
-        }
-        return !pairs.isEmpty() ? totalAgeDifference / pairs.size(): 0;
-    }
-
-    private double calculateFoodPreferenceDeviation(ArrayList<Pair> pairs) {
-        double deviationCount = 0;
-        for (Pair pair : pairs) {
-            if (pair.getParticipants().get(0).getFoodType() != pair.getParticipants().get(1).getFoodType()) {
-                deviationCount++;
-            }
-        }
-        return deviationCount/pairs.size();
+        return new PairIdentNumber(this);
     }
 
     /**
