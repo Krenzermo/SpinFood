@@ -105,7 +105,7 @@ public class PairList implements ParticipantCollectionList {
         if(participant1.getFoodType() == FoodType.MEAT){
             if (testedParticipant.getFoodType() == FoodType.MEAT) {
                 return pairingWeights.getPairFoodPreferenceWeight();
-            } else if (testedParticipant.getFoodType() == FoodType.ANY){
+            } else if (testedParticipant.getFoodType() == FoodType.NONE){
                 return 0.5 * pairingWeights.getPairFoodPreferenceWeight();
             } else{
                 return -1000;
@@ -115,7 +115,7 @@ public class PairList implements ParticipantCollectionList {
                 return pairingWeights.getPairFoodPreferenceWeight();
             } else if (testedParticipant.getFoodType() == FoodType.VEGAN){
                 return 0.5 * pairingWeights.getPairFoodPreferenceWeight();
-            } else if (testedParticipant.getFoodType() == FoodType.ANY){
+            } else if (testedParticipant.getFoodType() == FoodType.NONE){
                 return 0.25 * pairingWeights.getPairFoodPreferenceWeight();
             } else{
                 return -1000;
@@ -125,13 +125,13 @@ public class PairList implements ParticipantCollectionList {
                 return pairingWeights.getPairFoodPreferenceWeight();
             } else if (testedParticipant.getFoodType() == FoodType.VEGGIE){
                 return 0.5 * pairingWeights.getPairFoodPreferenceWeight();
-            } else if (testedParticipant.getFoodType() == FoodType.ANY){
+            } else if (testedParticipant.getFoodType() == FoodType.NONE){
                 return 0.25 * pairingWeights.getPairFoodPreferenceWeight();
             } else{
                 return -1000;
             }
         } else {
-            if (testedParticipant.getFoodType() == FoodType.ANY) {
+            if (testedParticipant.getFoodType() == FoodType.NONE) {
                 return 0.5 * pairingWeights.getPairFoodPreferenceWeight();
             } else if (testedParticipant.getFoodType() == FoodType.MEAT){
                 return 0.5 * pairingWeights.getPairFoodPreferenceWeight();
@@ -180,13 +180,13 @@ public class PairList implements ParticipantCollectionList {
         ArrayList<Participant> sortedParticipantList = new ArrayList<>();
 
         for (Participant participant : participantList) {
-            if (participant.getFoodType() != FoodType.ANY) {
+            if (participant.getFoodType() != FoodType.NONE) {
                 sortedParticipantList.add(participant);
             }
         }
 
         for (Participant participant : participantList) {
-            if (participant.getFoodType() == FoodType.ANY) {
+            if (participant.getFoodType() == FoodType.NONE) {
                 sortedParticipantList.add(participant);
             }
         }
