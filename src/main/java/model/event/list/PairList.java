@@ -13,39 +13,47 @@ import model.person.Participant;
 import java.util.ArrayList;
 import java.util.List;
 
-
-//TODO identnumber methoden anders verbauen? gewichtung identnumber anpassen(insbesondere meat-none paarung die gewünscht ist)? gewichtung paarsortierung anpassen?
-//TODO in pair mit autoassign kitchen den küchenbesitzer festhalten? falls nötig maybe küchenwahl verbessern,   habe identnummer nicht mehr protected gemacht und doubles, ka
+/**
+ * The PairList class represents a collection of pairs of participants.
+ * It provides functionality to pair participants based on various criteria
+ * and maintains a list of unpaired participants (successors).
+ */
 public class PairList implements ParticipantCollectionList {
     private IdentNumber identNumber;
     private final ArrayList<Pair> pairs;
-    public ArrayList<Participant> successors = new ArrayList<>();
+    private final ArrayList<Participant> successors = new ArrayList<>();
 
+    /**
+     * Constructs a PairList object by sorting participants and building the best pairs.
+     *
+     * @param inputData      the input data containing participant and pair information
+     * @param pairingWeights the weights used for pairing criteria
+     */
     public PairList(InputData inputData, PairingWeights pairingWeights) {
-
-        ArrayList<Participant> sortedParticipantList= sortParticipants(inputData.getParticipantInputData());
-
-        this.pairs = (buildBestPairs(sortedParticipantList, pairingWeights));
-        pairs.addAll(inputData.getPairInputData());
+        ArrayList<Participant> sortedParticipantList = sortParticipants(inputData.getParticipantInputData());
+        this.pairs = buildBestPairs(sortedParticipantList, pairingWeights);
+        this.pairs.addAll(inputData.getPairInputData());
         this.identNumber = deriveIdentNumber(pairs);
-
     }
 
-    public ArrayList<Pair> buildBestPairs(ArrayList<Participant> participantList, PairingWeights pairingWeights){
+    /**
+     * Builds the best pairs of participants based on pairing criteria and weights.
+     *
+     * @param participantList the list of participants to be paired
+     * @param pairingWeights  the weights used for pairing criteria
+     * @return a list of the best pairs of participants
+     */
+    private ArrayList<Pair> buildBestPairs(ArrayList<Participant> participantList, PairingWeights pairingWeights) {
         ArrayList<Pair> bestPairList = new ArrayList<>();
 
         while (participantList.size() >= 2) {
             Participant participant1 = participantList.remove(0);
             int bestPartnerPosition = -1;
-            double bestPartnerScore = -100;
+            double bestPartnerScore = Double.NEGATIVE_INFINITY;
 
-            for(int i=0; i < participantList.size(); i++) {
-                double score = 0;
+            for (int i = 0; i < participantList.size(); i++) {
                 Participant testedParticipant = participantList.get(i);
-                score += compareKitchen(participant1, testedParticipant);
-                score += compareGender(participant1, testedParticipant, pairingWeights);
-                score += compareFoodPreference(participant1, testedParticipant, pairingWeights);
-                score += compareAge(participant1, testedParticipant, pairingWeights);
+                double score = calculatePairScore(participant1, testedParticipant, pairingWeights);
 
                 if (score > bestPartnerScore) {
                     bestPartnerScore = score;
@@ -53,130 +61,152 @@ public class PairList implements ParticipantCollectionList {
                 }
             }
 
-            if (bestPartnerPosition == -1){
+            if (bestPartnerPosition == -1) {
                 successors.add(participant1);
                 continue;
             }
 
             Participant participant2 = participantList.remove(bestPartnerPosition);
-            bestPairList.add(new Pair(participant1, participant2, false));   //TODO wessen Küche als Feld in Pair?
-
-
+            bestPairList.add(new Pair(participant1, participant2, false)); // TODO: Determine kitchen ownership if necessary
         }
+
         successors.addAll(participantList);
         return bestPairList;
     }
-// requires List ordered by kitchen
-    public double compareKitchen(Participant participant1, Participant testedParticipant){
-        if (participant1.isHasKitchen() == KitchenAvailability.YES){
-            if (testedParticipant.isHasKitchen() == KitchenAvailability.YES && participant1.getKitchen().equals(testedParticipant.getKitchen())) {
-                return -1000;
-            } else {
-                return 0;
-            }
 
-        } else if(participant1.isHasKitchen() == KitchenAvailability.NO) {
-            if (testedParticipant.isHasKitchen() == KitchenAvailability.YES){
-                return 0;
-            } else if (testedParticipant.isHasKitchen() == KitchenAvailability.MAYBE) {
-                return -50;
-            } else {
-                return -1000;
-            }
-        } else {
-            if (testedParticipant.isHasKitchen() == KitchenAvailability.YES) {
-                return 0;
-            } else {
-                return -50;
+    /**
+     * Calculates the score for pairing two participants based on pairing criteria and weights.
+     *
+     * @param participant1    the first participant
+     * @param testedParticipant the second participant being tested as a potential pair
+     * @param pairingWeights  the weights used for pairing criteria
+     * @return the score for pairing the two participants
+     */
+    private double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+        double score = 0;
+        score += compareKitchen(participant1, testedParticipant);
+        score += compareGender(participant1, testedParticipant, pairingWeights);
+        score += compareFoodPreference(participant1, testedParticipant, pairingWeights);
+        score += compareAge(participant1, testedParticipant, pairingWeights);
+        return score;
+    }
 
-
-            }
-        }
-    }   //TODO was passiert wenn wir maybe einbinden wollen? einfach successors mit maybe als yes neu durchlaufen lassen?
-    public double compareGender(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights){
-        if(participant1.getGender().equals(testedParticipant.getGender())) {
-            return 0;
-        } else {
-            return 0.5 * pairingWeights.getPairGenderDifferenceWeight();
+    /**
+     * Compares the kitchen availability of two participants.
+     *
+     * @param participant1    the first participant
+     * @param testedParticipant the second participant being tested
+     * @return the score based on the kitchen availability comparison
+     */
+    private double compareKitchen(Participant participant1, Participant testedParticipant) {
+        switch (participant1.isHasKitchen()) {
+            case YES:
+                return (testedParticipant.isHasKitchen() == KitchenAvailability.YES &&
+                        participant1.getKitchen().equals(testedParticipant.getKitchen())) ? -1000 : 0;
+            case NO:
+                if (testedParticipant.isHasKitchen() == KitchenAvailability.YES) return 0;
+                return (testedParticipant.isHasKitchen() == KitchenAvailability.MAYBE) ? -50 : -1000;
+            case MAYBE:
+                return (testedParticipant.isHasKitchen() == KitchenAvailability.YES) ? 0 : -50;
+            default:
+                return 0;
         }
     }
 
-    public double compareFoodPreference(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights){
-        if(participant1.getFoodType() == FoodType.MEAT){
-            if (testedParticipant.getFoodType() == FoodType.MEAT) {
-                return pairingWeights.getPairFoodPreferenceWeight();
-            } else if (testedParticipant.getFoodType() == FoodType.NONE){
-                return 0.5 * pairingWeights.getPairFoodPreferenceWeight();
-            } else{
-                return -1000;
-            }
-        } else if (participant1.getFoodType() == FoodType.VEGGIE){
-            if (testedParticipant.getFoodType() == FoodType.VEGGIE) {
-                return pairingWeights.getPairFoodPreferenceWeight();
-            } else if (testedParticipant.getFoodType() == FoodType.VEGAN){
-                return 0.5 * pairingWeights.getPairFoodPreferenceWeight();
-            } else if (testedParticipant.getFoodType() == FoodType.NONE){
-                return 0.25 * pairingWeights.getPairFoodPreferenceWeight();
-            } else{
-                return -1000;
-            }
-        } else if (participant1.getFoodType() == FoodType.VEGAN){
-            if (testedParticipant.getFoodType() == FoodType.VEGAN) {
-                return pairingWeights.getPairFoodPreferenceWeight();
-            } else if (testedParticipant.getFoodType() == FoodType.VEGGIE){
-                return 0.5 * pairingWeights.getPairFoodPreferenceWeight();
-            } else if (testedParticipant.getFoodType() == FoodType.NONE){
-                return 0.25 * pairingWeights.getPairFoodPreferenceWeight();
-            } else{
-                return -1000;
-            }
-        } else {
-            if (testedParticipant.getFoodType() == FoodType.NONE) {
-                return 0.5 * pairingWeights.getPairFoodPreferenceWeight();
-            } else if (testedParticipant.getFoodType() == FoodType.MEAT){
-                return 0.5 * pairingWeights.getPairFoodPreferenceWeight();
-            } else{
-                return 0.25 * pairingWeights.getPairFoodPreferenceWeight();
-            }
+    /**
+     * Compares the gender of two participants based on pairing weights.
+     *
+     * @param participant1    the first participant
+     * @param testedParticipant the second participant being tested
+     * @param pairingWeights  the weights used for pairing criteria
+     * @return the score based on the gender comparison
+     */
+    private double compareGender(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+        return participant1.getGender().equals(testedParticipant.getGender()) ? 0 : 0.5 * pairingWeights.getPairGenderDifferenceWeight();
+    }
+
+    /**
+     * Compares the food preference of two participants based on pairing weights.
+     *
+     * @param participant1    the first participant
+     * @param testedParticipant the second participant being tested
+     * @param pairingWeights  the weights used for pairing criteria
+     * @return the score based on the food preference comparison
+     */
+    private double compareFoodPreference(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+        double weight = pairingWeights.getPairFoodPreferenceWeight();
+        switch (participant1.getFoodType()) {
+            case MEAT:
+                if (testedParticipant.getFoodType() == FoodType.MEAT) return weight;
+                return (testedParticipant.getFoodType() == FoodType.NONE) ? 0.5 * weight : -1000;
+            case VEGGIE:
+                if (testedParticipant.getFoodType() == FoodType.VEGGIE) return weight;
+                if (testedParticipant.getFoodType() == FoodType.VEGAN) return 0.5 * weight;
+                return (testedParticipant.getFoodType() == FoodType.NONE) ? 0.25 * weight : -1000;
+            case VEGAN:
+                if (testedParticipant.getFoodType() == FoodType.VEGAN) return weight;
+                if (testedParticipant.getFoodType() == FoodType.VEGGIE) return 0.5 * weight;
+                return (testedParticipant.getFoodType() == FoodType.NONE) ? 0.25 * weight : -1000;
+            case NONE:
+                return (testedParticipant.getFoodType() == FoodType.NONE || testedParticipant.getFoodType() == FoodType.MEAT) ? 0.5 * weight : 0.25 * weight;
+            default:
+                return 0;
         }
-
-    }
-    public double compareAge(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights){
-        return pairingWeights.getPairAgeDifferenceWeight() * (1- 0.1 *(participant1.getAge().getAgeDifference(testedParticipant.getAge())));
-
     }
 
-    public ArrayList<Participant> sortParticipants(ArrayList<Participant> participantList) {
+    /**
+     * Compares the age of two participants based on pairing weights.
+     *
+     * @param participant1    the first participant
+     * @param testedParticipant the second participant being tested
+     * @param pairingWeights  the weights used for pairing criteria
+     * @return the score based on the age comparison
+     */
+    private double compareAge(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+        double ageDifference = participant1.getAge().getAgeDifference(testedParticipant.getAge());
+        return pairingWeights.getPairAgeDifferenceWeight() * (1 - 0.1 * ageDifference);
+    }
+
+    /**
+     * Sorts participants based on their kitchen availability and food type.
+     *
+     * @param participantList the list of participants to be sorted
+     * @return the sorted list of participants
+     */
+    private ArrayList<Participant> sortParticipants(ArrayList<Participant> participantList) {
         ArrayList<Participant> sortedNoKitchenList = new ArrayList<>();
         ArrayList<Participant> sortedMaybeKitchenList = new ArrayList<>();
         ArrayList<Participant> sortedYesKitchenList = new ArrayList<>();
+
+        for (Participant participant : participantList) {
+            switch (participant.isHasKitchen()) {
+                case NO:
+                    sortedNoKitchenList.add(participant);
+                    break;
+                case MAYBE:
+                    sortedMaybeKitchenList.add(participant);
+                    break;
+                case YES:
+                    sortedYesKitchenList.add(participant);
+                    break;
+            }
+        }
+
         ArrayList<Participant> sortedParticipantList = new ArrayList<>();
-
-        for (Participant participant : participantList) {
-            if (participant.isHasKitchen() == KitchenAvailability.NO) {
-                sortedNoKitchenList.add(participant);
-            }
-        }
-
-        for (Participant participant : participantList) {
-            if (participant.isHasKitchen() == KitchenAvailability.MAYBE) {
-                sortedMaybeKitchenList.add(participant);
-            }
-        }
-
-        for (Participant participant : participantList) {
-            if (participant.isHasKitchen() == KitchenAvailability.YES) {
-                sortedYesKitchenList.add(participant);
-            }
-        }
-
         sortedParticipantList.addAll(sortByFoodType(sortedNoKitchenList));
         sortedParticipantList.addAll(sortByFoodType(sortedMaybeKitchenList));
         sortedParticipantList.addAll(sortByFoodType(sortedYesKitchenList));
+
         return sortedParticipantList;
     }
 
-    public ArrayList<Participant> sortByFoodType(ArrayList<Participant> participantList) {
+    /**
+     * Sorts participants based on their food type.
+     *
+     * @param participantList the list of participants to be sorted
+     * @return the sorted list of participants
+     */
+    private ArrayList<Participant> sortByFoodType(ArrayList<Participant> participantList) {
         ArrayList<Participant> sortedParticipantList = new ArrayList<>();
 
         for (Participant participant : participantList) {
@@ -194,20 +224,38 @@ public class PairList implements ParticipantCollectionList {
         return sortedParticipantList;
     }
 
+    /**
+     * Gets the list of unpaired participants.
+     *
+     * @return the list of unpaired participants
+     */
     public ArrayList<Participant> getSuccessors() {
         return successors;
     }
 
+    /**
+     * Gets the list of pairs of participants.
+     *
+     * @return the list of pairs of participants
+     */
     public ArrayList<Pair> getPairs() {
         return pairs;
     }
 
-    public IdentNumber deriveIdentNumber (ArrayList<Pair> pairs) {
+    /**
+     * Derives the identifying number for the list of pairs.
+     *
+     * @param pairs the list of pairs
+     * @return the identifying number for the list of pairs
+     */
+    private IdentNumber deriveIdentNumber(ArrayList<Pair> pairs) {
         return new PairIdentNumber(this);
     }
 
     /**
-     * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollectionList
+     * Gets the identifying number for this ParticipantCollectionList.
+     *
+     * @return the identifying number for this ParticipantCollectionList
      */
     @Override
     public IdentNumber getIdentNumber() {
@@ -215,53 +263,56 @@ public class PairList implements ParticipantCollectionList {
     }
 
     /**
-     * @return the evaluation of this ParticipantCollection
+     * Evaluates the ParticipantCollection.
+     *
+     * @return the evaluation score
      */
     @Override
     public double evaluate() {
-        // TODO: this
+        // TODO: Implement evaluation logic
         return 0;
     }
 
     /**
-     * This method is used to change the underlying data structure.
-     * It is used by the default implementations of {@link #add}, {@link #remove}, {@link #addUnsafe},
-     * {@link #addAll} and {@link #removeAll}methods.
+     * Gets the data structure that stores the instances of ParticipantCollection.
      *
-     * @return the data structure that stores the instances of {@link ParticipantCollection}
+     * @return the data structure that stores the instances of ParticipantCollection
      */
     @Override
     public List<ParticipantCollection> getDataStructure() {
-        return null; //TODO alles wieder zu participant collection?
+        // TODO: Implement the data structure for ParticipantCollection
+        return null;
     }
 
     /**
-     * Checks if the collection has the same type as this ParticipantCollectionList (subclass)
+     * Checks if the collection has the same type as this ParticipantCollectionList.
      *
      * @param collection the element to be checked
      * @throws IllegalArgumentException if the type check fails
      */
     @Override
     public void checkType(ParticipantCollection collection) {
-        if (!collection.getClass().equals(Pair.class)) {
+        if (!(collection instanceof Pair)) {
             throw new IllegalArgumentException("Collection is not a Pair");
         }
     }
+
+    /**
+     * Returns a string representation of the PairList.
+     *
+     * @return a string representation of the PairList
+     */
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
-        sb.append("PairList {\n");
-
-        sb.append("Pairs:\n");
+        sb.append("PairList {\nPairs:\n");
         for (Pair pair : pairs) {
             sb.append(pair.toString()).append("\n");
         }
-
         sb.append("\nSuccessors:\n");
         for (Participant successor : successors) {
             sb.append(successor.toString()).append("\n");
         }
-
         sb.append("}");
         return sb.toString();
     }
