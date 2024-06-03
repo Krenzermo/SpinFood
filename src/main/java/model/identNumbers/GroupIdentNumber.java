@@ -11,17 +11,17 @@ public class GroupIdentNumber extends IdentNumber{
     }
 
     @Override
-    protected int calcGenderDiversity(ParticipantCollectionList participantCollection) {
+    protected double calcGenderDiversity(ParticipantCollectionList participantCollection) {
         return 0;
     }
 
     @Override
-    protected int calcAgeDifference(ParticipantCollectionList participantCollection) {
+    protected double calcAgeDifference(ParticipantCollectionList participantCollection) {
         return 0;
     }
 
     @Override
-    protected int calcPreferenceDeviation(ParticipantCollectionList participantCollection) {
+    protected double calcPreferenceDeviation(ParticipantCollectionList participantCollection) {
         return 0;
     }
 }

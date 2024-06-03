@@ -4,12 +4,15 @@ import model.event.Location;
 import model.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.kitchen.KitchenAvailability;
+import model.person.Gender;
 import model.person.Participant;
 import model.event.Course;
 import model.event.InputData;
 
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collector;
+import java.util.stream.Collectors;
 
 /**
  * @author Finn Brecher
@@ -20,6 +23,7 @@ public class Pair implements ParticipantCollection {
 
     private final Participant[] participants = new Participant[2];
     private Kitchen kitchen;
+    private double distance;
     private Course course;
     private Group[] groups = new Group[3];
     public final boolean signedUpTogether;
@@ -35,6 +39,7 @@ public class Pair implements ParticipantCollection {
         participants[1] = participant2;
         this.signedUpTogether = signedUpTogether;
         this.kitchen = autoAssignKitchen();
+        this.distance = kitchen.location().getDistance(InputData.getInstance().getEventLocation());
     }
 
     @Override
@@ -202,7 +207,23 @@ public class Pair implements ParticipantCollection {
         return "{Participant 1: " + participants[0].toString() + ", Participant 2: " + participants[1].toString() + "}";
     }
 
+    /** Calculates the deviation of Food preferences of the Participants of this Pair
+     *
+     * @return The Preference deviation
+     */
     public int getPreferenceDeviation() {
         return participants[0].getFoodType().deviation.apply(participants[1].getFoodType());
+    }
+
+    /** Calculates the absolute deviation from .5 of the women-to-participants ratio
+     *
+     * @return The absolute gender deviation
+     */
+    public double getGenderDeviation() {
+        return Math.abs(getParticipants().stream().map(Participant::getGender).filter(g -> g == Gender.FEMALE).count() / 2d - .5);
+    }
+
+    public double getDistance() {
+        return distance;
     }
 }

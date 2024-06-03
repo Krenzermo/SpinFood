@@ -10,10 +10,15 @@ import java.util.List;
 
 public class GroupList implements ParticipantCollectionList {
 	private IdentNumber identNumber;
-	private final List<ParticipantCollection> groups;
+	private final List<Group> groups;
 
 	public GroupList() {
-		groups = new ArrayList<>();
+		groups = buildGroups();
+	}
+
+	private List<Group> buildGroups() {
+		//TODO
+		return new ArrayList();
 	}
 	/**
 	 * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollectionList

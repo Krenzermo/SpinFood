@@ -17,13 +17,13 @@ public abstract class IdentNumber {
 	//TODO: this
     protected int numElems;
     protected int numSuccessors;
-    protected int genderDiversity;
-    protected int ageDifference;
-    protected int preferenceDeviation;
+    protected double genderDiversity;
+    protected double ageDifference;
+    protected double preferenceDeviation;
 
     protected IdentNumber(ParticipantCollectionList participantCollection) {
         numElems = calcNumElems(participantCollection);
-        numElems = calcNumSuccessors(participantCollection);
+        numSuccessors = calcNumSuccessors(participantCollection);
     }
 
     /** Calculates the number of ParticipantCollections in this List
@@ -55,21 +55,24 @@ public abstract class IdentNumber {
      * @param participantCollection The List
      * @return The gender diversity
      */
-    protected abstract int calcGenderDiversity(ParticipantCollectionList participantCollection);
+    protected abstract double calcGenderDiversity(ParticipantCollectionList participantCollection);
 
     /** Calculates the average age difference for a ParticipantCollectionList
      *
      * @param participantCollection The List
      * @return The age difference
      */
-    protected abstract int calcAgeDifference(ParticipantCollectionList participantCollection);
+    protected abstract double calcAgeDifference(ParticipantCollectionList participantCollection);
 
     /** Calculates the deviation in food preferences of this ParticipantCollectionList
      *
      * @param participantCollection The List
      * @return The deviation in food preferences
      */
-    protected abstract int calcPreferenceDeviation(ParticipantCollectionList participantCollection);
+    protected abstract double calcPreferenceDeviation(ParticipantCollectionList participantCollection);
 
-
+    @Override
+    public String toString() {
+        return "Anzahl: " + numElems + " Nachrücker: " + numSuccessors + " Geschlechterdiversität: " + genderDiversity + " Altersunterschied: " + ageDifference + " Vorliebenabweichung: " + preferenceDeviation;
+    }
 }

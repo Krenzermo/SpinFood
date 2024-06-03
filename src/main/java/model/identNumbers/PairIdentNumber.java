@@ -17,32 +17,20 @@ public class PairIdentNumber extends IdentNumber{
     }
 
     @Override
-    protected int calcGenderDiversity(ParticipantCollectionList participantCollection) {
+    protected double calcGenderDiversity(ParticipantCollectionList participantCollection) {
         PairList pairList = (PairList) participantCollection;
-        AtomicInteger genderDiversity = new AtomicInteger();
-
-        //Calculate the gender Diversity of each pair and increment if the genders divers
-        pairList.getPairs().stream().map(Pair::getParticipants).forEach(p -> {
-            Participant p1 = p.get(0);
-            Participant p2 = p.get(1);
-
-            if (p1.getGender() != p2.getGender()) {
-                genderDiversity.getAndIncrement();
-            }
-        });
-
-        return genderDiversity.get();
+        return pairList.getPairs().stream().mapToDouble(Pair::getGenderDeviation).sum() / numElems;
     }
 
     @Override
-    protected int calcAgeDifference(ParticipantCollectionList participantCollection) {
+    protected double calcAgeDifference(ParticipantCollectionList participantCollection) {
         PairList pairList = (PairList) participantCollection;
-        return pairList.getPairs().stream().mapToInt(Pair::getAgeDifference).sum() / numElems;
+        return pairList.getPairs().stream().mapToInt(Pair::getAgeDifference).sum() / (double)numElems;
     }
 
     @Override
-    protected int calcPreferenceDeviation(ParticipantCollectionList participantCollection) {
+    protected double calcPreferenceDeviation(ParticipantCollectionList participantCollection) {
         PairList pairList = (PairList) participantCollection;
-        return pairList.getPairs().stream().mapToInt(Pair::getPreferenceDeviation).sum() / numElems;
+        return pairList.getPairs().stream().mapToInt(Pair::getPreferenceDeviation).sum() / (double)numElems;
     }
 }

@@ -1,15 +1,31 @@
 package model.event.collection;
 
 import model.event.Course;
+import model.event.list.GroupList;
 import model.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.person.AgeRange;
 import model.person.Participant;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 // TODO: Implementierung
 public class Group implements ParticipantCollection{
+
+	private final Pair[] pairs;
+	private Kitchen kitchen;
+	private Course course;
+
+
+	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen) {
+		this.pairs = new Pair[]{pair1, pair2, pair3};
+		this.course = course;
+		this.kitchen = kitchen;
+	}
+
 	/**
 	 * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollection
 	 */
@@ -24,8 +40,8 @@ public class Group implements ParticipantCollection{
 	 */
 	@Override
 	public List<Participant> getParticipants() {
-		// TODO: this
-		return List.of();
+        List<Pair> participants = new ArrayList<>(Arrays.stream(pairs).toList());
+		return participants.stream().flatMap(p -> p.getParticipants().stream()).collect(Collectors.toList());
 	}
 
 	/**
@@ -34,7 +50,7 @@ public class Group implements ParticipantCollection{
 	@Override
 	public Kitchen getKitchen() {
 		// TODO: this
-		return null;
+		return kitchen;
 	}
 
 	/**
@@ -61,7 +77,7 @@ public class Group implements ParticipantCollection{
 	@Override
 	public Course getCourse() {
 		// TODO: this
-		return null;
+		return course;
 	}
 
 	/**
@@ -86,5 +102,9 @@ public class Group implements ParticipantCollection{
 	public boolean remove(Object o) {
 		// TODO: this
 		return false;
+	}
+
+	public Pair[] getPairs() {
+		return pairs;
 	}
 }
