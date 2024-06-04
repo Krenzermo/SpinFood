@@ -1,4 +1,4 @@
-package model.identNumbers;
+package model.event.list.identNumbers;
 
 import model.event.collection.Pair;
 import model.event.collection.ParticipantCollection;

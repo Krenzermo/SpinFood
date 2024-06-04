@@ -1,11 +1,8 @@
-package model.identNumbers;
+package model.event.list.identNumbers;
 
 import model.event.collection.Pair;
 import model.event.list.PairList;
 import model.event.list.ParticipantCollectionList;
-import model.person.Participant;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class PairIdentNumber extends IdentNumber{
 

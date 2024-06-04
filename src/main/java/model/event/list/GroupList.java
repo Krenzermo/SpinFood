@@ -2,7 +2,7 @@ package model.event.list;
 
 import model.event.collection.Group;
 import model.event.collection.ParticipantCollection;
-import model.identNumbers.IdentNumber;
+import model.event.list.identNumbers.IdentNumber;
 import model.person.Participant;
 
 import java.util.ArrayList;

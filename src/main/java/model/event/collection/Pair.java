@@ -1,7 +1,7 @@
 package model.event.collection;
 
 import model.event.Location;
-import model.identNumbers.IdentNumber;
+import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.kitchen.KitchenAvailability;
 import model.person.FoodType;
@@ -10,11 +10,8 @@ import model.person.Participant;
 import model.event.Course;
 import model.event.InputData;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collector;
-import java.util.stream.Collectors;
 
 /**
  * @author Finn Brecher
