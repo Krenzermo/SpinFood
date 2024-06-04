@@ -47,7 +47,7 @@ public class GroupList implements ParticipantCollectionList {
 	 */
 	@Override
 	public List<ParticipantCollection> getDataStructure() {
-		return groups;
+		return null;
 	}
 
 	/**
@@ -63,7 +63,7 @@ public class GroupList implements ParticipantCollectionList {
 		}
 	}
 
-	public List<ParticipantCollection> getGroups() {
+	public List<Group> getGroups() {
 		return groups;
 	}
 

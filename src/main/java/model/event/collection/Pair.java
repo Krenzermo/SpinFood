@@ -4,11 +4,13 @@ import model.event.Location;
 import model.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.kitchen.KitchenAvailability;
+import model.person.FoodType;
 import model.person.Gender;
 import model.person.Participant;
 import model.event.Course;
 import model.event.InputData;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collector;
@@ -26,6 +28,7 @@ public class Pair implements ParticipantCollection {
     private double distance;
     private Course course;
     private Group[] groups = new Group[3];
+    private FoodType foodType;
     public final boolean signedUpTogether;
 
     private static final InputData inputData = InputData.getInstance();
@@ -39,7 +42,27 @@ public class Pair implements ParticipantCollection {
         participants[1] = participant2;
         this.signedUpTogether = signedUpTogether;
         this.kitchen = autoAssignKitchen();
+        this.foodType = autoAssignFoodType();
         this.distance = kitchen.location().getDistance(InputData.getInstance().getEventLocation());
+    }
+
+    private FoodType autoAssignFoodType() {
+        FoodType foodType1 = participants[0].getFoodType();
+        FoodType foodType2 = participants[1].getFoodType();
+        List<FoodType> list = List.of(foodType1, foodType2);
+
+        if (hasOnlyCarni(list)) {
+            return FoodType.MEAT;
+        }
+
+        int value = list.stream().mapToInt(FoodType::getValue).max().getAsInt();
+        return FoodType.herbiFromValue(value);
+    }
+
+
+
+    private boolean hasOnlyCarni(List<FoodType> list) {
+        return !(list.contains(FoodType.VEGGIE) || list.contains(FoodType.VEGAN));
     }
 
     @Override
@@ -225,5 +248,13 @@ public class Pair implements ParticipantCollection {
 
     public double getDistance() {
         return distance;
+    }
+
+    public boolean hasKitchen() {
+        return kitchen != null;
+    }
+
+    public FoodType getFoodType() {
+        return foodType;
     }
 }

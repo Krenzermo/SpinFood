@@ -23,8 +23,16 @@ public enum FoodType {
         this.deviation = function;
     }
 
+    public static FoodType herbiFromValue(int value) {
+        return value == 2 ? VEGAN : VEGGIE;
+    }
+
     @Override
     public String toString() {
         return "FoodType: " + this.name();
+    }
+
+    public int getValue() {
+        return value;
     }
 }
