@@ -23,10 +23,6 @@ public class PairList implements ParticipantCollectionList {
     private final ArrayList<Pair> pairs;
     private final ArrayList<Participant> successors = new ArrayList<>();
 
-    public PairList(List<ParticipantCollection> pairs) {
-        this();
-        this.pairs.addAll(pairs);
-    }
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
