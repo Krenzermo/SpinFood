@@ -23,6 +23,8 @@ class PairIdentNumberTest {
 
         pairList1 = new PairList(inputData, pairingWeights1);
         pairList2 = new PairList(inputData, pairingWeights2);
+
+
     }
 
     @Test
@@ -36,14 +38,46 @@ class PairIdentNumberTest {
     void calcGenderDiversity2() {
         PairIdentNumber num2 = new PairIdentNumber((PairList) pairList2);
         double delta = .05;
-        Assertions.assertEquals(.25, num2.genderDiversity, delta);
+        Assertions.assertEquals(.246, num2.genderDiversity, delta);
     }
 
     @Test
-    void calcAgeDifference() {
+    void calcAgeDifference1() {
+        PairIdentNumber num1 = new PairIdentNumber((PairList) pairList1);
+        double delta = .005;
+        Assertions.assertEquals(.53, num1.ageDifference, delta);
     }
 
     @Test
-    void calcPreferenceDeviation() {
+    void calcAgeDifference2() {
+        PairIdentNumber num2 = new PairIdentNumber((PairList) pairList2);
+        double delta = .005;
+        Assertions.assertEquals(.506, num2.ageDifference, delta);
+    }
+
+    @Test
+    void calcPreferenceDeviation1() {
+        PairIdentNumber num1 = new PairIdentNumber((PairList) pairList1);
+        double delta = .005;
+        Assertions.assertEquals(.598, num1.preferenceDeviation, delta);
+    }
+
+    @Test
+    void calcPreferenceDeviation2() {
+        PairIdentNumber num2 = new PairIdentNumber((PairList) pairList2);
+        double delta = .005;
+        Assertions.assertEquals(.60, num2.preferenceDeviation, delta);
+    }
+
+    @Test
+    void numElements() {
+        PairIdentNumber num1 = new PairIdentNumber((PairList) pairList1);
+        Assertions.assertEquals(152, num1.numElems);
+    }
+
+    @Test
+    void numSuccessors() {
+        PairIdentNumber num1 = new PairIdentNumber((PairList) pairList1);
+        Assertions.assertEquals(1, num1.numSuccessors);
     }
 }
