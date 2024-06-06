@@ -84,7 +84,11 @@ public class PairList implements ParticipantCollectionList {
      */
     private double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         double score = 0;
-        score += compareKitchen(participant1, testedParticipant);
+        double kitchenScore = compareKitchen(participant1, testedParticipant);
+        if (kitchenScore == Double.NEGATIVE_INFINITY) {
+            return Double.NEGATIVE_INFINITY;
+        }
+        score += kitchenScore;
         score += compareGender(participant1, testedParticipant, pairingWeights);
         score += compareFoodPreference(participant1, testedParticipant, pairingWeights);
         score += compareAge(participant1, testedParticipant, pairingWeights);
@@ -105,7 +109,7 @@ public class PairList implements ParticipantCollectionList {
                         participant1.getKitchen().equals(testedParticipant.getKitchen())) ? -1000 : 0;
             case NO:
                 if (testedParticipant.isHasKitchen() == KitchenAvailability.YES) return 0;
-                return (testedParticipant.isHasKitchen() == KitchenAvailability.MAYBE) ? -50 : -1000;
+                return (testedParticipant.isHasKitchen() == KitchenAvailability.MAYBE) ? -50 : Double.NEGATIVE_INFINITY;
             case MAYBE:
                 return (testedParticipant.isHasKitchen() == KitchenAvailability.YES) ? 0 : -50;
             default:
