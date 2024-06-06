@@ -33,7 +33,7 @@ public class PairList implements ParticipantCollectionList {
         ArrayList<Participant> sortedParticipantList = sortParticipants(inputData.getParticipantInputData());
         this.pairs = buildBestPairs(sortedParticipantList, pairingWeights);
         this.pairs.addAll(inputData.getPairInputData());
-        this.identNumber = deriveIdentNumber(pairs);
+        this.identNumber = deriveIdentNumber();
     }
 
     /**
@@ -122,7 +122,7 @@ public class PairList implements ParticipantCollectionList {
      * @return the score based on the gender comparison
      */
     private double compareGender(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
-        return participant1.getGender().equals(testedParticipant.getGender()) ? 0 : 0.5 * pairingWeights.getPairGenderDifferenceWeight();
+        return participant1.getGender().equals(testedParticipant.getGender()) ? 0 : 0.5 * pairingWeights.getGenderDifferenceWeight();
     }
 
     /**
@@ -134,7 +134,7 @@ public class PairList implements ParticipantCollectionList {
      * @return the score based on the food preference comparison
      */
     private double compareFoodPreference(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
-        double weight = pairingWeights.getPairFoodPreferenceWeight();
+        double weight = pairingWeights.getFoodPreferenceWeight();
         switch (participant1.getFoodType()) {
             case MEAT:
                 if (testedParticipant.getFoodType() == FoodType.MEAT) return weight;
@@ -164,7 +164,7 @@ public class PairList implements ParticipantCollectionList {
      */
     private double compareAge(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         double ageDifference = participant1.getAge().getAgeDifference(testedParticipant.getAge());
-        return pairingWeights.getPairAgeDifferenceWeight() * (1 - 0.1 * ageDifference);
+        return pairingWeights.getAgeDifferenceWeight() * (1 - 0.1 * ageDifference);
     }
 
     /**
@@ -245,10 +245,9 @@ public class PairList implements ParticipantCollectionList {
     /**
      * Derives the identifying number for the list of pairs.
      *
-     * @param pairs the list of pairs
      * @return the identifying number for the list of pairs
      */
-    private IdentNumber deriveIdentNumber(ArrayList<Pair> pairs) {
+    private IdentNumber deriveIdentNumber() {
         return new PairIdentNumber(this);
     }
 
