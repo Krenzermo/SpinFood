@@ -125,7 +125,7 @@ public class InputData {
                 }
             }
         } catch (Exception e) {
-            throw new RuntimeException();
+            throw new RuntimeException(e);
         }
     }
 

@@ -1,7 +1,7 @@
 package model.event.collection;
 
 import model.event.Course;
-import model.identNumbers.IdentNumber;
+import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.person.Participant;
 

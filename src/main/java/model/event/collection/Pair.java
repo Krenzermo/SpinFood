@@ -1,9 +1,11 @@
 package model.event.collection;
 
 import model.event.Location;
-import model.identNumbers.IdentNumber;
+import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.kitchen.KitchenAvailability;
+import model.person.FoodType;
+import model.person.Gender;
 import model.person.Participant;
 import model.event.Course;
 import model.event.InputData;
@@ -20,8 +22,10 @@ public class Pair implements ParticipantCollection {
 
     private final Participant[] participants = new Participant[2];
     private Kitchen kitchen;
+    private double distance;
     private Course course;
     private Group[] groups = new Group[3];
+    private FoodType foodType;
     public final boolean signedUpTogether;
 
     private static final InputData inputData = InputData.getInstance();
@@ -35,6 +39,27 @@ public class Pair implements ParticipantCollection {
         participants[1] = participant2;
         this.signedUpTogether = signedUpTogether;
         this.kitchen = autoAssignKitchen();
+        this.foodType = autoAssignFoodType();
+        this.distance = kitchen.location().getDistance(InputData.getInstance().getEventLocation());
+    }
+
+    private FoodType autoAssignFoodType() {
+        FoodType foodType1 = participants[0].getFoodType();
+        FoodType foodType2 = participants[1].getFoodType();
+        List<FoodType> list = List.of(foodType1, foodType2);
+
+        if (hasOnlyCarni(list)) {
+            return FoodType.MEAT;
+        }
+
+        int value = list.stream().mapToInt(FoodType::getValue).max().getAsInt();
+        return FoodType.herbiFromValue(value);
+    }
+
+
+
+    private boolean hasOnlyCarni(List<FoodType> list) {
+        return !(list.contains(FoodType.VEGGIE) || list.contains(FoodType.VEGAN));
     }
 
     @Override
@@ -200,5 +225,33 @@ public class Pair implements ParticipantCollection {
     @Override
     public String toString() {
         return "{Participant 1: " + participants[0].toString() + ", Participant 2: " + participants[1].toString() + "}";
+    }
+
+    /** Calculates the deviation of Food preferences of the Participants of this Pair
+     *
+     * @return The Preference deviation
+     */
+    public int getPreferenceDeviation() {
+        return participants[0].getFoodType().deviation.apply(participants[1].getFoodType());
+    }
+
+    /** Calculates the absolute deviation from .5 of the women-to-participants ratio
+     *
+     * @return The absolute gender deviation
+     */
+    public double getGenderDeviation() {
+        return Math.abs(getParticipants().stream().map(Participant::getGender).filter(g -> g == Gender.FEMALE).count() / 2d - .5);
+    }
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public boolean hasKitchen() {
+        return kitchen != null;
+    }
+
+    public FoodType getFoodType() {
+        return foodType;
     }
 }

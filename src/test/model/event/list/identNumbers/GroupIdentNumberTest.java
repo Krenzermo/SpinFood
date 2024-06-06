@@ -1,0 +1,61 @@
+package model.event.list.identNumbers;
+
+import model.event.InputData;
+import model.event.PairingWeights;
+import model.event.list.GroupList;
+import model.event.list.PairList;
+import model.event.list.ParticipantCollectionList;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
+
+/*public class GroupIdentNumberTest {
+
+    static ParticipantCollectionList GroupList1;
+    static ParticipantCollectionList pairList;
+    @BeforeAll
+    static void setUp() {
+        InputData inputData = InputData.getInstance();
+        PairingWeights pairingWeights = new PairingWeights(1, 1, 1,1);
+        pairList = new PairList(inputData, pairingWeights);
+        PairingWeights groupPairingWeights = new groupPairingWeights(1, 1, 1, 1);
+
+        GroupList1 = new GroupList(inputData, groupPairingWeights);
+
+    }
+
+    @Test
+    void calcGenderDiversity() {
+        GroupIdentNumber num = new GroupIdentNumber((GroupList) GroupList1);
+        double delta = .5;
+        Assertions.assertEquals(.5, num.genderDiversity, delta);
+    }
+
+    @Test
+    void calcAgeDifference() {
+        GroupIdentNumber num = new GroupIdentNumber((GroupList) GroupList1);
+        Assertions.assertTrue(num.ageDifference >= 0);
+    }
+
+    @Test
+    void calcPreferenceDeviation() {
+        GroupIdentNumber num = new GroupIdentNumber((GroupList) GroupList1);
+        Assertions.assertTrue(num.preferenceDeviation >= 0 && num.preferenceDeviation <=2);
+    }
+    @Test
+    void calcAveragePathLength() {
+        GroupIdentNumber num = new GroupIdentNumber((GroupList) GroupList1);
+        Assertions.assertTrue(num.averagePathLength > 0);
+    }
+    @Test
+    void numElements() {
+        GroupIdentNumber num = new GroupIdentNumber((GroupList) GroupList1);
+        Assertions.assertTrue(num.numElems >= 0);
+    }
+    @Test
+    void numSuccessors() {
+        GroupIdentNumber num = new GroupIdentNumber((GroupList) GroupList1);
+        Assertions.assertTrue(num.numSuccessors >= 0);
+    }
+}
+*/

@@ -2,17 +2,23 @@ package model.event.list;
 
 import model.event.collection.Group;
 import model.event.collection.ParticipantCollection;
-import model.identNumbers.IdentNumber;
+import model.event.list.identNumbers.IdentNumber;
+import model.person.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GroupList implements ParticipantCollectionList {
 	private IdentNumber identNumber;
-	private final List<ParticipantCollection> groups;
+	private final List<Group> groups;
 
 	public GroupList() {
-		groups = new ArrayList<>();
+		groups = buildGroups();
+	}
+
+	private List<Group> buildGroups() {
+		//TODO
+		return new ArrayList();
 	}
 	/**
 	 * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollectionList
@@ -41,7 +47,7 @@ public class GroupList implements ParticipantCollectionList {
 	 */
 	@Override
 	public List<ParticipantCollection> getDataStructure() {
-		return groups;
+		return null;
 	}
 
 	/**
@@ -55,5 +61,14 @@ public class GroupList implements ParticipantCollectionList {
 		if (!collection.getClass().equals(Group.class)) {
 			throw new IllegalArgumentException("Collection is not a Group");
 		}
+	}
+
+	public List<Group> getGroups() {
+		return groups;
+	}
+
+	public List<Participant> getSuccessors() {
+		//todo
+		return null;
 	}
 }
