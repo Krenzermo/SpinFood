@@ -6,504 +6,357 @@ import model.person.Participant;
 
 import java.util.*;
 
-public interface ParticipantCollectionList extends List<ParticipantCollection> {
+/**
+ * This class provides a baseline {@link List} implementation for any {@link List} of {@link ParticipantCollection} objects.
+ * Trying to add {@code null} or a {@link ParticipantCollection} containing {@code null} elements
+ * will result in a {@link NullPointerException}.
+ * Trying to add duplicates will result in an {@link IllegalArgumentException}.
+ *
+ * @author Finn Brecher
+ *
+ * @param <E> The type of the elements in this {@link ParticipantCollectionList}, extends {@link ParticipantCollection}
+ */
+public abstract class ParticipantCollectionList<E extends ParticipantCollection> extends ArrayList<E> {
 	/**
-	 * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollectionList
+	 * A {@link HashSet} containing all unique instances of {@link Participant} in this {@link ParticipantCollectionList}.
 	 */
-	IdentNumber getIdentNumber();
+	private final Set<Participant> participants = new HashSet<>();
+
+	// Methods to be implemented:
 
 	/**
-	 * @return the evaluation of this ParticipantCollection
-	 */
-	double evaluate(); // TODO: create methode evaluate() and make it useful
-
-	/**
-	 * This method is used to change the underlying data structure.
-	 * It is used by the default implementations of {@link #add}, {@link #remove}, {@link #addUnsafe},
-	 * {@link #addAll} and {@link #removeAll}methods.
+	 * Gets the identifying numbers for this {@link ParticipantCollectionList}.
 	 *
-	 * @return the data structure that stores the instances of {@link ParticipantCollection}
+	 * @return the {@link IdentNumber} (Identifying Numbers) of {@code this}
 	 */
-	List<ParticipantCollection> getDataStructure();
+	abstract IdentNumber getIdentNumber();
 
 	/**
-	 * Checks if the collection has the same type as this ParticipantCollectionList (subclass)
+	 * Evaluates the {@link ParticipantCollectionList}.
 	 *
-	 * @param collection the element to be checked
-	 * @throws IllegalArgumentException if the type check fails
+	 * @return the evaluation of {@code this}
 	 */
-	void checkType(ParticipantCollection collection);
-
-	/**
-	 * This method is used to get the instances of {@link ParticipantCollection} in this ParticipantCollectionList
-	 * without changing the underlying data structure.
-	 *
-	 * @return a mutable List containing all instances of {@link ParticipantCollection} in this ParticipantCollectionList
-	 */
-	default List<ParticipantCollection> getParticipantCollections() {
-		return new ArrayList<>(getDataStructure());
-	}
-
-	/**
-	 * clears this ParticipantCollectionList and adds all elements of list
-	 *
-	 * @param list the list to be set as this
-	 * @throws IllegalArgumentException if the type check fails
-	 */
-	default void setList(List<? extends ParticipantCollection> list) {
-		for (ParticipantCollection participantCollection : list) {
-			checkType(participantCollection);
-		}
-		clear();
-		addAll(list);
-	}
+	abstract double evaluate(); // TODO: create methode evaluate() and make it useful
 
 
 	// Participant Methods:
 
 	/**
-	 * @return a List containing all unique instances of {@link Participant} in this ParticipantCollectionList
+	 * Creates a modifiable {@link List} containing all unique instances of {@link Participant} in this {@link ParticipantCollectionList}.
+	 *
+	 * @return a modifiable {@link List} containing all unique instances of {@link Participant} in {@code this}
 	 */
-	default List<Participant> getParticipants() {
-		HashSet<Participant> participants = new HashSet<>();
-		for (ParticipantCollection participantCollection : getParticipantCollections()) {
-			participants.addAll(participantCollection.getParticipants());
-		}
-		return participants.stream().toList(); // TODO: maybe return a modifiable List instead
+	public List<Participant> getParticipants() {
+		return new ArrayList<>(participants);
 	}
 
 	/**
-	 * @return the amount of unique instances of {@link Participant} in this ParticipantCollectionList
+	 * Calculates the amount of unique instances of {@link Participant} in this {@link ParticipantCollectionList}.
+	 *
+	 * @return the amount of unique instances of {@link Participant} in {@code this}
 	 */
-	default int getParticipantCount() {
-		return getParticipants().size();
+	public int getParticipantCount() {
+		return participants.size();
 	}
 
 	/**
-	 * @param participant {@link Participant} whose presence in this list is to be tested
-	 * @return true if this ParticipantCollectionList contains a {@link ParticipantCollection} containing the participant
+	 * Tests if this {@link ParticipantCollectionList} contains the {@link Participant}.
+	 *
+	 * @param participant {@link Participant} whose presence in {@code this} is to be tested
+	 *
+	 * @return true if {@code this} contains a {@link ParticipantCollection} containing the {@link Participant}, {@code false} otherwise
 	 */
-	default boolean containsParticipant(Participant participant) {
-		for (ParticipantCollection participantCollection : getParticipantCollections()) {
-			if (participantCollection.getParticipants().contains(participant)) {
-				return true;
-			}
-		}
-		return false;
+	public boolean containsParticipant(Participant participant) {
+		return participants.contains(participant);
 	}
 
 	/**
-	 * @param participants elements whose presence in this list is to be tested
-	 * @return {@code true} if all elements are contained in this ParticipantCollectionList, {@link false} otherwise
+	 * Test if this {@link ParticipantCollectionList} contains all instances of {@link Participant}.
+	 *
+	 * @param participants elements whose presence in {@code this} is to be tested
+	 *
+	 * @return {@code true} if all elements are contained in {@code this}, {@code false} otherwise
 	 */
-	default boolean containsAllParticipants(Collection<Participant> participants) {
-		return new HashSet<>(getParticipants()).containsAll(participants);
+	public boolean containsAllParticipants(Collection<Participant> participants) {
+		return this.participants.containsAll(participants);
 	}
 
 	/**
-	 * @param participants elements whose presence in this list is to be tested
-	 * @return {@code true} if any element is contained in this ParticipantCollectionList, {@link false} otherwise
+	 * Test if this {@link ParticipantCollectionList} contains any instances of {@link Participant}.
+	 *
+	 * @param participants elements whose presence in {@code this} is to be tested
+	 *
+	 * @return {@code true} if any element is contained in {@code this}, {@code false} otherwise
 	 */
-	default boolean containsAnyParticipant(Collection<Participant> participants) {
-		for (Participant participant: participants) {
-			if (containsParticipant(participant)) {
-				return true;
-			}
-		}
-		return false;
+	public boolean containsAnyParticipant(Collection<Participant> participants) {
+		return participants.stream().anyMatch(this.participants::contains);
 	}
 
 	/**
-	 * @return an array containing all unique instances of {@link Participant} in this ParticipantCollectionList
+	 * Creates an {@code Array} containing all unique instances of {@link Participant} in this {@link ParticipantCollectionList}.
+	 *
+	 * @return an {@code Array} containing all unique instances of {@link Participant} in {@code this}
 	 */
-	default Participant[] getParticipantArray() {
-		return getParticipants().toArray(Participant[]::new);
+	public Participant[] getParticipantArray() {
+		return participants.toArray(Participant[]::new);
 	}
 
 	/**
-	 * @return an Iterator over all unique instances of {@link Participant} in this ParticipantCollectionList
+	 * Creates an {@link Iterator} over all unique instances of {@link Participant} in this {@link ParticipantCollectionList}.
+	 *
+	 * @return an {@link Iterator} over all unique instances of {@link Participant} in {@code this}
 	 */
-	default Iterator<Participant> getParticipantIterator() {
-		return getParticipants().iterator();
+	public Iterator<Participant> getParticipantIterator() {
+		return participants.iterator();
 	}
 
 	/**
-	 * @return a list iterator over all unique instances of {@link Participant} in this ParticipantCollectionList
-	 */
-	default ListIterator<Participant> getParticipantListIterator() {
-		return getParticipants().listIterator();
-	}
-
-	/**
+	 * Gets the element at the specified index from field {@link #participants}.
+	 * This method is equivalent to calling {@code getParticipants().get(index)}.
+	 *
 	 * @param index index of the element to return
-	 * @return the element at the specified position in this list
+	 *
+	 * @return the element at the specified position in the {@link List} of {@link Participant} objects
+	 *
 	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
-	default Participant getParticipant(int index) {
+	public Participant getParticipant(int index) {
 		return getParticipants().get(index);
 	}
 
 
-	// Utility Methods:
+	// Utility and check methods:
 
 	/**
-	 * @return {@code true} if all elements in this List are of the same type, {@code false} otherwise.
-	 */
-	default boolean isHomogenous() {
-		if (isEmpty()) {
-			return true;
-		}
-
-		Class<? extends ParticipantCollection> firstElement = getParticipantCollections().get(0).getClass();
-		for (ParticipantCollection participantCollection : getParticipantCollections()) {
-			if (!firstElement.isInstance(participantCollection)) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Checks if this List is homogenous and returns the {@link Class} if it is.
-	 * Returns {@code ParticipantCollection.class} if this List is empty or contains multiple different implementations.
+	 * This method is used to get the instances of {@link ParticipantCollection} in this {@link ParticipantCollectionList}
+	 * without changing the underlying data structure.
 	 *
-	 * @return the {@link Class} of the elements in this ParticipantCollectionList
+	 * @return a mutable {@link List} containing all instances of {@link ParticipantCollection} in {@code this}
 	 */
-	default Class<? extends ParticipantCollection> getListElementsClass() {
-		if (!isHomogenous() || isEmpty()) {
-			return ParticipantCollection.class;
-		}
-		return getParticipantCollections().get(0).getClass();
+	private List<E> getParticipantCollections() {
+		return new ArrayList<>(this);
 	}
 
 	/**
-	 * @param collection the collection to be checked
-	 * @throws NullPointerException if the collection is or contains null
-	 */
-	private void checkCollectionIsNotNull(ParticipantCollection collection) {
-		// TODO: may need to be changed if ParticipantCollection.contains() throws a NullPointerException
-		if (collection.contains(null)) {
-			throw new NullPointerException("Participants must not be null!");
-		}
-	}
-
-	/**
-	 * Checks if the specified collection could be added to this ParticipantCollectionList
+	 * Clears this {@link ParticipantCollectionList} and adds all elements of the specified {@link List}.
 	 *
-	 * @param collection the collection to be checked
-	 * @throws NullPointerException if the collection is or contains null
-	 * @throws IllegalArgumentException if any {@link Participant} is already in this ParticipantCollectionList
+	 * @param list the {@link List} to be set as this
+	 *
+	 * @throws IllegalArgumentException if the type check fails
 	 */
-	private void checkCollection(ParticipantCollection collection) {
-		checkCollectionIsNotNull(collection);
-		checkType(collection);
-		if (getParticipantCollections().contains(collection)) {
-			throw new IllegalArgumentException("ParticipantCollectionList already contains this collection!");
+	public void setList(List<E> list) {
+		clear();
+		addAll(list);
+	}
+
+	/**
+	 * Checks if the specified {@link ParticipantCollection} is or contains {@code null}.
+	 *
+	 * @param collection the {@link ParticipantCollection} to be checked
+	 *
+	 * @throws NullPointerException if the {@link ParticipantCollection} is or contains {@code null}
+	 */
+	private void nullCheck(E collection) {
+		Objects.requireNonNull(collection);
+		if (collection.contains(null)) { // TODO: may need to be changed if Pair or Group throw NullPointerException
+			throw new NullPointerException("Collection contains null element");
+		}
+	}
+
+	/**
+	 * Checks if the specified {@link ParticipantCollection} could be added to this {@link ParticipantCollectionList}.
+	 *
+	 * @param collection the {@link ParticipantCollection} to be checked
+	 *
+	 * @throws NullPointerException if the {@link ParticipantCollection} is or contains {@code null}
+	 * @throws IllegalArgumentException if any {@link Participant} or the {@link ParticipantCollection} is already contained in {@code this}
+	 */
+	private void check(E collection) {
+		nullCheck(collection);
+		if (contains(collection)) {
+			throw new IllegalArgumentException("This ParticipantCollectionList already contains the collection: " + collection);
 		}
 		if (containsAnyParticipant(collection)) {
-			throw new IllegalArgumentException("ParticipantCollectionList already contains a participant ");
+			throw new IllegalArgumentException("This ParticipantCollectionList already contains a participant: " + collection);
 		}
-	}
-
-	// Unsafe add methods:
-
-	/**
-	 * Adds the specified Collection without checking for duplicates
-	 *
-	 * @param collection element whose presence in this collection is to be ensured
-	 * @return {@code true} if the operation was successful, {@code false} otherwise
-	 * @throws NullPointerException if the collection or a participant is null
-	 */
-	default boolean addUnsafe(ParticipantCollection collection) {
-		checkCollectionIsNotNull(collection);
-		return getDataStructure().add(collection);
 	}
 
 
 	// Inherited Methods:
 
 	/**
-	 * Adds the specified {@link ParticipantCollection} to this List.
-	 * The element will not be added if this ParticipantCollectionList
-	 * already contains one of the instances of {@link Participant}.
-	 * Use {@link #addUnsafe} to allow duplicates
+	 * Adds the specified {@link ParticipantCollection} to this {@link ParticipantCollectionList}.
+	 * The element will not be added if this {@link ParticipantCollectionList}
+	 * already contains at least one of the instances of {@link Participant}.
 	 *
-	 * @param collection element whose presence in this collection is to be ensured
+	 * @param collection element whose presence in {@code this} is to be ensured
+	 *
 	 * @return {@code true} if the operation was successful, {@code false} otherwise
-	 * @throws NullPointerException if the collection or a participant is null
-	 * @throws IllegalArgumentException if any {@link Participant} is already in this ParticipantCollectionList
+	 *
+	 * @throws NullPointerException if the {@link ParticipantCollection} or a participant is {@code null}
+	 * @throws IllegalArgumentException if any {@link Participant} or the {@link ParticipantCollection} is already in {@code this}
 	 */
 	@Override
-	default boolean add(ParticipantCollection collection) {
-		checkCollection(collection);
-		return getDataStructure().add(collection);
+	public boolean add(E collection) {
+		check(collection);
+		participants.addAll(collection);
+		return super.add(collection);
 	}
 
 	/**
-	 * @param object element to be removed from this list, if present
+	 * Removes the specified object from this {@link ParticipantCollectionList}, if possible.
+	 *
+	 * @param object element to be removed from {@code this}, if present
+	 *
 	 * @return {@code true} if the operation was successful, {@code false} otherwise
-	 * @throws NullPointerException if the collection or a participant is null
-	 * @throws ClassCastException if the Object is not of type {@link ParticipantCollection}
 	 */
 	@Override
-	default boolean remove(Object object) {
-		checkCollectionIsNotNull((ParticipantCollection) object);
-		return getDataStructure().remove(object);
+	public boolean remove(Object object) {
+		participants.remove(object);
+		return super.remove(object);
 	}
 
 	/**
-	 * @return the size of this ParticipantCollectionList
+	 * Removes all the elements from this {@link ParticipantCollectionList}.
+	 * {@code this} will be empty after this call returns.
 	 */
 	@Override
-	default int size() {
-		return getParticipantCollections().size();
+	public void clear() {
+		participants.clear();
+		super.clear();
 	}
 
 	/**
-	 * @return {@code true} if this ParticipantCollectionList is empty, {@code false} otherwise
-	 */
-	@Override
-	default boolean isEmpty() {
-		return getParticipantCollections().isEmpty();
-	}
-
-	/**
-	 * Checks if this ParticipantCollectionList contains the specified Object.
-	 * Only true if the Object is a {@link ParticipantCollection}.
-	 * Use {@link #containsParticipant} to check for Participants
+	 * Adds all specified elements to this {@link ParticipantCollectionList}, if possible.
 	 *
-	 * @param o element whose presence in this list is to be tested
-	 * @return {@code true} if the element is contained in this ParticipantCollectionList, {@code false} otherwise
-	 * @throws NullPointerException if the collection or a participant is null
-	 * @throws ClassCastException if the Object is not of type {@link ParticipantCollection}
-	 */
-	@Override
-	default boolean contains(Object o) {
-		checkCollectionIsNotNull((ParticipantCollection) o);
-		return getParticipantCollections().contains(o);
-	}
-
-	/**
-	 * @return an Iterator over all instances of {@link Participant} in this ParticipantCollectionList
-	 */
-	@Override
-	default Iterator<ParticipantCollection> iterator() {
-		return getParticipantCollections().listIterator();
-	}
-
-	/**
-	 * @return an array containing all instances of {@link ParticipantCollection} in this ParticipantCollectionList
-	 */
-	@Override
-	default Object[] toArray() {
-		return getParticipantCollections().toArray();
-	}
-
-	/**
-	 * @param a   the array into which the elements of this list are to
-	 *            be stored, if it is big enough; otherwise, a new array of the
-	 *            same runtime type is allocated for this purpose.
-	 * @param <T> the type of the array
-	 * @return an array containing the elements of this list
-	 * @throws ArrayStoreException if the runtime type of the specified array
-	 *          is not a supertype of the runtime type of every element in this list
-	 * @throws NullPointerException if the specified array is null
-	 */
-	@Override
-	default <T> T[] toArray(T[] a) {
-		return getParticipantCollections().toArray(a);
-	}
-
-	/**
-	 * Checks if this ParticipantCollectionList contains all specified elements.
-	 * Only true if the Object is a {@link ParticipantCollection}.
-	 * Use {@link #containsAllParticipants} to check for Participants
+	 * @param c {@link Collection} containing elements to be added to {@code this}
 	 *
-	 * @param c collection to be checked for containment in this list
-	 * @return {@code true} if this ParticipantCollectionList contains all elements of c, {@code false} otherwise
-	 * @throws ClassCastException if the types of one or more elements
-	 *          in the specified collection are incompatible with this list
+	 * @return {@code true} if {@code this} changed as a result of the call, {@code false} otherwise
+	 *
+	 * @throws NullPointerException if any {@link ParticipantCollection} is or contains {@code null}
+	 * @throws IllegalArgumentException if any {@link Participant} or {@link ParticipantCollection} is already in {@code this}
 	 */
 	@Override
-	default boolean containsAll(Collection<?> c) {
-		return new HashSet<>(getParticipantCollections()).containsAll(c);
+	public boolean addAll(Collection<? extends E> c) {
+		for (E e : c) {
+			check(e);
+		}
+		c.forEach(participants::addAll);
+		return super.addAll(c);
 	}
 
 	/**
-	 * @param c collection containing elements to be added to this collection
-	 * @return {@code true} if this list changed as a result of the call, {@code false} otherwise
-	 * @throws NullPointerException if the collection is or contains null
-	 * @throws IllegalArgumentException if a Collection or a Participant is already in this ParticipantCollectionList
-	 */
-	@Override
-	default boolean addAll(Collection<? extends ParticipantCollection> c) {
-		return addAll(size(), c);
-	}
-
-	/**
-	 * @param index index at which to insert the first element from the
-	 *              specified collection
-	 * @param c     collection containing elements to be added to this list
-	 * @return {@code true} if this list changed as a result of the call, {@code false} otherwise
-	 * @throws NullPointerException if any collection is or contains null
-	 * @throws IllegalArgumentException if any {@link ParticipantCollection} or any {@link Participant}
-	 *          is already in this ParticipantCollectionList
+	 * Adds all specified elements to this {@link ParticipantCollectionList}, if possible.
+	 *
+	 * @param index index at which to insert the first element from the specified {@link Collection}
+	 * @param c {@link Collection} containing elements to be added to {@code this}
+	 *
+	 * @return {@code true} if {@code this} changed as a result of the call, {@code false} otherwise
+	 *
+	 * @throws NullPointerException if any {@link ParticipantCollection} is or contains {@code null}
+	 * @throws IllegalArgumentException if any {@link Participant} or {@link ParticipantCollection} is already in {@code this}
 	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
-	default boolean addAll(int index, Collection<? extends ParticipantCollection> c) {
-		for (ParticipantCollection participantCollection : c) {
-			checkCollection(participantCollection);
+	public boolean addAll(int index, Collection<? extends E> c) {
+		for (E e : c) {
+			check(e);
 		}
-		return getDataStructure().addAll(index, c);
+		c.forEach(participants::addAll);
+		return super.addAll(index, c);
 	}
 
+
 	/**
-	 * @param c collection containing elements to be removed from this list
-	 * @return {@code true} if this list changed as a result of the call, {@code false} otherwise
-	 * @throws NullPointerException if the collection is or contains null
+	 * Removes all the specified elements from this {@link ParticipantCollectionList}, if possible.
+	 *
+	 * @param c {@link Collection} containing elements to be removed from {@code this}
+	 *
+	 * @return {@code true} if {@code this} changed as a result of the call, {@code false} otherwise
+	 *
+	 * @throws ClassCastException if the class of an element of {@code this} is incompatible with the specified {@link Collection}
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	default boolean removeAll(Collection<?> c) {
-		if (c.contains(null)) {
-			throw new NullPointerException("ParticipantCollection must not be null!");
-		}
-		return getDataStructure().removeAll(c);
+	public boolean removeAll(Collection<?> c) {
+		((Collection<Collection<?>>) c).forEach(participants::removeAll);
+		return super.removeAll(c);
 	}
 
 	/**
-	 * @param c collection containing elements to be retained in this list
-	 * @return {@code true} if this list changed as a result of the call, {@code false} otherwise
-	 * @throws NullPointerException if the collection is or contains null
+	 * Removes all non-specified elements from this {@link ParticipantCollectionList}.
+	 *
+	 * @param c {@link Collection} containing elements to be retained in {@code this}
+	 *
+	 * @return {@code true} if {@code this} changed as a result of the call, {@code false} otherwise
+	 *
+	 * @throws ClassCastException if the class of an element of {@code this} is incompatible with the specified {@link Collection}
 	 */
+	@SuppressWarnings("unchecked")
 	@Override
-	default boolean retainAll(Collection<?> c) {
-		if (c.contains(null)) {
-			throw new NullPointerException("ParticipantCollection must not be null!");
-		}
-		return getDataStructure().retainAll(c);
+	public boolean retainAll(Collection<?> c) {
+		((Collection<Collection<?>>) c).forEach(participants::retainAll);
+		return super.retainAll(c);
 	}
 
 	/**
-	 * Removes all the elements from this List.
-	 * The list will be empty after this call returns.
-	 */
-	@Override
-	default void clear() {
-		getDataStructure().clear();
-	}
-
-	/**
-	 * @param index index of the element to return
-	 * @return the element at the specified position in this list
-	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
-	 */
-	@Override
-	default ParticipantCollection get(int index) {
-		return getParticipantCollections().get(index);
-	}
-
-	/**
+	 * Adds the specified element to this {@link ParticipantCollectionList} at the specified index.
+	 *
+	 *
 	 * @param index   index of the element to replace
 	 * @param element element to be stored at the specified position
+	 *
 	 * @return the element previously at the specified position
-	 * @throws NullPointerException if element is or contains null
-	 * @throws IllegalArgumentException if this list already contains the {@link ParticipantCollection} or a {@link Participant}
+	 *
+	 * @throws NullPointerException if element is or contains {@code null}
+	 * @throws IllegalArgumentException if {@code this} already contains the {@link ParticipantCollection} or a {@link Participant}
 	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
-	default ParticipantCollection set(int index, ParticipantCollection element) {
-		checkCollection(element);
-		return getDataStructure().set(index, element);
+	public E set(int index, E element) {
+		check(element);
+		E oldElement =  super.set(index, element);
+		if (oldElement != null) {
+			oldElement.forEach(participants::remove); //optimized for speed (by IntelliJ)
+		}
+		participants.addAll(element);
+		return oldElement;
 	}
 
 	/**
+	 * Inserts the specified element at the specified position in this {@link ParticipantCollectionList} (optional operation).
+	 * Shifts the element currently at that position (if any) and any subsequent elements to the right (adds one to their indices).
+	 *
 	 * @param index   index at which the specified element is to be inserted
 	 * @param element element to be inserted
-	 * @throws NullPointerException if element is or contains null
-	 * @throws IllegalArgumentException if this list already contains the {@link ParticipantCollection} or a {@link Participant}
+	 *
+	 * @throws NullPointerException if element is or contains {@code null}
+	 * @throws IllegalArgumentException if {@code this} already contains the {@link ParticipantCollection} or a {@link Participant}
 	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
-	default void add (int index, ParticipantCollection element) {
-		checkCollection(element);
-		getDataStructure().add(index, element);
+	public void add (int index, E element) {
+		check(element);
+		participants.addAll(element);
+		super.add(index, element);
 	}
 
 	/**
+	 * Removes the element at the specified position in this {@link ParticipantCollectionList}.
+	 * Shifts any subsequent elements to the left (subtracts one from their indices).
+	 *
 	 * @param index the index of the element to be removed
+	 *
 	 * @return the element previously at the specified position
+	 *
 	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
-	default ParticipantCollection remove(int index) {
-		return getDataStructure().remove(index);
-	}
-
-	/**
-	 * @param o element to search for
-	 * @return the index of the first occurrence of the specified element in this list,
-	 *          or -1 if this list does not contain the element
-	 * @throws NullPointerException if the specified element is null
-	 * @throws ClassCastException if the type of the specified element is incompatible with this list
-	 */
-	@Override
-	default int indexOf(Object o) {
-		checkCollectionIsNotNull((ParticipantCollection) o);
-		try {
-			checkType((ParticipantCollection) o);
-		} catch (IllegalArgumentException e) {
-			throw new ClassCastException(e.getMessage());
+	public E remove(int index) {
+		E oldElement =  super.remove(index);
+		if (oldElement != null) {
+			participants.addAll(oldElement);
 		}
-		return getParticipantCollections().indexOf(o);
-	}
-
-	/**
-	 * @param o element to search for
-	 * @return the index of the last occurrence of the specified element in
-	 *          this list, or -1 if this list does not contain the element
-	 * @throws NullPointerException if the specified element is null
-	 * @throws ClassCastException if the type of the specified element is incompatible with this list
-	 */
-	@Override
-	default int lastIndexOf(Object o) {
-		checkCollectionIsNotNull((ParticipantCollection) o);
-		try {
-			checkType((ParticipantCollection) o);
-		} catch (IllegalArgumentException e) {
-			throw new ClassCastException(e.getMessage());
-		}
-		return getParticipantCollections().lastIndexOf(o);
-	}
-
-	/**
-	 * @return a list iterator over the elements in this ParticipantCollectionList (in proper sequence)
-	 */
-	@Override
-	default ListIterator<ParticipantCollection> listIterator() {
-		return getParticipantCollections().listIterator();
-	}
-
-	/**
-	 * @param index index of the first element to be returned from the
-	 *              list iterator (by a call to {@link ListIterator#next next})
-	 * @return a list iterator over the elements in this list (in proper sequence),
-	 * 	 *          starting at the specified position in the ParticipantCollectionList
-	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
-	 */
-	@Override
-	default ListIterator<ParticipantCollection> listIterator(int index) {
-		return getParticipantCollections().listIterator(index);
-	}
-
-	/**
-	 * @param fromIndex low endpoint (inclusive) of the subList
-	 * @param toIndex   high endpoint (exclusive) of the subList
-	 * @return a view of the specified range within this ParticipantCollection
-	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
-	 */
-	@Override
-	default List<ParticipantCollection> subList(int fromIndex, int toIndex) {
-		return getParticipantCollections().subList(fromIndex, toIndex);
+		return oldElement;
 	}
 }
