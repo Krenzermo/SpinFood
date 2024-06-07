@@ -54,6 +54,9 @@ public class Pair implements ParticipantCollection {
         FoodType foodType1 = participants[0].getFoodType();
         FoodType foodType2 = participants[1].getFoodType();
         List<FoodType> list = List.of(foodType1, foodType2);
+        if (foodType1 == foodType2) {
+            return foodType1;
+        }
 
         if (hasOnlyCarni(list)) {
             return FoodType.MEAT;
