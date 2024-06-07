@@ -20,12 +20,17 @@ import java.util.Objects;
  */
 public class Pair implements ParticipantCollection {
 
+    private int id;
     private final Participant[] participants = new Participant[2];
     private Kitchen kitchen;
+    private boolean kitchenOf;
     private double distance;
     private Course course;
     private Group[] groups = new Group[3];
     private FoodType foodType;
+    private int starterNumber;
+    private int mainNumber;
+    private int dessertNumber;
     public final boolean signedUpTogether;
 
     private static final InputData inputData = InputData.getInstance();
@@ -137,25 +142,36 @@ public class Pair implements ParticipantCollection {
 
         // assign kitchen if signedUpTogether or one does not have a kitchen
         if (signedUpTogether) {
+            kitchenOf = false;
             return participants[0].getKitchen();
         }
         if (KitchenAvailability.NO.equals(participants[0].isHasKitchen())) {
+            kitchenOf = true;
             return participants[1].getKitchen();
         }
         if (KitchenAvailability.NO.equals(participants[1].isHasKitchen())) {
+            kitchenOf = false;
             return participants[0].getKitchen();
         }
 
         // if exactly one participant maybe has a kitchen
         if (KitchenAvailability.MAYBE.equals(participants[0].isHasKitchen()) ^ KitchenAvailability.MAYBE.equals(participants[1].isHasKitchen())) {
             if (KitchenAvailability.YES.equals(participants[0].isHasKitchen())) {
+                kitchenOf = false;
                 return participants[0].getKitchen();
             }
             if (KitchenAvailability.YES.equals(participants[1].isHasKitchen())) {
+                kitchenOf = true;
                 return participants[1].getKitchen();
             }
 
-            return KitchenAvailability.MAYBE.equals(participants[0].isHasKitchen()) ? participants[0].getKitchen() : participants[1].getKitchen();
+            if (KitchenAvailability.MAYBE.equals(participants[0].isHasKitchen())) {
+                kitchenOf = false;
+                return participants[0].getKitchen();
+            } else {
+                kitchenOf = true;
+                return participants[1].getKitchen();
+            }
         }
 
         // here if both have a kitchen or both maybe have a kitchen
@@ -224,7 +240,28 @@ public class Pair implements ParticipantCollection {
 
     @Override
     public String toString() {
-        return "{Participant 1: " + participants[0].toString() + ", Participant 2: " + participants[1].toString() + "}";
+        return "{Participant1: " + participants[0] + " Participant2: " + participants[1] + kitchen + "}";
+    }
+
+    /** Creates an Output String for this pair object in the following format:
+     * <p>- Name of Participant 1 </p>
+     * <p> - Name of Participant 2 </p>
+     * <p> - Signed up together? </p>
+     * <p> - Longitude of Kitchen </p>
+     * <p> - Latitude of Kitchen </p>
+     * <p> - Food Preference </p>
+     * <p> - Pair number </p>
+     * <p> - Starter Group number </p>
+     * <p> - Main Group number </p>
+     * <p> - Dessert Group number </p>
+     * <p> - Who owns the kitchen? </p>
+     * <p> - Cooking course </p>
+     *
+     * @return A String of a Pair in the output Format
+     */
+    public String asOutputString() {
+        int signedUpTogether = this.signedUpTogether ? 1 : 0;
+        return participants[0].getName() + ";" + participants[1].getName() + ";" + signedUpTogether + ";" + kitchen.asOutputString() + ";" + foodType.getOtherName() + ";" + id + ";" + starterNumber + ";" + mainNumber + ";" + dessertNumber + ";" + kitchenOf + ";" + course.getAsInt();
     }
 
     /** Calculates the deviation of Food preferences of the Participants of this Pair

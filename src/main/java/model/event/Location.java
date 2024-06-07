@@ -15,6 +15,14 @@ public record Location(double latitude, double longitude) {
 						+ Math.pow(Math.abs(this.longitude-other.longitude), 2));
 	}
 
+	/** Creates an output String for this Location. First longitude then latitude
+	 *
+	 * @return The output String of this Location
+	 */
+	public String asOutputString() {
+		return longitude + ";" + latitude;
+	}
+
 	@Override
 	public String toString() {
 		return "@Location{" + "latitude: " + latitude + ", longitude: " + longitude + "}";
