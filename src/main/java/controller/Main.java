@@ -3,6 +3,8 @@ package controller;
 import model.event.InputData;
 import model.event.OutputData;
 import model.event.PairingWeights;
+import model.event.collection.Group;
+import model.event.list.GroupList;
 import model.event.list.PairList;
 
 /**
@@ -24,8 +26,10 @@ public class Main {
 		System.out.println(pairList);
 		System.out.println(pairList.getIdentNumber());
 
-		OutputData outputData = new OutputData("src/main/java/data");
-		outputData.makeOutputFile();
+		GroupList groupList = new GroupList(pairList);
+
+		OutputData outputData = new OutputData("src/main/java/data", groupList);
+		outputData.makePairOutputFile();
 
 	}
 }

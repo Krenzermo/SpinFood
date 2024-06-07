@@ -17,6 +17,7 @@ public class Group implements ParticipantCollection{
 	private final Pair[] pairs;
 	private Kitchen kitchen;
 	private Course course;
+	private int id;
 
 
 	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen) {
@@ -101,6 +102,10 @@ public class Group implements ParticipantCollection{
 	public boolean remove(Object o) {
 		// TODO: this
 		return false;
+	}
+
+	public String asOutputString() {
+		return id + ";" + course.getAsInt() + ";" + pairs[0].asOutputString() + ";" + pairs[1].asOutputString() + ";" + pairs[2].asOutputString();
 	}
 
 	public Pair[] getPairs() {

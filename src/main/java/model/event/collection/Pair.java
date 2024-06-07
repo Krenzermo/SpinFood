@@ -25,7 +25,7 @@ public class Pair implements ParticipantCollection {
     private Kitchen kitchen;
     private boolean kitchenOf;
     private double distance;
-    private Course course;
+    private Course course = Course.DESSERT; //TODO: delete dummy value for course when implemented correctly
     private Group[] groups = new Group[3];
     private FoodType foodType;
     private int starterNumber;
@@ -263,7 +263,7 @@ public class Pair implements ParticipantCollection {
      */
     public String asOutputString() {
         int signedUpTogether = this.signedUpTogether ? 1 : 0;
-        return participants[0].getName() + ";" + participants[1].getName() + ";" + signedUpTogether + ";" + kitchen.asOutputString() + ";" + foodType.getOtherName() + ";" + id + ";" + starterNumber + ";" + mainNumber + ";" + dessertNumber + ";" + kitchenOf + ";" + course.getAsInt();
+        return participants[0].getName().asOutputString() + ";" + participants[1].getName().asOutputString() + ";" + signedUpTogether + ";" + kitchen.asOutputString() + ";" + foodType.getOtherName() + ";" + id + ";" + starterNumber + ";" + mainNumber + ";" + dessertNumber + ";" + kitchenOf + ";" + course.getAsInt();
     }
 
     /** Calculates the deviation of Food preferences of the Participants of this Pair
@@ -293,4 +293,5 @@ public class Pair implements ParticipantCollection {
     public FoodType getFoodType() {
         return foodType;
     }
+
 }

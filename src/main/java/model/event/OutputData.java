@@ -11,6 +11,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 /** This class contains the methods for creating an output File for the Groups and pairs created in {@link PairList}
@@ -40,13 +41,30 @@ public class OutputData {
      * See {@link Pair#asOutputString()} for the format of each entry
      *
      */
-    public void makeOutputFile() {
-        List<Group> groups = groupList.getGroups().stream().sorted(Comparator.comparing(Group::getCourse)).toList();
-        List<Pair> pairs = groups.stream().flatMap(g -> Arrays.stream(g.getPairs())).toList();
+    public void makePairOutputFile() {
+        List<Pair> pairs = groupList.getPairList().getPairs();
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath + "/pairs.csv"))) {
-            for (Pair pair : pairs) {
-                writer.write(pair.asOutputString());
-                writer.newLine();
+            Iterator<Pair> iter = pairs.iterator();
+            while (iter.hasNext()) {
+                writer.write(iter.next().asOutputString());
+                if (iter.hasNext()) {
+                    writer.newLine();
+                }
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void makeGroupOutputFile() {
+        List<Group> groups = groupList.getGroups().stream().sorted(Comparator.comparing(Group::getCourse)).toList();
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath + "/groups.csv"))) {
+            Iterator<Group> iter = groups.iterator();
+            while (iter.hasNext()) {
+                writer.write(iter.next().asOutputString());
+                if (iter.hasNext()) {
+                    writer.newLine();
+                }
             }
         } catch (IOException e) {
             throw new RuntimeException(e);

@@ -32,4 +32,8 @@ public record Name(String firstName, String lastName) {
     public String toString() {
         return firstName + " " + lastName;
     }
+
+    public String asOutputString() {
+        return firstName + lastName;
+    }
 }

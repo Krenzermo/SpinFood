@@ -11,8 +11,10 @@ import java.util.List;
 public class GroupList implements ParticipantCollectionList {
 	private IdentNumber identNumber;
 	private final List<Group> groups;
+	private PairList pairList;
 
-	public GroupList() {
+	public GroupList(PairList pairList) {
+		this.pairList = pairList;
 		groups = buildGroups();
 	}
 
@@ -70,5 +72,9 @@ public class GroupList implements ParticipantCollectionList {
 	public List<Participant> getSuccessors() {
 		//todo
 		return null;
+	}
+
+	public PairList getPairList() {
+		return pairList;
 	}
 }
