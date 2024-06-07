@@ -3,7 +3,6 @@ package model.event.list;
 import model.event.InputData;
 import model.event.PairingWeights;
 import model.event.collection.Pair;
-import model.event.collection.ParticipantCollection;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.identNumbers.PairIdentNumber;
 import model.kitchen.KitchenAvailability;
@@ -17,11 +16,15 @@ import java.util.List;
  * The PairList class represents a collection of pairs of participants.
  * It provides functionality to pair participants based on various criteria
  * and maintains a list of unpaired participants (successors).
+ *
+ * @author Ole Krenzer
+ * @author Daniel Hinkelmann
+ * @author Finn Brecher
+ * @author Davide Piacenza
  */
-public class PairList implements ParticipantCollectionList {
-    private IdentNumber identNumber;
-    private final ArrayList<Pair> pairs;
-    private final ArrayList<Participant> successors = new ArrayList<>();
+public class PairList extends ParticipantCollectionList<Pair> {
+    private final IdentNumber identNumber;
+    private static final List<Participant> successors = new ArrayList<>();
 
 
     /**
@@ -31,9 +34,9 @@ public class PairList implements ParticipantCollectionList {
      * @param pairingWeights the weights used for pairing criteria
      */
     public PairList(InputData inputData, PairingWeights pairingWeights) {
-        ArrayList<Participant> sortedParticipantList = sortParticipants(inputData.getParticipantInputData());
-        this.pairs = buildBestPairs(sortedParticipantList, pairingWeights);
-        this.pairs.addAll(inputData.getPairInputData());
+        List<Participant> sortedParticipantList = sortParticipants(inputData.getParticipantInputData());
+        setList(buildBestPairs(sortedParticipantList, pairingWeights));
+        addAll(inputData.getPairInputData());
         this.identNumber = deriveIdentNumber();
     }
 
@@ -44,8 +47,8 @@ public class PairList implements ParticipantCollectionList {
      * @param pairingWeights  the weights used for pairing criteria
      * @return a list of the best pairs of participants
      */
-    private ArrayList<Pair> buildBestPairs(ArrayList<Participant> participantList, PairingWeights pairingWeights) {
-        ArrayList<Pair> bestPairList = new ArrayList<>();
+    private static List<Pair> buildBestPairs(List<Participant> participantList, PairingWeights pairingWeights) {
+        List<Pair> bestPairList = new ArrayList<>();
 
         while (participantList.size() >= 2) {
             Participant participant1 = participantList.remove(0);
@@ -83,7 +86,7 @@ public class PairList implements ParticipantCollectionList {
      * @param pairingWeights  the weights used for pairing criteria
      * @return the score for pairing the two participants
      */
-    private double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+    private static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         double score = 0;
         score += compareKitchen(participant1, testedParticipant);
         score += compareGender(participant1, testedParticipant, pairingWeights);
@@ -99,7 +102,7 @@ public class PairList implements ParticipantCollectionList {
      * @param testedParticipant the second participant being tested
      * @return the score based on the kitchen availability comparison
      */
-    private double compareKitchen(Participant participant1, Participant testedParticipant) {
+    private static double compareKitchen(Participant participant1, Participant testedParticipant) {
         switch (participant1.isHasKitchen()) {
             case YES:
                 return (testedParticipant.isHasKitchen() == KitchenAvailability.YES &&
@@ -122,7 +125,7 @@ public class PairList implements ParticipantCollectionList {
      * @param pairingWeights  the weights used for pairing criteria
      * @return the score based on the gender comparison
      */
-    private double compareGender(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+    private static double compareGender(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         return participant1.getGender().equals(testedParticipant.getGender()) ? 0 : 0.5 * pairingWeights.getGenderDifferenceWeight();
     }
 
@@ -134,7 +137,7 @@ public class PairList implements ParticipantCollectionList {
      * @param pairingWeights  the weights used for pairing criteria
      * @return the score based on the food preference comparison
      */
-    private double compareFoodPreference(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+    private static double compareFoodPreference(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         double weight = pairingWeights.getFoodPreferenceWeight();
         switch (participant1.getFoodType()) {
             case MEAT:
@@ -163,7 +166,7 @@ public class PairList implements ParticipantCollectionList {
      * @param pairingWeights  the weights used for pairing criteria
      * @return the score based on the age comparison
      */
-    private double compareAge(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+    private static double compareAge(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         double ageDifference = participant1.getAge().getAgeDifference(testedParticipant.getAge());
         return pairingWeights.getAgeDifferenceWeight() * (1 - 0.1 * ageDifference);
     }
@@ -174,10 +177,10 @@ public class PairList implements ParticipantCollectionList {
      * @param participantList the list of participants to be sorted
      * @return the sorted list of participants
      */
-    private ArrayList<Participant> sortParticipants(ArrayList<Participant> participantList) {
-        ArrayList<Participant> sortedNoKitchenList = new ArrayList<>();
-        ArrayList<Participant> sortedMaybeKitchenList = new ArrayList<>();
-        ArrayList<Participant> sortedYesKitchenList = new ArrayList<>();
+    private static List<Participant> sortParticipants(List<Participant> participantList) {
+        List<Participant> sortedNoKitchenList = new ArrayList<>();
+        List<Participant> sortedMaybeKitchenList = new ArrayList<>();
+        List<Participant> sortedYesKitchenList = new ArrayList<>();
 
         for (Participant participant : participantList) {
             switch (participant.isHasKitchen()) {
@@ -193,7 +196,7 @@ public class PairList implements ParticipantCollectionList {
             }
         }
 
-        ArrayList<Participant> sortedParticipantList = new ArrayList<>();
+        List<Participant> sortedParticipantList = new ArrayList<>();
         sortedParticipantList.addAll(sortByFoodType(sortedNoKitchenList));
         sortedParticipantList.addAll(sortByFoodType(sortedMaybeKitchenList));
         sortedParticipantList.addAll(sortByFoodType(sortedYesKitchenList));
@@ -207,8 +210,8 @@ public class PairList implements ParticipantCollectionList {
      * @param participantList the list of participants to be sorted
      * @return the sorted list of participants
      */
-    private ArrayList<Participant> sortByFoodType(ArrayList<Participant> participantList) {
-        ArrayList<Participant> sortedParticipantList = new ArrayList<>();
+    private static List<Participant> sortByFoodType(List<Participant> participantList) {
+        List<Participant> sortedParticipantList = new ArrayList<>();
 
         for (Participant participant : participantList) {
             if (participant.getFoodType() != FoodType.NONE) {
@@ -230,7 +233,7 @@ public class PairList implements ParticipantCollectionList {
      *
      * @return the list of unpaired participants
      */
-    public ArrayList<Participant> getSuccessors() {
+    public List<Participant> getSuccessors() {
         return successors;
     }
 
@@ -239,8 +242,8 @@ public class PairList implements ParticipantCollectionList {
      *
      * @return the list of pairs of participants
      */
-    public ArrayList<Pair> getPairs() {
-        return pairs;
+    public List<Pair> getPairs() {
+        return this;
     }
 
     /**
@@ -253,9 +256,9 @@ public class PairList implements ParticipantCollectionList {
     }
 
     /**
-     * Gets the identifying number for this ParticipantCollectionList.
+     * Gets the identifying number for this PairList.
      *
-     * @return the identifying number for this ParticipantCollectionList
+     * @return the identifying number for this PairList
      */
     @Override
     public IdentNumber getIdentNumber() {
@@ -263,7 +266,7 @@ public class PairList implements ParticipantCollectionList {
     }
 
     /**
-     * Evaluates the ParticipantCollection.
+     * Evaluates the PairList.
      *
      * @return the evaluation score
      */
@@ -271,30 +274,6 @@ public class PairList implements ParticipantCollectionList {
     public double evaluate() {
         // TODO: Implement evaluation logic
         return 0;
-    }
-
-    /**
-     * Gets the data structure that stores the instances of ParticipantCollection.
-     *
-     * @return the data structure that stores the instances of ParticipantCollection
-     */
-    @Override
-    public List<ParticipantCollection> getDataStructure() {
-        // TODO: Implement the data structure for ParticipantCollection
-        return null;
-    }
-
-    /**
-     * Checks if the collection has the same type as this ParticipantCollectionList.
-     *
-     * @param collection the element to be checked
-     * @throws IllegalArgumentException if the type check fails
-     */
-    @Override
-    public void checkType(ParticipantCollection collection) {
-        if (!(collection instanceof Pair)) {
-            throw new IllegalArgumentException("Collection is not a Pair");
-        }
     }
 
     /**
@@ -306,7 +285,7 @@ public class PairList implements ParticipantCollectionList {
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("PairList {\nPairs:\n");
-        for (Pair pair : pairs) {
+        for (Pair pair : this) {
             sb.append(pair.toString()).append("\n");
         }
         sb.append("\nSuccessors:\n");

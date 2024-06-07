@@ -8,20 +8,31 @@ import model.person.Participant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GroupList implements ParticipantCollectionList {
+/**
+ * The GroupList class represents a collection of Groups of Pairs.
+ * It provides functionality to group participants based on various criteria
+ * and maintains a list of unpaired participants (successors).
+ *
+ * @author Daniel Hinkelmann
+ * @author Finn Brecher
+ */
+public class GroupList extends ParticipantCollectionList<Group> {
 	private IdentNumber identNumber;
-	private final List<Group> groups;
+	private static final List<Participant> successors = new ArrayList<>();
 
 	public GroupList() {
-		groups = buildGroups();
+		setList(buildGroups());
 	}
 
-	private List<Group> buildGroups() {
+	private static List<Group> buildGroups() {
 		//TODO
-		return new ArrayList();
+		return new ArrayList<>();
 	}
+
 	/**
-	 * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollectionList
+	 * Gets the identifying number for this GroupList.
+	 *
+	 * @return the {@link IdentNumber} (Identifying Numbers) of this GroupList
 	 */
 	@Override
 	public IdentNumber getIdentNumber() {
@@ -30,7 +41,9 @@ public class GroupList implements ParticipantCollectionList {
 	}
 
 	/**
-	 * @return the evaluation of this ParticipantCollection
+	 *  Evaluates the GroupList.
+	 *
+	 * @return the evaluation of this GroupList
 	 */
 	@Override
 	public double evaluate() {
@@ -38,37 +51,11 @@ public class GroupList implements ParticipantCollectionList {
 		return 0;
 	}
 
-	/**
-	 * This method is used to change the underlying data structure.
-	 * It is used by the default implementations of {@link #add}, {@link #remove}, {@link #addUnsafe},
-	 * {@link #addAll} and {@link #removeAll}methods.
-	 *
-	 * @return the data structure that stores the instances of {@link ParticipantCollection}
-	 */
-	@Override
-	public List<ParticipantCollection> getDataStructure() {
-		return null;
-	}
-
-	/**
-	 * Checks if the collection has the same type as this ParticipantCollectionList (subclass)
-	 *
-	 * @param collection the element to be checked
-	 * @throws IllegalArgumentException if the type check fails
-	 */
-	@Override
-	public void checkType(ParticipantCollection collection) {
-		if (!collection.getClass().equals(Group.class)) {
-			throw new IllegalArgumentException("Collection is not a Group");
-		}
-	}
-
 	public List<Group> getGroups() {
-		return groups;
+		return this;
 	}
 
 	public List<Participant> getSuccessors() {
-		//todo
-		return null;
+		return successors;
 	}
 }
