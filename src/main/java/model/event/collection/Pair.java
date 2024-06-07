@@ -33,6 +33,7 @@ public class Pair implements ParticipantCollection {
     private int dessertNumber;
     public final boolean signedUpTogether;
 
+    private static int COUNTER = 0;
     private static final InputData inputData = InputData.getInstance();
 
     public Pair(Participant participant1, Participant participant2) {
@@ -40,6 +41,7 @@ public class Pair implements ParticipantCollection {
     }
 
     public Pair(Participant participant1, Participant participant2, boolean signedUpTogether) {
+        id = COUNTER++;
         participants[0] = participant1;
         participants[1] = participant2;
         this.signedUpTogether = signedUpTogether;
