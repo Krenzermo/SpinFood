@@ -28,13 +28,41 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 
 	public GroupList(PairList pairList, GroupWeights groupWeights) {
-		setList(buildBestGroups(pairList, groupWeights));
+		List<Pair> sortedPairList = sortPairs(pairList);
+		setList(buildBestGroups(sortedPairList, groupWeights));
 		this.identNumber = getIdentNumber();
 		this.pairList = pairList;
 
 
 
 	}
+
+	private List<Pair> sortPairs(PairList pairList) {
+		List<Pair> sortedPairList = new ArrayList<>();
+			for (Pair pair : pairList) {
+				if (pair.getFoodType() == FoodType.MEAT) {
+					sortedPairList.add(pair);
+				}
+			}
+
+		for (Pair pair : pairList) {
+			if (pair.getFoodType() == FoodType.NONE) {
+				sortedPairList.add(pair);
+			}
+		}
+		for (Pair pair : pairList) {
+			if (pair.getFoodType() == FoodType.VEGGIE) {
+				sortedPairList.add(pair);
+			}
+		}
+		for (Pair pair : pairList) {
+			if (pair.getFoodType() == FoodType.VEGAN) {
+				sortedPairList.add(pair);
+			}
+		}
+
+			return sortedPairList;
+		}
 
 	/*
 	1. paar nehmen
@@ -56,7 +84,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 			for (int i = 0; i < 8; i++) {
 				int bestPairPosition = -1;
-				double bestPairScore = Double.NEGATIVE_INFINITY;
+				double bestPairScore = -5000;
 
 				for (int j = 0; j < sortedPairList.size(); j++) {
 					Pair testedPair = sortedPairList.get(j);
@@ -216,7 +244,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 
 		if (!testGroupComposition(testedPair, matchedPairList)) {
-			return -Double.NEGATIVE_INFINITY;
+			return -100000;
 		}
 
 
@@ -235,7 +263,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 			groupAge = groupAge + pair.getAverageAgeRange();
 		}
 		double ageDifference = Math.abs((groupAge / matchedPairList.size()) - testedPair.getAverageAgeRange());
-		return groupWeights.getAgeDifferenceWeight() * (1 - ageDifference);
+		return groupWeights.getAgeDifferenceWeight() * (1 - 0.1 * ageDifference);
 	}
 
 	//gleich wie bei pair i guess, vorliebe vom gruppencluster gleich dem 1. paar-done
@@ -301,12 +329,12 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 	//wenn mixedgroup, dann max 3 any/fleischie-done
 	private static boolean testGroupComposition(Pair testedPair, List<Pair> matchedPairList) {
-		if (testedPair.getFoodType() == FoodType.VEGAN || testedPair.getFoodType() == FoodType.VEGGIE) {
-			return listCountFoodType(matchedPairList, FoodType.MEAT) + listCountFoodType(matchedPairList, FoodType.NONE) > 3;
-		} else if (listCountFoodType(matchedPairList, FoodType.VEGGIE) == 0 && listCountFoodType(matchedPairList, FoodType.VEGAN) == 0) {
+		if (testedPair.getFoodType() == FoodType.VEGAN || testedPair.getFoodType() == FoodType.VEGGIE) {         //veganer testen
+			return listCountFoodType(matchedPairList, FoodType.MEAT) + listCountFoodType(matchedPairList, FoodType.NONE) <= 3;         //bei vegan, true wenn meat+none kleiner gleich 3
+		} else if (listCountFoodType(matchedPairList, FoodType.VEGGIE) == 0 && listCountFoodType(matchedPairList, FoodType.VEGAN) == 0) {      //bei fleischi testen, wenn null veganer+veggie anwesend, dann wahr zurück
 			return true;
-		} else
-			return listCountFoodType(matchedPairList, FoodType.MEAT) + listCountFoodType(matchedPairList, FoodType.NONE) != 3;
+		} else																													//wenn veganer anwesend, dann gib war zurück bei meat/none unter 3, also dass einer noch passt
+			return listCountFoodType(matchedPairList, FoodType.MEAT) + listCountFoodType(matchedPairList, FoodType.NONE) < 3;
 	}
 
 	private static int listCountFoodType(List<Pair> matchedPairList, FoodType foodType) {
