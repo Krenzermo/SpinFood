@@ -22,8 +22,8 @@ public class Participant {
     private final FoodType foodType;
     private final AgeRange ageRange;
     private final Gender gender;
-    private final KitchenAvailability hasKitchen;
-    private final Kitchen kitchen; // kitchen may be null
+    private KitchenAvailability hasKitchen;
+    private Kitchen kitchen; // kitchen may be null
     private Pair pair;
     private Group[] groups = new Group[3];
 
@@ -146,5 +146,10 @@ public class Participant {
             throw new RuntimeException("Groups must have exactly 3 pairs!");
         }
         this.groups = groups;
+    }
+
+    public void setNoKitchen() {
+        this.hasKitchen = KitchenAvailability.NO;
+        this.kitchen = null;
     }
 }

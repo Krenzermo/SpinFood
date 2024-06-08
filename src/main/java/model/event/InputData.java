@@ -238,7 +238,8 @@ public class InputData {
         kitchenCountMap.put(kitchen, kitchenCountMap.getOrDefault(kitchen, 0) + 1);
 
         if (kitchenCountMap.get(kitchen) > 3) {
-            participantSuccessorList.add(participant);
+            participant.setNoKitchen();
+            participantInputData.add(participant);
         } else {
             participantInputData.add(participant);
         }

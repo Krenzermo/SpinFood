@@ -18,13 +18,42 @@ public class Group implements ParticipantCollection{
 	private Kitchen kitchen;
 	private Course course;
 	private int id;
+	private static int COUNTER = 0;
 
 
 	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen) {
+		id = COUNTER++;
 		this.pairs = new Pair[]{pair1, pair2, pair3};
 		this.course = course;
 		this.kitchen = kitchen;
+		setPairIds();
 	}
+
+	private void setPairIds(){
+		if (kitchen.equals(pairs[0].getKitchen())){
+			pairs[0].setCourse(course);
+		} else if (kitchen.equals(pairs[1].getKitchen())){
+			pairs[1].setCourse(course);
+		} else if(kitchen.equals(pairs[2].getKitchen())){
+			pairs[2].setCourse(course);
+		}
+		if (this.course == Course.STARTER){
+			pairs[0].setStarterNumber(id);
+			pairs[1].setStarterNumber(id);
+			pairs[2].setStarterNumber(id);
+
+		}else if (this.course == Course.MAIN){
+			pairs[0].setMainNumber(id);
+			pairs[1].setMainNumber(id);
+			pairs[2].setMainNumber(id);
+
+		}else {
+			pairs[0].setDessertNumber(id);
+			pairs[1].setDessertNumber(id);
+			pairs[2].setDessertNumber(id);
+		}
+	}
+
 
 	/**
 	 * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollection

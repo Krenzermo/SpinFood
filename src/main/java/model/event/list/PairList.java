@@ -106,6 +106,8 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param testedParticipant the second participant being tested
      * @return the score based on the kitchen availability comparison
      */
+
+    //TODO fix gleiche küche unmöglich
     private static double compareKitchen(Participant participant1, Participant testedParticipant) {
         switch (participant1.isHasKitchen()) {
             case YES:

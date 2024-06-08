@@ -1,5 +1,6 @@
 package controller;
 
+import model.event.GroupWeights;
 import model.event.InputData;
 import model.event.OutputData;
 import model.event.PairingWeights;
@@ -26,7 +27,8 @@ public class Main {
 		System.out.println(pairList);
 		System.out.println(pairList.getIdentNumber());
 
-		GroupList groupList = new GroupList(pairList);
+		GroupWeights groupWeights = new GroupWeights(1,1,1,1);
+		GroupList groupList = new GroupList(pairList,groupWeights);
 
 		OutputData outputData = new OutputData("src/main/java/data", groupList);
 		outputData.makePairOutputFile();

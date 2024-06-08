@@ -296,5 +296,19 @@ public class Pair implements ParticipantCollection {
     public FoodType getFoodType() {
         return foodType;
     }
+    public double getAverageAgeRange() {
+        return (participants[0].getAge().value + participants[1].getAge().value)/ 2.0;
+    }
 
+    public void setStarterNumber(int starterNumber) {
+        this.starterNumber = starterNumber;
+    }
+
+    public void setMainNumber(int mainNumber) {
+        this.mainNumber = mainNumber;
+    }
+
+    public void setDessertNumber(int dessertNumber) {
+        this.dessertNumber = dessertNumber;
+    }
 }
