@@ -8,19 +8,20 @@ import java.util.function.Function;
  * @author Finn Brecher
  */
 public enum FoodType {
-    NONE(0, foodType -> 0),
-    VEGAN(2, foodType -> foodType == FoodType.NONE ? 0 : 2 - Math.abs(2 - foodType.value)),
-    VEGGIE(1, foodType -> foodType == FoodType.NONE ? 0 : 1 - Math.abs(1 - foodType.value)),
+    NONE(0, foodType -> 0, "ANY"),
+    VEGAN(2, foodType -> foodType == FoodType.NONE ? 0 : 2 - Math.abs(2 - foodType.value), "VEGAN"),
+    VEGGIE(1, foodType -> foodType == FoodType.NONE ? 0 : 1 - Math.abs(1 - foodType.value), "VEGGIE"),
 
-    MEAT(0, foodType -> Math.abs(-foodType.value));
+    MEAT(0, foodType -> Math.abs(-foodType.value), "MEAT");
 
-
-    private int value;
+    private final String otherName;
+    private final int value;
     public final Function<FoodType, Integer> deviation;
 
-    FoodType(int value, Function<FoodType, Integer> function) {
+    FoodType(int value, Function<FoodType, Integer> function, String otherName) {
         this.value = value;
         this.deviation = function;
+        this.otherName = otherName;
     }
 
     public static FoodType herbiFromValue(int value) {
@@ -34,5 +35,9 @@ public enum FoodType {
 
     public int getValue() {
         return value;
+    }
+
+    public String getOtherName() {
+        return otherName;
     }
 }

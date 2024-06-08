@@ -19,6 +19,15 @@ public record Kitchen(Location location, int story){
         return "@Kitchen{" + location + ", Story: " + story + "}";
     }
 
+    /** Return an output String for this Kitchen which basically is the output String of it's
+     * {@link Location}
+     *
+     * @return The output String of the Kitchen
+     */
+    public String asOutputString() {
+        return location.asOutputString();
+    }
+
     public double compareTo(Kitchen o) {
         return (location.getDistance(InputData.getInstance().getEventLocation())
                 - o.location.getDistance(InputData.getInstance().getEventLocation()));
