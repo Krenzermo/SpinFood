@@ -118,7 +118,7 @@ public class GroupIdentNumber extends IdentNumber {
         double pair1Deviation = pairs[0].getGenderDeviation();
         double pair2Deviation = pairs[1].getGenderDeviation();
         double pair3Deviation = pairs[2].getGenderDeviation();
-        double groupDeviation = Math.abs((pair1Deviation + pair2Deviation + pair3Deviation) / 3 - 0.5);
+        double groupDeviation = Math.abs((pair1Deviation + pair2Deviation + pair3Deviation) / 3);
         return groupDeviation;
     }
 
