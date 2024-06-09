@@ -4,7 +4,9 @@ import model.event.Course;
 import model.event.GroupWeights;
 import model.event.collection.Group;
 import model.event.collection.Pair;
+import model.event.list.identNumbers.GroupIdentNumber;
 import model.event.list.identNumbers.IdentNumber;
+import model.event.list.identNumbers.PairIdentNumber;
 import model.person.FoodType;
 import model.person.Participant;
 
@@ -52,6 +54,12 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		setList(buildBestGroups(sortedPairList, groupWeights));
 		this.identNumber = getIdentNumber();
 		this.pairList = pairList;
+		this.identNumber = deriveIdentNumber();
+	}
+
+	private IdentNumber deriveIdentNumber() {
+
+		return new GroupIdentNumber(this);
 	}
 
 	/**
@@ -379,7 +387,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	@Override
 	public IdentNumber getIdentNumber() {
 		// TODO: Implement this method
-		return null;
+		return identNumber;
 	}
 
 	/**
@@ -429,4 +437,5 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		}
 		return sb.toString();
 	}
+
 }
