@@ -51,9 +51,9 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	}
 
 	/**
-	 * Calculates the amount of unique instances of {@link Participant} in this {@link ParticipantCollectionList}.
+	 * Calculates the number of unique instances of {@link Participant} in this {@link ParticipantCollectionList}.
 	 *
-	 * @return the amount of unique instances of {@link Participant} in {@code this}
+	 * @return the number of unique instances of {@link Participant} in {@code this}
 	 */
 	public int getParticipantCount() {
 		return participants.size();
@@ -140,9 +140,10 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	/**
 	 * Clears this {@link ParticipantCollectionList} and adds all elements of the specified {@link List}.
 	 *
-	 * @param list the {@link List} to be set as this
+	 * @param list the {@link List} to be set as {@code this}
 	 *
-	 * @throws IllegalArgumentException if the type check fails
+	 * @throws NullPointerException if any {@link ParticipantCollection} is or contains {@code null}
+	 * @throws IllegalArgumentException if any {@link Participant} or {@link ParticipantCollection} is already in {@code this}
 	 */
 	public void setList(List<E> list) {
 		clear();
@@ -353,7 +354,7 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 */
 	@Override
 	public E remove(int index) {
-		E oldElement =  super.remove(index);
+		E oldElement = super.remove(index);
 		if (oldElement != null) {
 			participants.addAll(oldElement);
 		}
