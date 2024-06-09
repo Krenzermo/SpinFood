@@ -16,9 +16,11 @@ public class GroupIdentNumber extends IdentNumber {
     private double averagePathLength;
     private double totalPathLength;
     private double pathLengthStdDev;
+    private final GroupList groupList;
 
     public GroupIdentNumber(GroupList participantCollection) {
         super(participantCollection);
+        this.groupList = participantCollection;
         genderDiversity = calcGenderDiversity(participantCollection);
         ageDifference = calcAgeDifference(participantCollection);
         preferenceDeviation = calcPreferenceDeviation(participantCollection);
@@ -96,7 +98,7 @@ public class GroupIdentNumber extends IdentNumber {
     }
 
     private Group getGroupById(int groupId) {
-        return GroupList.getGroups().stream()
+        return groupList.getGroups().stream()
                 .filter(group -> group.getId() == groupId)
                 .findFirst()
                 .orElse(null);
@@ -138,6 +140,18 @@ public class GroupIdentNumber extends IdentNumber {
         double pair3Deviation = pairs[2].getPreferenceDeviation();
         double groupDeviation = Math.abs((pair1Deviation + pair2Deviation + pair3Deviation) / 3);
         return groupDeviation;
+    }
+
+    public double getAveragePathLength() {
+        return averagePathLength;
+    }
+
+    public double getTotalPathLength() {
+        return totalPathLength;
+    }
+
+    public double getPathLengthStdDev() {
+        return pathLengthStdDev;
     }
 
     @Override

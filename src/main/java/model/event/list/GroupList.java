@@ -406,7 +406,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 *
 	 * @return the list of groups
 	 */
-	public static List<Group> getGroups() {
+	public List<Group> getGroups() {
 		return this;
 	}
 
