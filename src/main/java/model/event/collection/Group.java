@@ -140,4 +140,8 @@ public class Group implements ParticipantCollection{
 	public Pair[] getPairs() {
 		return pairs;
 	}
+
+	public int getId() {
+		return id;
+	}
 }

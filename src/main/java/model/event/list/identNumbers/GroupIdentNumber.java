@@ -1,11 +1,14 @@
 package model.event.list.identNumbers;
 
+import model.event.InputData;
+import model.event.Location;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.ParticipantCollectionList;
+import model.kitchen.Kitchen;
+import model.person.Participant;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,9 +22,9 @@ public class GroupIdentNumber extends IdentNumber {
         genderDiversity = calcGenderDiversity(participantCollection);
         ageDifference = calcAgeDifference(participantCollection);
         preferenceDeviation = calcPreferenceDeviation(participantCollection);
-        averagePathLength = calcAveragePathLength(participantCollection);
-        pathLengthStdDev = calcPathLengthStdDev(participantCollection);
         totalPathLength = calcTotalPathLength(participantCollection);
+        averagePathLength = totalPathLength / getTotalPairs(participantCollection);
+        pathLengthStdDev = calcPathLengthStdDev(participantCollection);
     }
 
     @Override
@@ -48,44 +51,66 @@ public class GroupIdentNumber extends IdentNumber {
                 .average().orElse(0.0);
     }
 
-    protected double calcAveragePathLength(ParticipantCollectionList participantCollection) {
-        GroupList groupList = (GroupList) participantCollection;
-        return groupList.getGroups().stream()
-                .flatMapToDouble(group -> {
-                    Pair[] pairs = group.getPairs();
-                    double starterToMain = pairs[0].getKitchen().location().getDistance(pairs[1].getKitchen().location());
-                    double mainToDessert = pairs[1].getKitchen().location().getDistance(pairs[2].getKitchen().location());
-                    return Arrays.stream(new double[]{starterToMain, mainToDessert});
-                })
-                .average().orElse(0.0);
-    }
-
     private double calcTotalPathLength(ParticipantCollectionList participantCollection) {
-        GroupList groupList = (GroupList) participantCollection;
-        return groupList.getGroups().stream()
-                .flatMapToDouble(group -> {
-                    Pair[] pairs = group.getPairs();
-                    double starterToMain = pairs[0].getKitchen().location().getDistance(pairs[1].getKitchen().location());
-                    double mainToDessert = pairs[1].getKitchen().location().getDistance(pairs[2].getKitchen().location());
-                    return Arrays.stream(new double[]{starterToMain, mainToDessert});
-                })
+        List<Pair> pairs = getAllPairs(participantCollection);
+        return pairs.stream()
+                .mapToDouble(this::calculateTotalDistanceForPair)
                 .sum();
     }
 
+    private double calculateTotalDistanceForPair(Pair pair) {
+        double totalDistance = 0.0;
+
+        Group starterGroup = getGroupById(pair.getStarterNumber());
+        Group mainGroup = getGroupById(pair.getMainNumber());
+        Group dessertGroup = getGroupById(pair.getDessertNumber());
+        Location partyLocation = InputData.getInstance().getEventLocation();
+
+        if (starterGroup != null) {
+            totalDistance += pair.getKitchen().location().getDistance(starterGroup.getKitchen().location());
+        }
+
+        if (starterGroup != null && mainGroup != null) {
+            totalDistance += starterGroup.getKitchen().location().getDistance(mainGroup.getKitchen().location());
+        }
+
+        if (mainGroup != null && dessertGroup != null) {
+            totalDistance += mainGroup.getKitchen().location().getDistance(dessertGroup.getKitchen().location());
+        }
+
+        if (dessertGroup != null) {
+            totalDistance += dessertGroup.getKitchen().location().getDistance(partyLocation);
+        }
+
+        return totalDistance;
+    }
+
     private double calcPathLengthStdDev(ParticipantCollectionList participantCollection) {
-        GroupList groupList = (GroupList) participantCollection;
-        List<Double> pathLengths = groupList.getGroups().stream()
-                .flatMap(group -> {
-                    Pair[] pairs = group.getPairs();
-                    double starterToMain = pairs[0].getKitchen().location().getDistance(pairs[1].getKitchen().location());
-                    double mainToDessert = pairs[1].getKitchen().location().getDistance(pairs[2].getKitchen().location());
-                    return Arrays.asList(starterToMain, mainToDessert).stream();
-                })
+        List<Double> pathLengths = getAllPairs(participantCollection).stream()
+                .map(this::calculateTotalDistanceForPair)
                 .collect(Collectors.toList());
 
         double mean = pathLengths.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
         double variance = pathLengths.stream().mapToDouble(length -> Math.pow(length - mean, 2)).average().orElse(0.0);
         return Math.sqrt(variance);
+    }
+
+    private Group getGroupById(int groupId) {
+        return GroupList.getGroups().stream()
+                .filter(group -> group.getId() == groupId)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private List<Pair> getAllPairs(ParticipantCollectionList participantCollection) {
+        GroupList groupList = (GroupList) participantCollection;
+        return groupList.getGroups().stream()
+                .flatMap(group -> List.of(group.getPairs()).stream())
+                .collect(Collectors.toList());
+    }
+
+    private int getTotalPairs(ParticipantCollectionList participantCollection) {
+        return getAllPairs(participantCollection).size();
     }
 
     private double calculateGroupGenderDeviation(Group group) {
@@ -94,8 +119,6 @@ public class GroupIdentNumber extends IdentNumber {
         double pair2Deviation = pairs[1].getGenderDeviation();
         double pair3Deviation = pairs[2].getGenderDeviation();
         double groupDeviation = Math.abs((pair1Deviation + pair2Deviation + pair3Deviation) / 3 - 0.5);
-        // - 0,5, damit wir sehen können, um welches Verhältnis die Gruppe von einander abweicht. Beispiel: Pair 1: 0,5 Pair 2: 0,5 und Pair 3: 0,5 ergibt 0.5 - 0.5 = 0 (perfektes Verhältnis)
-
         return groupDeviation;
     }
 
