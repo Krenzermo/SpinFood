@@ -112,7 +112,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
         switch (participant1.isHasKitchen()) {
             case YES:
                 return (testedParticipant.isHasKitchen() == KitchenAvailability.YES &&
-                        participant1.getKitchen().equals(testedParticipant.getKitchen())) ? -1000 : 0;
+                        participant1.getKitchen().equals(testedParticipant.getKitchen())) ? Double.NEGATIVE_INFINITY : 0;
             case NO:
                 if (testedParticipant.isHasKitchen() == KitchenAvailability.YES) return 0;
                 return (testedParticipant.isHasKitchen() == KitchenAvailability.MAYBE) ? -50 : Double.NEGATIVE_INFINITY;
@@ -144,11 +144,11 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @return the score based on the food preference comparison
      */
     private static double compareFoodPreference(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
-        double weight = pairingWeights.getFoodPreferenceWeight();
+        double weight = 0.5 * pairingWeights.getFoodPreferenceWeight();
         switch (participant1.getFoodType()) {
             case MEAT:
                 if (testedParticipant.getFoodType() == FoodType.MEAT) return weight;
-                return (testedParticipant.getFoodType() == FoodType.NONE) ? 0.5 * weight : -1000;
+                return (testedParticipant.getFoodType() == FoodType.NONE) ? weight : - 1000;
             case VEGGIE:
                 if (testedParticipant.getFoodType() == FoodType.VEGGIE) return weight;
                 if (testedParticipant.getFoodType() == FoodType.VEGAN) return 0.5 * weight;
@@ -158,7 +158,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
                 if (testedParticipant.getFoodType() == FoodType.VEGGIE) return 0.5 * weight;
                 return (testedParticipant.getFoodType() == FoodType.NONE) ? 0.25 * weight : -1000;
             case NONE:
-                return (testedParticipant.getFoodType() == FoodType.NONE || testedParticipant.getFoodType() == FoodType.MEAT) ? 0.5 * weight : 0.25 * weight;
+                return (testedParticipant.getFoodType() == FoodType.NONE || testedParticipant.getFoodType() == FoodType.MEAT) ? weight : 0.25 * weight;
             default:
                 return 0;
         }
