@@ -51,6 +51,21 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return 0;
 	}
 
+	/**
+	 * Checks if the specified {@link ParticipantCollection} could be added to this {@link ParticipantCollectionList}.
+	 *
+	 * @param collection the {@link ParticipantCollection} to be checked
+	 *
+	 * @throws NullPointerException if the {@link ParticipantCollection} is or contains {@code null}
+	 * @throws IllegalArgumentException if the {@link ParticipantCollection} is already contained in {@code this}
+	 */
+	@Override
+	protected void check(Group collection) {
+		nullCheck(collection);
+		duplicateElementCheck(collection);
+		// no duplicateParticipantCheck as each Pair is contained in exactly three Groups
+	}
+
 	public List<Group> getGroups() {
 		return this;
 	}
