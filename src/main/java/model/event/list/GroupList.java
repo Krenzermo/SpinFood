@@ -8,16 +8,31 @@ import model.event.list.identNumbers.IdentNumber;
 import model.person.FoodType;
 import model.person.Participant;
 
-import java.lang.reflect.Array;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
  * The GroupList class represents a collection of Groups of Pairs.
  * It provides functionality to group participants based on various criteria
  * and maintains a list of unpaired participants (successors).
  *
+ * This class extends ParticipantCollectionList and uses GroupWeights for grouping logic.
+ *
+ * @see model.event.GroupWeights
+ * @see model.event.collection.Group
+ * @see model.event.collection.Pair
+ * @see model.event.list.ParticipantCollectionList
+ * @see model.person.Participant
+ * @see model.person.FoodType
+ * @see model.kitchen.Kitchen
+ * @see model.event.Course
+ *
+ *
  * @author Daniel Hinkelmann
  * @author Finn Brecher
+ * @author Davide Piacenza
+ * @author Ole Krenzer
  */
 public class GroupList extends ParticipantCollectionList<Group> {
 
@@ -26,53 +41,63 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	private static final List<Participant> successors = new ArrayList<>();
 	private static final List<Pair> successorPairs = new ArrayList<>();
 
-
+	/**
+	 * Constructs a GroupList instance.
+	 *
+	 * @param pairList     the list of pairs to be grouped
+	 * @param groupWeights the weights used for grouping criteria
+	 */
 	public GroupList(PairList pairList, GroupWeights groupWeights) {
 		List<Pair> sortedPairList = sortPairs(pairList);
 		setList(buildBestGroups(sortedPairList, groupWeights));
 		this.identNumber = getIdentNumber();
 		this.pairList = pairList;
-
-
-
 	}
 
+	/**
+	 * Sorts pairs based on their FoodType in a specific order: MEAT, NONE, VEGGIE, VEGAN.
+	 *
+	 * @param pairList the list of pairs to be sorted
+	 * @return the sorted list of pairs
+	 */
 	private List<Pair> sortPairs(PairList pairList) {
 		List<Pair> sortedPairList = new ArrayList<>();
-			for (Pair pair : pairList) {
-				if (pair.getFoodType() == FoodType.MEAT) {
-					sortedPairList.add(pair);
-				}
+
+		for (Pair pair : pairList) {
+			if (pair.getFoodType() == FoodType.MEAT) {
+				sortedPairList.add(pair);
 			}
+		}
 
 		for (Pair pair : pairList) {
 			if (pair.getFoodType() == FoodType.NONE) {
 				sortedPairList.add(pair);
 			}
 		}
+
 		for (Pair pair : pairList) {
 			if (pair.getFoodType() == FoodType.VEGGIE) {
 				sortedPairList.add(pair);
 			}
 		}
+
 		for (Pair pair : pairList) {
 			if (pair.getFoodType() == FoodType.VEGAN) {
 				sortedPairList.add(pair);
 			}
 		}
 
-			return sortedPairList;
-		}
+		return sortedPairList;
+	}
 
-	/*
-	1. paar nehmen
-	8 mal beste paare suchen
-	alle 9 entfernen
-	gruppe aus 9 bilden
-	dabei nach distanz sortieren
-	wenn 2-3 any in veggiegruppe, bzw 2-3 veggie in vegan, dann spezielle sortierung
-	bis nurnoch <9 da (vegan+veggie zuerst?)
-	*/
+	/**
+	 * Builds the best groups of pairs based on the provided GroupWeights.
+	 * Groups are created in batches of 9 pairs each.
+	 *
+	 * @param pairList     the list of pairs to be grouped
+	 * @param groupWeights the weights used for grouping criteria
+	 * @return the list of groups
+	 */
 	private static List<Group> buildBestGroups(List<Pair> pairList, GroupWeights groupWeights) {
 		List<Pair> sortedPairList = new ArrayList<>(pairList);
 		List<Group> bestGroupList = new ArrayList<>();
@@ -80,7 +105,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		while (sortedPairList.size() >= 9) {
 			List<Pair> matchedPairList = new ArrayList<>();
 			Pair pair1 = sortedPairList.remove(0);
-			matchedPairList.add(pair1);                                //brauchen pair1 schon in matchedList für test auf gemischte gruppen
+			matchedPairList.add(pair1);
 
 			for (int i = 0; i < 8; i++) {
 				int bestPairPosition = -1;
@@ -94,22 +119,18 @@ public class GroupList extends ParticipantCollectionList<Group> {
 						bestPairScore = score;
 						bestPairPosition = j;
 					}
-
 				}
 
 				if (bestPairPosition == -1) {
 					break;
 				}
 
-
 				matchedPairList.add(sortedPairList.remove(bestPairPosition));
-
-
 			}
 
 			if (matchedPairList.size() != 9) {
-				successorPairs.add(matchedPairList.remove(0));       // wenn pair1 nicht 8 paare findet, add ihn zu successor und
-				sortedPairList.addAll(matchedPairList);                        // adde gematchte paare wieder in die liste
+				successorPairs.add(matchedPairList.remove(0));
+				sortedPairList.addAll(matchedPairList);
 			} else {
 				bestGroupList.addAll(makeGroups(matchedPairList));
 			}
@@ -120,16 +141,12 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return bestGroupList;
 	}
 
-	//TODO make groups out of the 9 pairs, sort first by distance, or special sorting for mixed groups
-//V036 (0, 3, 6)
-//V147 (1, 4, 7)
-//V258 (2, 5, 8)
-//H048 (0, 4, 8)
-//H156 (1, 5, 6)
-//H237 (2, 3, 7)
-//D057 (0, 5, 7)
-//D138 (1, 3, 8)
-//D246 (2, 4, 6)
+	/**
+	 * Creates groups from a list of 9 matched pairs.
+	 *
+	 * @param matchedPairList the list of matched pairs
+	 * @return the list of groups
+	 */
 	private static List<Group> makeGroups(List<Pair> matchedPairList) {
 		List<Group> groupList = new ArrayList<>();
 		matchedPairList.sort(Comparator.comparingDouble(Pair::getDistance).reversed());
@@ -140,12 +157,12 @@ public class GroupList extends ParticipantCollectionList<Group> {
 			if (meatCount == 2) {
 				List<Integer> meatPositions = new ArrayList<>(findMeatPosition(matchedPairList));
 				matchedPairList = swapPositions(matchedPairList, meatPositions, 2);
-
 			} else if (meatCount == 3) {
 				List<Integer> meatPositions = new ArrayList<>(findMeatPosition(matchedPairList));
 				matchedPairList = swapPositions(matchedPairList, meatPositions, 3);
 			}
 		}
+
 		groupList.add(new Group(matchedPairList.get(0), matchedPairList.get(3), matchedPairList.get(6), Course.STARTER, matchedPairList.get(0).getKitchen()));
 		groupList.add(new Group(matchedPairList.get(1), matchedPairList.get(4), matchedPairList.get(7), Course.STARTER, matchedPairList.get(1).getKitchen()));
 		groupList.add(new Group(matchedPairList.get(2), matchedPairList.get(5), matchedPairList.get(8), Course.STARTER, matchedPairList.get(2).getKitchen()));
@@ -156,20 +173,19 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		groupList.add(new Group(matchedPairList.get(1), matchedPairList.get(3), matchedPairList.get(8), Course.DESSERT, matchedPairList.get(8).getKitchen()));
 		groupList.add(new Group(matchedPairList.get(2), matchedPairList.get(4), matchedPairList.get(6), Course.DESSERT, matchedPairList.get(6).getKitchen()));
 
-
 		return groupList;
 	}
 
+	/**
+	 * Swaps the positions of pairs in the list based on the given meat positions and number of swaps.
+	 *
+	 * @param matchedPairList the list of matched pairs
+	 * @param meatPositions   the positions of meat pairs
+	 * @param num             the number of swaps
+	 * @return the list of pairs after swapping
+	 */
 	private static List<Pair> swapPositions(List<Pair> matchedPairList, List<Integer> meatPositions, int num) {
 		List<Pair> swappedList = new ArrayList<>();
-		/*double sum = 0;
-		for (int num : meatPositions) {
-			sum += num;
-		}
-
-		double positionAverage = sum / meatPositions.size();
-		*/
-
 
 		if (num == 3) {
 			swappedList.add(matchedPairList.get(meatPositions.get(0)));
@@ -177,57 +193,30 @@ public class GroupList extends ParticipantCollectionList<Group> {
 			swappedList.add(matchedPairList.get(meatPositions.get(2)));
 
 			for (int i = 0; i < 9; i++) {
-				if (i != meatPositions.get(0) && i != meatPositions.get(1) && i != meatPositions.get(2)) {
+				if (!meatPositions.contains(i)) {
 					swappedList.add(matchedPairList.get(i));
 				}
 			}
-
 		} else if (num == 2) {
 			swappedList.add(matchedPairList.get(meatPositions.get(0)));
 			swappedList.add(matchedPairList.get(meatPositions.get(1)));
 
 			for (int i = 0; i < 9; i++) {
-				if (i != meatPositions.get(0) && i != meatPositions.get(1)) {
+				if (!meatPositions.contains(i)) {
 					swappedList.add(matchedPairList.get(i));
 				}
 			}
 		}
 
-		/* else if (positionAverage <6){
-
-			int i =0;
-			while(swappedList.size()<3){
-				if (i!= meatPositions.get(0) && i!= meatPositions.get(1) && i!= meatPositions.get(2)){
-					swappedList.add(matchedPairList.get(i));
-				}
-				i++;
-			}
-
-			swappedList.add(matchedPairList.get(meatPositions.get(0)));
-			swappedList.add(matchedPairList.get(meatPositions.get(1)));
-			swappedList.add(matchedPairList.get(meatPositions.get(2)));
-			while(swappedList.size()<10){
-				if (i!= meatPositions.get(0) && i!= meatPositions.get(1) && i!= meatPositions.get(2)){
-					swappedList.add(matchedPairList.get(i));
-				}
-				i++;
-			}
-
-		} else {
-
-			for(int i=0;i<9;i++){
-				if (i!= meatPositions.get(0) && i!= meatPositions.get(1) && i!= meatPositions.get(2)){
-					swappedList.add(matchedPairList.get(i));
-				}
-			}
-			swappedList.add(matchedPairList.get(meatPositions.get(0)));
-			swappedList.add(matchedPairList.get(meatPositions.get(1)));
-			swappedList.add(matchedPairList.get(meatPositions.get(2)));
-
-		} */
 		return swappedList;
 	}
 
+	/**
+	 * Finds the positions of meat pairs in the list.
+	 *
+	 * @param matchedPairList the list of matched pairs
+	 * @return the list of positions of meat pairs
+	 */
 	private static List<Integer> findMeatPosition(List<Pair> matchedPairList) {
 		List<Integer> meatPositions = new ArrayList<>();
 		for (int i = 0; i < matchedPairList.size(); i++) {
@@ -238,35 +227,54 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return meatPositions;
 	}
 
-	//TODO score weights anpassen
+	/**
+	 * Calculates the group score for a tested pair based on various criteria.
+	 *
+	 * @param pair1            the initial pair
+	 * @param testedPair       the pair being tested
+	 * @param groupWeights     the weights used for grouping criteria
+	 * @param matchedPairList  the list of matched pairs
+	 * @return the calculated score
+	 */
 	private static double calculateGroupScore(Pair pair1, Pair testedPair, GroupWeights groupWeights, List<Pair> matchedPairList) {
 		double score = 0;
-
 
 		if (!testGroupComposition(testedPair, matchedPairList)) {
 			return -100000;
 		}
-
 
 		score += compareLocation(pair1, testedPair, groupWeights);
 		score += compareGroupGender(matchedPairList, testedPair, groupWeights);
 		score += compareGroupFoodPreference(pair1, testedPair, groupWeights);
 		score += compareGroupAge(matchedPairList, testedPair, groupWeights);
 		return score;
-
 	}
 
-	//abstand von durschnittssalter-done
+	/**
+	 * Compares the group age difference.
+	 *
+	 * @param matchedPairList  the list of matched pairs
+	 * @param testedPair       the pair being tested
+	 * @param groupWeights     the weights used for grouping criteria
+	 * @return the calculated score based on age difference
+	 */
 	private static double compareGroupAge(List<Pair> matchedPairList, Pair testedPair, GroupWeights groupWeights) {
 		double groupAge = 0;
 		for (Pair pair : matchedPairList) {
-			groupAge = groupAge + pair.getAverageAgeRange();
+			groupAge += pair.getAverageAgeRange();
 		}
 		double ageDifference = Math.abs((groupAge / matchedPairList.size()) - testedPair.getAverageAgeRange());
 		return groupWeights.getAgeDifferenceWeight() * (1 - 0.1 * ageDifference);
 	}
 
-	//gleich wie bei pair i guess, vorliebe vom gruppencluster gleich dem 1. paar-done
+	/**
+	 * Compares the food preferences of the group.
+	 *
+	 * @param pair1        the initial pair
+	 * @param testedPair   the pair being tested
+	 * @param groupWeights the weights used for grouping criteria
+	 * @return the calculated score based on food preference
+	 */
 	private static double compareGroupFoodPreference(Pair pair1, Pair testedPair, GroupWeights groupWeights) {
 		double weight = groupWeights.getFoodPreferenceWeight();
 		switch (pair1.getFoodType()) {
@@ -286,57 +294,73 @@ public class GroupList extends ParticipantCollectionList<Group> {
 			default:
 				return 0;
 		}
-
 	}
 
-	//minimaleGenderDeviaton-done
-//dh, gruppen die schon gute diversität haben, achten weniger auf diversität i guess?
-//0 ist perfekt
-//TODO eventuell Wertung auf 0,5 mal das weight ändern wenn zu impactful?
+	/**
+	 * Compares the gender diversity of the group.
+	 *
+	 * @param matchedPairList  the list of matched pairs
+	 * @param testedPair       the pair being tested
+	 * @param groupWeights     the weights used for grouping criteria
+	 * @return the calculated score based on gender diversity
+	 */
 	private static double compareGroupGender(List<Pair> matchedPairList, Pair testedPair, GroupWeights groupWeights) {
-		double groupGenderdeviation = 0;
+		double groupGenderDeviation = 0;
 		for (Pair pair : matchedPairList) {
-			groupGenderdeviation = groupGenderdeviation + pair.getGenderDeviation();
+			groupGenderDeviation += pair.getGenderDeviation();
 		}
 
 		List<Pair> matchedPairListAdded = new ArrayList<>(matchedPairList);
 		matchedPairListAdded.add(testedPair);
 
-		double groupGenderdeviationAdded = 0;
+		double groupGenderDeviationAdded = 0;
 		for (Pair pair : matchedPairListAdded) {
-			groupGenderdeviationAdded = groupGenderdeviationAdded + pair.getGenderDeviation();
+			groupGenderDeviationAdded += pair.getGenderDeviation();
 		}
 
-		double genderDifference = groupGenderdeviationAdded - groupGenderdeviation;
+		double genderDifference = groupGenderDeviationAdded - groupGenderDeviation;
 
-
-		return groupWeights.getGenderDifferenceWeight() * (1 - (genderDifference * matchedPairList.size()));    // *size, damit die späteren paare vollen impact haben
+		return groupWeights.getGenderDifferenceWeight() * (1 - (genderDifference * matchedPairList.size()));
 	}
-//minimale Locationdiff,vlt hier nah an pair1? - done
-//TODO maxDistance eventuell unrealistisch, vlt kleiner ansetzten? vlt auch egal
 
-	//Minimum Longitude: 8.65772146601726
-//Maximum Longitude: 8.719772776126227
-//Range of Longitude: 0.06205131010896636
-//Minimum Latitude: 50.57093176601726
-//Maximum Latitude: 50.60878552060185
-//Range of Latitude: 0.03785375458458873
+	/**
+	 * Compares the location distance between pairs.
+	 *
+	 * @param pair1        the initial pair
+	 * @param testedPair   the pair being tested
+	 * @param groupWeights the weights used for grouping criteria
+	 * @return the calculated score based on location distance
+	 */
 	private static double compareLocation(Pair pair1, Pair testedPair, GroupWeights groupWeights) {
 		double distance = pair1.getKitchen().location().getDistance(testedPair.getKitchen().location());
-		double maxPossibleDistance = 0.07268611849857841;
-		return groupWeights.getDistanceWeight() * (1 - distance / maxPossibleDistance);    //relativiert die Distance mit max Distance
+		double maxPossibleDistance = 0.07268611849857841; // Max distance in the given context
+		return groupWeights.getDistanceWeight() * (1 - distance / maxPossibleDistance);
 	}
 
-	//wenn mixedgroup, dann max 3 any/fleischie-done
+	/**
+	 * Tests the composition of the group based on food type.
+	 *
+	 * @param testedPair       the pair being tested
+	 * @param matchedPairList  the list of matched pairs
+	 * @return true if the group composition is valid, false otherwise
+	 */
 	private static boolean testGroupComposition(Pair testedPair, List<Pair> matchedPairList) {
-		if (testedPair.getFoodType() == FoodType.VEGAN || testedPair.getFoodType() == FoodType.VEGGIE) {         //veganer testen
-			return listCountFoodType(matchedPairList, FoodType.MEAT) + listCountFoodType(matchedPairList, FoodType.NONE) <= 3;         //bei vegan, true wenn meat+none kleiner gleich 3
-		} else if (listCountFoodType(matchedPairList, FoodType.VEGGIE) == 0 && listCountFoodType(matchedPairList, FoodType.VEGAN) == 0) {      //bei fleischi testen, wenn null veganer+veggie anwesend, dann wahr zurück
+		if (testedPair.getFoodType() == FoodType.VEGAN || testedPair.getFoodType() == FoodType.VEGGIE) {
+			return listCountFoodType(matchedPairList, FoodType.MEAT) + listCountFoodType(matchedPairList, FoodType.NONE) <= 3;
+		} else if (listCountFoodType(matchedPairList, FoodType.VEGGIE) == 0 && listCountFoodType(matchedPairList, FoodType.VEGAN) == 0) {
 			return true;
-		} else																													//wenn veganer anwesend, dann gib war zurück bei meat/none unter 3, also dass einer noch passt
+		} else {
 			return listCountFoodType(matchedPairList, FoodType.MEAT) + listCountFoodType(matchedPairList, FoodType.NONE) < 3;
+		}
 	}
 
+	/**
+	 * Counts the number of pairs with a specific food type in the list.
+	 *
+	 * @param matchedPairList the list of matched pairs
+	 * @param foodType        the food type to count
+	 * @return the count of pairs with the specified food type
+	 */
 	private static int listCountFoodType(List<Pair> matchedPairList, FoodType foodType) {
 		int foodTypeCount = 0;
 		for (Pair pair : matchedPairList) {
@@ -347,7 +371,6 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return foodTypeCount;
 	}
 
-
 	/**
 	 * Gets the identifying number for this GroupList.
 	 *
@@ -355,7 +378,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 */
 	@Override
 	public IdentNumber getIdentNumber() {
-		// TODO: this
+		// TODO: Implement this method
 		return null;
 	}
 
@@ -366,23 +389,36 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 */
 	@Override
 	public double evaluate() {
-		// TODO: this
+		// TODO: Implement this method
 		return 0;
 	}
 
+	/**
+	 * Gets the list of groups.
+	 *
+	 * @return the list of groups
+	 */
 	public List<Group> getGroups() {
 		return this;
 	}
 
+	/**
+	 * Gets the list of successor participants.
+	 *
+	 * @return the list of successor participants
+	 */
 	public List<Participant> getSuccessors() {
 		return successors;
 	}
 
-
+	/**
+	 * Gets the pair list.
+	 *
+	 * @return the pair list
+	 */
 	public PairList getPairList() {
 		return pairList;
 	}
-
 
 	@Override
 	public String toString() {
