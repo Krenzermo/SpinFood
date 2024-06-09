@@ -7,16 +7,20 @@ import model.event.list.ParticipantCollectionList;
 import model.event.InputData;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 public class GroupIdentNumber extends IdentNumber {
+    private double totalPathLength;
     private double averagePathLength;
+    private double pathLengthStdDev;
 
     public GroupIdentNumber(GroupList participantCollection) {
         super(participantCollection);
         genderDiversity = calcGenderDiversity(participantCollection);
         ageDifference = calcAgeDifference(participantCollection);
         preferenceDeviation = calcPreferenceDeviation(participantCollection);
-        averagePathLength = calcAveragePathLength(participantCollection);
+        calculatePathLengths(participantCollection);
     }
 
     @Override
@@ -43,32 +47,27 @@ public class GroupIdentNumber extends IdentNumber {
                 .average().orElse(0.0);
     }
 
-    protected double calcAveragePathLength(ParticipantCollectionList participantCollection) {
+    private void calculatePathLengths(ParticipantCollectionList participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
-
-        return groupList.getGroups().stream()
-                .flatMapToDouble(group -> {
+        List<Double> pathLengths = groupList.getGroups().stream()
+                .flatMap(group -> {
                     Pair[] pairs = group.getPairs();
-                    double[] pathLengths = new double[pairs.length];
-
-                    for (int i = 0; i < pairs.length; i++) {
-                        Pair pair = pairs[i];
-
-                        // Berechne den Weg von Vorspeise über Hauptspeise bis zum Dessert und zurück zur Eventlocation
-                        double distanceToStarter = pair.getKitchen().location().getDistance(group.getKitchen().location());
-                        double distanceStarterToMain = group.getPairs()[0].getKitchen().location().getDistance(group.getPairs()[1].getKitchen().location());
-                        double distanceMainToDessert = group.getPairs()[1].getKitchen().location().getDistance(group.getPairs()[2].getKitchen().location());
-                        double distanceDessertToEvent = group.getPairs()[2].getKitchen().location().getDistance(InputData.getInstance().getEventLocation());
-
-                        // Summiere die Distanzen, um die Gesamtlänge des Pfades zu berechnen
-                        pathLengths[i] = distanceToStarter + distanceStarterToMain + distanceMainToDessert + distanceDessertToEvent;
-                    }
-
-                    return Arrays.stream(pathLengths);
+                    return Arrays.stream(pairs)
+                            .map(pair -> {
+                                double pathLength = 0;
+                                for (int i = 0; i < pairs.length - 1; i++) {
+                                    pathLength += pairs[i].getKitchen().location().getDistance(pairs[i + 1].getKitchen().location());
+                                }
+                                pathLength += pairs[pairs.length - 1].getKitchen().location().getDistance(InputData.getInstance().getEventLocation());
+                                return pathLength;
+                            });
                 })
-                .sum();
-    }
+                .collect(Collectors.toList());
 
+        totalPathLength = pathLengths.stream().mapToDouble(Double::doubleValue).sum();
+        averagePathLength = pathLengths.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        pathLengthStdDev = Math.sqrt(pathLengths.stream().mapToDouble(pl -> Math.pow(pl - averagePathLength, 2)).average().orElse(0.0));
+    }
 
     @Override
     public String toString() {
@@ -77,6 +76,8 @@ public class GroupIdentNumber extends IdentNumber {
                 " Geschlechterdiversität: " + genderDiversity +
                 " Altersunterschied: " + ageDifference +
                 " Vorliebenabweichung: " + preferenceDeviation +
-                " Durchschnittliche Pfadlänge: " + averagePathLength;
+                " Gesamte Weglänge: " + totalPathLength +
+                " Durchschnittliche Weglänge: " + averagePathLength +
+                " Standardabweichung der Weglänge: " + pathLengthStdDev;
     }
 }
