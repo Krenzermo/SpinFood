@@ -4,6 +4,7 @@ import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.ParticipantCollectionList;
+import model.event.InputData;
 
 import java.util.Arrays;
 
@@ -44,15 +45,30 @@ public class GroupIdentNumber extends IdentNumber {
 
     protected double calcAveragePathLength(ParticipantCollectionList participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
+
         return groupList.getGroups().stream()
                 .flatMapToDouble(group -> {
                     Pair[] pairs = group.getPairs();
-                    double starterToMain = pairs[0].getKitchen().location().getDistance(pairs[1].getKitchen().location());
-                    double mainToDessert = pairs[1].getKitchen().location().getDistance(pairs[2].getKitchen().location());
-                    return Arrays.stream(new double[]{starterToMain, mainToDessert});
+                    double[] pathLengths = new double[pairs.length];
+
+                    for (int i = 0; i < pairs.length; i++) {
+                        Pair pair = pairs[i];
+
+                        // Berechne den Weg von Vorspeise über Hauptspeise bis zum Dessert und zurück zur Eventlocation
+                        double distanceToStarter = pair.getKitchen().location().getDistance(group.getKitchen().location());
+                        double distanceStarterToMain = group.getPairs()[0].getKitchen().location().getDistance(group.getPairs()[1].getKitchen().location());
+                        double distanceMainToDessert = group.getPairs()[1].getKitchen().location().getDistance(group.getPairs()[2].getKitchen().location());
+                        double distanceDessertToEvent = group.getPairs()[2].getKitchen().location().getDistance(InputData.getInstance().getEventLocation());
+
+                        // Summiere die Distanzen, um die Gesamtlänge des Pfades zu berechnen
+                        pathLengths[i] = distanceToStarter + distanceStarterToMain + distanceMainToDessert + distanceDessertToEvent;
+                    }
+
+                    return Arrays.stream(pathLengths);
                 })
-                .average().orElse(0.0);
+                .sum();
     }
+
 
     @Override
     public String toString() {
