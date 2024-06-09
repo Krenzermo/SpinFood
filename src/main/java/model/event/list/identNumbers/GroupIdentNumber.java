@@ -11,9 +11,9 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 public class GroupIdentNumber extends IdentNumber {
-    private double totalPathLength;
-    private double averagePathLength;
-    private double pathLengthStdDev;
+    protected double totalPathLength;
+    protected double averagePathLength;
+    protected double pathLengthStdDev;
 
     public GroupIdentNumber(GroupList participantCollection) {
         super(participantCollection);
