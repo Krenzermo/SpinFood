@@ -29,7 +29,7 @@ public class Main {
 
 		GroupWeights groupWeights = new GroupWeights(1,1,1,1);
 		GroupList groupList = new GroupList(pairList,groupWeights);
-		System.out.println(groupList);
+		System.out.println(groupList.getIdentNumber());
 
 		OutputData outputData = new OutputData("src/main/java/data", groupList);
 		outputData.makePairOutputFile();

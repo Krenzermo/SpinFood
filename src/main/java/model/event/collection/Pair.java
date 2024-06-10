@@ -304,6 +304,18 @@ public class Pair implements ParticipantCollection {
         this.starterNumber = starterNumber;
     }
 
+    public int getStarterNumber() {
+        return starterNumber;
+    }
+
+    public int getMainNumber() {
+        return mainNumber;
+    }
+
+    public int getDessertNumber() {
+        return dessertNumber;
+    }
+
     public void setMainNumber(int mainNumber) {
         this.mainNumber = mainNumber;
     }

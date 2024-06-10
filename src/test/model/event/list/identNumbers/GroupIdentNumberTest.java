@@ -1,5 +1,6 @@
 package model.event.list.identNumbers;
 
+import model.event.GroupWeights;
 import model.event.InputData;
 import model.event.PairingWeights;
 import model.event.list.GroupList;
@@ -9,18 +10,18 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-/*public class GroupIdentNumberTest {
+public class GroupIdentNumberTest {
 
     static ParticipantCollectionList GroupList1;
     static ParticipantCollectionList pairList;
     @BeforeAll
     static void setUp() {
         InputData inputData = InputData.getInstance();
-        PairingWeights pairingWeights = new PairingWeights(1, 1, 1,1);
+        PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         pairList = new PairList(inputData, pairingWeights);
-        PairingWeights groupPairingWeights = new groupPairingWeights(1, 1, 1, 1);
+        GroupWeights groupPairingWeights = new GroupWeights(1, 1, 1, 1);
 
-        GroupList1 = new GroupList(inputData, groupPairingWeights);
+        GroupList1 = new GroupList((PairList) pairList, groupPairingWeights);
 
     }
 
@@ -58,4 +59,3 @@ import org.junit.jupiter.api.Test;
         Assertions.assertTrue(num.numSuccessors >= 0);
     }
 }
-*/
