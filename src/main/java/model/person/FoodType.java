@@ -26,7 +26,7 @@ public enum FoodType {
     }
 
     public static FoodType herbiFromValue(int value) {
-        return value == 2 ? VEGAN : VEGGIE;
+        return value == 4 ? VEGAN : VEGGIE;
     }
 
     @Override
