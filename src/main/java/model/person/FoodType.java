@@ -8,11 +8,11 @@ import java.util.function.Function;
  * @author Finn Brecher
  */
 public enum FoodType {
-    NONE(0, foodType -> 0, "ANY"),
-    VEGAN(2, foodType -> foodType == FoodType.NONE ? 1 : Math.abs(2 - foodType.value), "VEGAN"),
-    VEGGIE(1, foodType -> foodType == FoodType.NONE ? 1 : Math.abs(1 - foodType.value), "VEGGIE"),
+    MEAT(0, foodType -> foodType.value, "MEAT"),
+    NONE(0, foodType -> foodType == FoodType.MEAT ? 0 : foodType.value - 2, "ANY"),
+    VEGAN(4, foodType -> foodType == FoodType.NONE ? 2 : Math.abs(4 - foodType.value), "VEGAN"),
+    VEGGIE(3, foodType -> foodType == FoodType.NONE ? 1 : Math.abs(3 - foodType.value), "VEGGIE");
 
-    MEAT(0, foodType -> Math.abs(-foodType.value), "MEAT");
 
     private final String otherName;
     private final int value;
