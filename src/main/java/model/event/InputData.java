@@ -86,7 +86,7 @@ public class InputData {
 
             double longitude = Double.parseDouble(parts[0]);
             double latitude = Double.parseDouble(parts[1]);
-            eventLocation = new Location(latitude, longitude);        //initialize eventLocation
+            eventLocation = new Location(longitude, latitude);        //initialize eventLocation
 
         } catch (Exception e) {
             throw new RuntimeException(e);

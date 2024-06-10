@@ -16,7 +16,10 @@ public class GroupIdentNumber extends IdentNumber {
         genderDiversity = calcGenderDiversity(participantCollection);
         ageDifference = calcAgeDifference(participantCollection);
         preferenceDeviation = calcPreferenceDeviation(participantCollection);
-        averagePathLength = calcAveragePathLength(participantCollection);
+        totalPathLength = calcTotalPathLength(participantCollection);
+        averagePathLength = totalPathLength / participantCollection.getPairList().getPairs().size();
+        pathLengthStdDev = calcPathLengthStdDev(participantCollection);
+
     }
 
     @Override
@@ -67,6 +70,98 @@ public class GroupIdentNumber extends IdentNumber {
                     return Arrays.stream(pathLengths);
                 })
                 .sum();
+    }
+
+
+    private double calculateTotalDistanceForPair(Pair pair) {
+        double totalDistance = 0.0;
+
+        Group starterGroup = getGroupById(pair.getStarterNumber());
+        Group mainGroup = getGroupById(pair.getMainNumber());
+        Group dessertGroup = getGroupById(pair.getDessertNumber());
+        Location partyLocation = InputData.getInstance().getEventLocation();
+
+        if (starterGroup != null && mainGroup != null) {
+            totalDistance += starterGroup.getKitchen().location().getDistance(mainGroup.getKitchen().location());
+        }
+
+        if (mainGroup != null && dessertGroup != null) {
+            totalDistance += mainGroup.getKitchen().location().getDistance(dessertGroup.getKitchen().location());
+        }
+
+        if (dessertGroup != null) {
+            totalDistance += dessertGroup.getKitchen().location().getDistance(partyLocation);
+        }
+
+        return totalDistance;
+    }
+
+    private double calcPathLengthStdDev(ParticipantCollectionList participantCollection) {
+        List<Double> pathLengths = getAllPairs(participantCollection).stream()
+                .map(this::calculateTotalDistanceForPair)
+                .collect(Collectors.toList());
+
+        double mean = pathLengths.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
+        double variance = pathLengths.stream().mapToDouble(length -> Math.pow(length - mean, 2)).average().orElse(0.0);
+        return Math.sqrt(variance);
+    }
+
+    private Group getGroupById(int groupId) {
+        return groupList.getGroups().stream()
+                .filter(group -> group.getId() == groupId)
+                .findFirst()
+                .orElse(null);
+    }
+
+    private List<Pair> getAllPairs(ParticipantCollectionList participantCollection) {
+        GroupList groupList = (GroupList) participantCollection;
+        return groupList.getGroups().stream()
+                .flatMap(group -> List.of(group.getPairs()).stream())
+                .collect(Collectors.toList());
+    }
+
+    private int getTotalPairs(ParticipantCollectionList participantCollection) {
+        return getAllPairs(participantCollection).size();
+    }
+
+    private double calculateGroupGenderDeviation(Group group) {
+        Pair[] pairs = group.getPairs();
+        double pair1Deviation = pairs[0].getGenderDeviation();
+        double pair2Deviation = pairs[1].getGenderDeviation();
+        double pair3Deviation = pairs[2].getGenderDeviation();
+        double groupDeviation = Math.abs((pair1Deviation + pair2Deviation + pair3Deviation) / 3);
+        return groupDeviation;
+    }
+
+    private double calculateGroupAgeDifference(Group group) {
+        Pair[] pairs = group.getPairs();
+        double pair1AverageAge = pairs[0].getAverageAgeRange();
+        double pair2AverageAge = pairs[1].getAverageAgeRange();
+        double pair3AverageAge = pairs[2].getAverageAgeRange();
+        double groupAgeAverage = Math.abs((pair1AverageAge + pair2AverageAge + pair3AverageAge) / 3);
+        double groupAgeDifference = (Math.abs(pair1AverageAge-groupAgeAverage) + Math.abs(pair2AverageAge-groupAgeAverage) +Math.abs(pair3AverageAge-groupAgeAverage))/ 3;
+        return groupAgeDifference;
+    }
+
+    private double calculateGroupPreferenceDeviation(Group group) {
+        Pair[] pairs = group.getPairs();
+        double pair1Deviation = pairs[0].getFoodType().deviation.apply(pairs[1].getFoodType());
+        double pair2Deviation = pairs[1].getFoodType().deviation.apply(pairs[2].getFoodType());
+        double pair3Deviation = pairs[0].getFoodType().deviation.apply(pairs[2].getFoodType());
+        double groupDeviation = Math.abs((pair1Deviation + pair2Deviation + pair3Deviation) / 3);
+        return groupDeviation;
+    }
+
+    public double getAveragePathLength() {
+        return averagePathLength;
+    }
+
+    public double getTotalPathLength() {
+        return totalPathLength;
+    }
+
+    public double getPathLengthStdDev() {
+        return pathLengthStdDev;
     }
 
 
