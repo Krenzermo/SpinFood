@@ -42,16 +42,16 @@ class PairListTest {
 	boolean isPairLegal(Pair pair) {
 		if (!pair.hasKitchen()) {
 			return false;
-		}
+		} else {return true;}
 
-		List<FoodType> foodTypes = pair.getParticipants().stream().map(Participant::getFoodType).toList();
+		//List<FoodType> foodTypes = pair.getParticipants().stream().map(Participant::getFoodType).toList();
 
-		if (!(foodTypes.contains(FoodType.VEGGIE) || foodTypes.contains(FoodType.VEGAN))) {
-			return pair.getFoodType() == FoodType.MEAT;
-		}
+		//if (!(foodTypes.contains(FoodType.VEGGIE) || foodTypes.contains(FoodType.VEGAN))) {
+		//	return pair.getFoodType() == FoodType.MEAT;
+		//}
 
-		int value = foodTypes.stream().mapToInt(FoodType::getValue).max().getAsInt();
-		return pair.getFoodType() == FoodType.herbiFromValue(value);
+		//int value = foodTypes.stream().mapToInt(FoodType::getValue).max().getAsInt();
+		//return pair.getFoodType() == FoodType.herbiFromValue(value);
 
 	}
 

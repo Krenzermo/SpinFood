@@ -23,6 +23,7 @@ public class GroupIdentNumberTest {
 
         GroupList1 = new GroupList((PairList) pairList, groupPairingWeights);
 
+
     }
 
     @Test
@@ -46,7 +47,17 @@ public class GroupIdentNumberTest {
     @Test
     void calcAveragePathLength() {
         GroupIdentNumber num = new GroupIdentNumber((GroupList) GroupList1);
-        Assertions.assertTrue(num.averagePathLength > 0);
+        Assertions.assertTrue(num.getAveragePathLength() > 0);
+    }
+    @Test
+    void calcTotalPathLength() {
+        GroupIdentNumber num = new GroupIdentNumber((GroupList) GroupList1);
+        Assertions.assertTrue(num.getTotalPathLength() > 0);
+    }
+    @Test
+    void calcStandardDeviationPathLength() {
+        GroupIdentNumber num = new GroupIdentNumber((GroupList) GroupList1);
+        Assertions.assertTrue(num.getPathLengthStdDev() > 0);
     }
     @Test
     void numElements() {
