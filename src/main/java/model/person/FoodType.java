@@ -9,8 +9,8 @@ import java.util.function.Function;
  */
 public enum FoodType {
     NONE(0, foodType -> 0, "ANY"),
-    VEGAN(2, foodType -> foodType == FoodType.NONE ? 0 : 2 - Math.abs(2 - foodType.value), "VEGAN"),
-    VEGGIE(1, foodType -> foodType == FoodType.NONE ? 0 : 1 - Math.abs(1 - foodType.value), "VEGGIE"),
+    VEGAN(2, foodType -> foodType == FoodType.NONE ? 1 : Math.abs(2 - foodType.value), "VEGAN"),
+    VEGGIE(1, foodType -> foodType == FoodType.NONE ? 1 : Math.abs(1 - foodType.value), "VEGGIE"),
 
     MEAT(0, foodType -> Math.abs(-foodType.value), "MEAT");
 
