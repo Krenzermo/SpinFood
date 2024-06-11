@@ -1,13 +1,12 @@
 package model.event.list;
 
 import model.event.Course;
-import model.event.GroupWeights;
+import model.event.weight.GroupWeights;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.collection.ParticipantCollection;
 import model.event.list.identNumbers.GroupIdentNumber;
 import model.event.list.identNumbers.IdentNumber;
-import model.event.list.identNumbers.PairIdentNumber;
 import model.person.FoodType;
 import model.person.Participant;
 
@@ -22,7 +21,7 @@ import java.util.List;
  *
  * This class extends ParticipantCollectionList and uses GroupWeights for grouping logic.
  *
- * @see model.event.GroupWeights
+ * @see GroupWeights
  * @see model.event.collection.Group
  * @see model.event.collection.Pair
  * @see model.event.list.ParticipantCollectionList

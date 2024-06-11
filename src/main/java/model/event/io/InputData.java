@@ -1,5 +1,6 @@
-package model.event;
+package model.event.io;
 
+import model.event.Location;
 import model.event.collection.Pair;
 import model.kitchen.KitchenAvailability;
 import model.person.FoodType;

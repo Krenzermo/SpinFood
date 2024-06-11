@@ -1,13 +1,11 @@
 package model.event.list.identNumbers;
 
-import model.event.InputData;
+import model.event.io.InputData;
 import model.event.Location;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.ParticipantCollectionList;
-import model.kitchen.Kitchen;
-import model.person.Participant;
 
 import java.util.List;
 import java.util.stream.Collectors;

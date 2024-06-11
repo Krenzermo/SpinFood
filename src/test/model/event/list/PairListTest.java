@@ -1,12 +1,11 @@
 package model.event.list;
 
-import model.event.InputData;
-import model.event.PairingWeights;
+import model.event.io.InputData;
+import model.event.weight.PairingWeights;
 import model.event.collection.Pair;
 import model.person.FoodType;
 import model.person.Participant;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

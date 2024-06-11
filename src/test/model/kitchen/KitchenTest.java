@@ -1,6 +1,6 @@
 package model.kitchen;
 
-import model.event.InputData;
+import model.event.io.InputData;
 import model.event.Location;
 
 import org.junit.jupiter.api.BeforeAll;

@@ -8,7 +8,7 @@ import model.person.FoodType;
 import model.person.Gender;
 import model.person.Participant;
 import model.event.Course;
-import model.event.InputData;
+import model.event.io.InputData;
 
 import java.util.List;
 import java.util.Objects;

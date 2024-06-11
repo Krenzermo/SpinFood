@@ -1,4 +1,4 @@
-package model.event;
+package model.event.io;
 
 import model.event.collection.Group;
 import model.event.list.GroupList;

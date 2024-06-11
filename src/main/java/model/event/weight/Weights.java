@@ -1,4 +1,4 @@
-package model.event;
+package model.event.weight;
 
 /**
  * This abstract class represents the weights used in various pairings and groupings.

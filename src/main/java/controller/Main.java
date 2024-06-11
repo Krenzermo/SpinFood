@@ -1,10 +1,9 @@
 package controller;
 
-import model.event.GroupWeights;
-import model.event.InputData;
-import model.event.OutputData;
-import model.event.PairingWeights;
-import model.event.collection.Group;
+import model.event.weight.GroupWeights;
+import model.event.io.InputData;
+import model.event.io.OutputData;
+import model.event.weight.PairingWeights;
 import model.event.list.GroupList;
 import model.event.list.PairList;
 

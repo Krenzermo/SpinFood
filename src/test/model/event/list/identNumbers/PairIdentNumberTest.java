@@ -1,14 +1,12 @@
 package model.event.list.identNumbers;
 
-import model.event.InputData;
-import model.event.PairingWeights;
+import model.event.io.InputData;
+import model.event.weight.PairingWeights;
 import model.event.list.PairList;
 import model.event.list.ParticipantCollectionList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class PairIdentNumberTest {
 

@@ -3,6 +3,7 @@ package model.event;
 import static org.junit.jupiter.api.Assertions.*;
 
 import model.event.collection.Pair;
+import model.event.io.InputData;
 import model.kitchen.Kitchen;
 import model.kitchen.KitchenAvailability;
 import model.person.Participant;
