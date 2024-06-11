@@ -2,8 +2,10 @@ package model.event;
 
 import model.person.Participant;
 
-/**
+/** A simple recode that holds a Location on planet earth in (latitude, longitude) notation.
+ *
  * @author Finn Brecher
+ * @author Daniel Hinkelmann
  *
  * @param latitude the latitude
  * @param longitude the longitude

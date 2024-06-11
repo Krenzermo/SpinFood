@@ -3,6 +3,8 @@ package model.person;
 import java.util.Objects;
 
 /**
+ * The name of a participant
+ *
  * @author Davide Piacenza
  *
  * @param firstName the participants first name

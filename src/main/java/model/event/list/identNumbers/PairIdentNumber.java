@@ -4,6 +4,10 @@ import model.event.collection.Pair;
 import model.event.list.PairList;
 import model.event.list.ParticipantCollectionList;
 
+/** A class that holds and calculates the defined IdentNumber for a {@link Pair}
+ *
+ * @author Daniel Hinkelmann
+ */
 public class PairIdentNumber extends IdentNumber{
 
     public PairIdentNumber(PairList participantCollection) {

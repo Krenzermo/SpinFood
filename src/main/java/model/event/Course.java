@@ -1,6 +1,8 @@
 package model.event;
 
-/**
+/** A simple enum representing a Course of the evening.
+ *
+ * @author Daniel Hinkelmann
  * @author Finn Brecher
  */
 public enum Course {

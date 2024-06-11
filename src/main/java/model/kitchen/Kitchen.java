@@ -4,6 +4,8 @@ import model.event.io.InputData;
 import model.event.Location;
 
 /**
+ * A simple record, representing a Kitchen of a Participant.
+ *
  * @author Davide Piacenza
  * @author Daniel Hinkelmann
  * @author Finn Brecher

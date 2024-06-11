@@ -11,7 +11,13 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-// TODO: Implementierung
+/** This class holds a Group (3 {@link Pair}) in compliance with the defined rules
+ *
+ * @author Finn Brecher
+ * @author Daniel Hinkelmann
+ * @author Ole Krenzer
+ * @author Davide Piacenza
+ */
 public class Group implements ParticipantCollection{
 
 	private final Pair[] pairs;

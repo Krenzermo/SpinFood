@@ -10,6 +10,8 @@ import model.person.Participant;
 import java.util.List;
 
 /**
+ * The abstract class for the different identNumbers of {@link Pair} and {@link Group}
+ *
  * @author Finn Brecher
  * @author Daniel Hinkelmann
  */
