@@ -394,7 +394,11 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	public E remove(int index) {
 		E oldElement = super.remove(index);
 		if (oldElement != null) {
-			participants.addAll(oldElement.getParticipants());
+			participants.retainAll(
+					this.stream()
+					.flatMap(collection -> collection.getParticipants().stream())
+					.toList()
+			);
 		}
 		return oldElement;
 	}
