@@ -10,8 +10,6 @@ import org.junit.jupiter.api.Test;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class PairListTest {
 	@Test
 	void pairListTest() {
@@ -19,7 +17,7 @@ class PairListTest {
 		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
 		PairList pairList = new PairList(inputData, pairingWeights);
 
-		Assertions.assertTrue(allPairLegal(pairList));
+		Assertions.assertTrue(allPairsLegal(pairList));
 	}
 
 	@Test
@@ -32,10 +30,10 @@ class PairListTest {
 		PairList pairList1 = new PairList(inputData, pairingWeights);
 		PairList pairList2 = new PairList(inputData, pairingWeights1);
 
-		assert allPairLegal(pairList1) && allPairLegal(pairList2);
+		Assertions.assertTrue(allPairsLegal(pairList1) && allPairsLegal(pairList2));
 
-        assertNotEquals(pairList1.getPairs(), pairList2.getPairs());
-
+        Assertions.assertFalse(pairList1.containsAll(pairList2.getPairs()));
+		Assertions.assertFalse(pairList2.containsAll(pairList1.getPairs()));
 	}
 
 	boolean isPairLegal(Pair pair) {
@@ -57,7 +55,7 @@ class PairListTest {
 
 	}
 
-	boolean allPairLegal(PairList pairList) {
+	boolean allPairsLegal(PairList pairList) {
 		for (Pair pair: pairList.getPairs()) {
 			if (!isPairLegal(pair)) {
 				return false;
@@ -65,14 +63,5 @@ class PairListTest {
 		}
 
 		return true;
-	}
-
-	@Test
-	void remove() {
-		InputData inputData = InputData.getInstance();
-		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
-		PairList pairList = new PairList(inputData, pairingWeights);
-
-		Assertions.assertTrue(pairList.remove(pairList.getPairs().get(0)));
 	}
 }

@@ -4,10 +4,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 import model.event.Location;
 import model.event.collection.Pair;
-import model.event.io.InputData;
 import model.kitchen.Kitchen;
 import model.kitchen.KitchenAvailability;
 import model.person.Participant;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -36,7 +36,7 @@ public class InputDataTest {
     @Test
     public void testEventLocationLoading() {
         Location expectedLocation = new Location(8.6746166676233,50.5909317660173); // Expected values based on test data
-        assertEquals(expectedLocation, InputData.getInstance().getEventLocation());
+        Assertions.assertEquals(expectedLocation, InputData.getInstance().getEventLocation());
     }
 
     /**
@@ -45,8 +45,8 @@ public class InputDataTest {
     @Test
     public void testParticipantsLoading() {
         ArrayList<Participant> participants = inputData.getParticipantInputData();
-        assertFalse(participants.isEmpty());
-        assertEquals("Person1", participants.get(0).getName().firstName());
+        Assertions.assertFalse(participants.isEmpty());
+        Assertions.assertEquals("Person1", participants.get(0).getName().firstName());
     }
 
     /**
@@ -55,8 +55,8 @@ public class InputDataTest {
     @Test
     public void testPairsLoading() {
         ArrayList<Pair> pairs = inputData.getPairInputData();
-        assertFalse(pairs.isEmpty());
-        assertTrue(pairs.get(0).signedUpTogether);
+        Assertions.assertFalse(pairs.isEmpty());
+        Assertions.assertTrue(pairs.get(0).signedUpTogether);
     }
 
     /**
@@ -64,10 +64,10 @@ public class InputDataTest {
      */
     @Test
     public void testGetMethods() {
-        assertNotNull(inputData.getEventLocationDataFilePath());
-        assertNotNull(inputData.getParticipantDataFilePath());
-        assertNotNull(inputData.getParticipantInputData());
-        assertNotNull(inputData.getPairInputData());
+        Assertions.assertNotNull(inputData.getEventLocationDataFilePath());
+        Assertions.assertNotNull(inputData.getParticipantDataFilePath());
+        Assertions.assertNotNull(inputData.getParticipantInputData());
+        Assertions.assertNotNull(inputData.getPairInputData());
     }
 
     /**
@@ -77,8 +77,8 @@ public class InputDataTest {
     public void testCorrectPairAssignment() {
         ArrayList<Pair> pairs = inputData.getPairInputData();
         for (Pair pair : pairs) {
-            assertTrue(pair.signedUpTogether);
-            assertNotEquals(pair.getParticipants().get(0).getId(), pair.getParticipants().get(1).getId());
+            Assertions.assertTrue(pair.signedUpTogether);
+            Assertions.assertNotEquals(pair.getParticipants().get(0).getId(), pair.getParticipants().get(1).getId());
         }
     }
 
@@ -89,9 +89,9 @@ public class InputDataTest {
     public void testDataValueValidation() {
         ArrayList<Participant> participants = inputData.getParticipantInputData();
         for (Participant participant : participants) {
-            assertNotNull(participant.getGender());
-            assertNotNull(participant.getFoodType());
-            assertTrue(participant.getAge().value > 0);  // Assuming age should be positive
+            Assertions.assertNotNull(participant.getGender());
+            Assertions.assertNotNull(participant.getFoodType());
+            Assertions.assertTrue(participant.getAge().value > 0);  // Assuming age should be positive
         }
     }
 
@@ -101,9 +101,9 @@ public class InputDataTest {
     @Test
     public void testParticipantSuccessorLoading() {
         ArrayList<Participant> successorParticipants = inputData.getParticipantSuccessorList();
-        assertTrue(successorParticipants.isEmpty());
-        for (Participant participant : successorParticipants) {
-            assertTrue(participant.isHasKitchen() != KitchenAvailability.NO);
+        Assertions.assertTrue(successorParticipants.isEmpty());
+        for (Participant participant : successorParticipants) { // will not be executed as there are no Successors
+            Assertions.assertNotSame(participant.isHasKitchen(), KitchenAvailability.NO);
         }
     }
 
@@ -113,10 +113,10 @@ public class InputDataTest {
     @Test
     public void testPairSuccessorLoading() {
         ArrayList<Pair> successorPairs = inputData.getPairSuccessorList();
-        assertFalse(successorPairs.isEmpty());
+        Assertions.assertFalse(successorPairs.isEmpty());
         for (Pair pair : successorPairs) {
-            assertNotNull(pair.getKitchen());
-            assertTrue(pair.signedUpTogether);
+            Assertions.assertNotNull(pair.getKitchen());
+            Assertions.assertTrue(pair.signedUpTogether);
         }
     }
 
@@ -128,17 +128,19 @@ public class InputDataTest {
         ArrayList<Participant> successorParticipants = inputData.getParticipantSuccessorList();
         ArrayList<Pair> successorPairs = inputData.getPairSuccessorList();
 
+        Assertions.assertTrue(successorParticipants.isEmpty());
         // Check that all successors have kitchens that are used more than 3 times
         for (Participant participant : successorParticipants) {
             Kitchen kitchen = participant.getKitchen();
-            assertNotNull(kitchen);
-            assertTrue(inputData.getKitchenCountMap().get(kitchen) > 3);
+            Assertions.assertNotNull(kitchen);
+            Assertions.assertTrue(inputData.getKitchenCountMap().get(kitchen) > 3);
         }
 
+        Assertions.assertFalse(successorPairs.isEmpty());
         for (Pair pair : successorPairs) {
             Kitchen kitchen = pair.getKitchen();
-            assertNotNull(kitchen);
-            assertTrue(inputData.getKitchenCountMap().get(kitchen) > 3);
+            Assertions.assertNotNull(kitchen);
+            Assertions.assertTrue(inputData.getKitchenCountMap().get(kitchen) > 3);
         }
     }
 }
