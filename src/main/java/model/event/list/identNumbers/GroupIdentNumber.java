@@ -10,6 +10,12 @@ import model.event.list.ParticipantCollectionList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**A class that holds and calculates the IdentNumbers for a {@link Group}
+ *
+ * @author Ole Krenzer
+ * @author Davide Piacenza
+ *
+ */
 public class GroupIdentNumber extends IdentNumber {
     private double averagePathLength;
     private double totalPathLength;

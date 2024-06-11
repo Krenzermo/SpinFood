@@ -1,6 +1,9 @@
 package model.kitchen;
 
 /**
+ * A simple enum representing if a Participant has a Kitchen, has no kitchen, or has a kitchen
+ * but only wants to use it if there's no other way.
+ *
  * @author Daniel Hinkelmann
  */
 public enum KitchenAvailability {

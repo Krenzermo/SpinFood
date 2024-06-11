@@ -10,6 +10,8 @@ import model.kitchen.KitchenAvailability;
 import java.util.Objects;
 
 /**
+ * A simple class that holds information about a Participant.
+ *
  * @author Daniel Hinkelmann
  * @author Davide Piacenza
  * @author Finn Brecher

@@ -3,6 +3,8 @@ package model.person;
 import java.util.function.Function;
 
 /**
+ * The FoodType of a Participant
+ *
  * @author Davide Piacenza
  * @author Daniel Hinkelmann
  * @author Finn Brecher

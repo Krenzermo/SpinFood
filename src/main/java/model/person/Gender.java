@@ -1,6 +1,8 @@
 package model.person;
 
 /**
+ * The gender of participant.
+ *
  * @author Davide Piacenza
  * @author Finn Brecher
  */

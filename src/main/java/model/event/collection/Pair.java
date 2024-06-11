@@ -13,7 +13,8 @@ import model.event.io.InputData;
 import java.util.List;
 import java.util.Objects;
 
-/**
+/** This class represents one Pair of {@link Participant} that complies with the defined rules.
+ *
  * @author Finn Brecher
  * @author Davide Piacenza
  * @author Daniel Hinkelmann
