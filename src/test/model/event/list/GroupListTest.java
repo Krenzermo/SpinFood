@@ -59,7 +59,7 @@ class GroupListTest {
 	 * @return {@code true} if the {@link Group} is legal, {@code false} otherwise
 	 */
 	boolean isGroupLegal(Group group) {
-		return !(containsMoreMeatThanVeggie(group) && GroupContainsPairMoreThanOnce(group));
+		return !containsMoreMeatThanVeggie(group) && !GroupContainsPairMoreThanOnce(group);
 	}
 
 	/**
@@ -80,7 +80,7 @@ class GroupListTest {
 	}
 
 	boolean GroupContainsPairMoreThanOnce(Group group) {
-		return Arrays.stream(group.getPairs()).collect(Collectors.groupingBy(Pair::hashCode, Collectors.counting())).size() == 3;
+		return Arrays.stream(group.getPairs()).collect(Collectors.groupingBy(Pair::hashCode, Collectors.counting())).size() != 3;
 	}
 
 	/**
