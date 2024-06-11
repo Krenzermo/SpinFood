@@ -148,15 +148,15 @@ public class PairList extends ParticipantCollectionList<Pair> {
         switch (participant1.getFoodType()) {
             case MEAT:
                 if (testedParticipant.getFoodType() == FoodType.MEAT) return weight;
-                return (testedParticipant.getFoodType() == FoodType.NONE) ? weight : - 1000;
+                return (testedParticipant.getFoodType() == FoodType.NONE) ? weight : - 1000 * weight;
             case VEGGIE:
                 if (testedParticipant.getFoodType() == FoodType.VEGGIE) return weight;
                 if (testedParticipant.getFoodType() == FoodType.VEGAN) return 0.5 * weight;
-                return (testedParticipant.getFoodType() == FoodType.NONE) ? 0.25 * weight : -1000;
+                return (testedParticipant.getFoodType() == FoodType.NONE) ? 0.33 * weight : -1000 * weight;
             case VEGAN:
                 if (testedParticipant.getFoodType() == FoodType.VEGAN) return weight;
                 if (testedParticipant.getFoodType() == FoodType.VEGGIE) return 0.5 * weight;
-                return (testedParticipant.getFoodType() == FoodType.NONE) ? 0.25 * weight : -1000;
+                return (testedParticipant.getFoodType() == FoodType.NONE) ? 0.25 * weight : -1000 * weight;
             case NONE:
                 return (testedParticipant.getFoodType() == FoodType.NONE || testedParticipant.getFoodType() == FoodType.MEAT) ? weight : 0.25 * weight;
             default:
@@ -220,7 +220,17 @@ public class PairList extends ParticipantCollectionList<Pair> {
         List<Participant> sortedParticipantList = new ArrayList<>();
 
         for (Participant participant : participantList) {
-            if (participant.getFoodType() != FoodType.NONE) {
+            if (participant.getFoodType() == FoodType.VEGAN) {
+                sortedParticipantList.add(participant);
+            }
+        }
+        for (Participant participant : participantList) {
+            if (participant.getFoodType() == FoodType.VEGGIE) {
+                sortedParticipantList.add(participant);
+            }
+        }
+        for (Participant participant : participantList) {
+            if (participant.getFoodType() == FoodType.MEAT) {
                 sortedParticipantList.add(participant);
             }
         }
