@@ -79,6 +79,12 @@ class GroupListTest {
 				&& (map.containsKey(FoodType.VEGAN.getValue()) || map.containsKey(FoodType.VEGGIE.getValue()));
 	}
 
+	/**
+	 * Checks if the specified {@link Group} contains any {@link Pair} more than once.
+	 *
+	 * @param group the {@link Group} to be checked
+	 * @return {@code true} if the {@link Group} contains any {@link Pair} more than once, {@code false} otherwise
+	 */
 	boolean GroupContainsPairMoreThanOnce(Group group) {
 		return Arrays.stream(group.getPairs()).collect(Collectors.groupingBy(Pair::hashCode, Collectors.counting())).size() != 3;
 	}
