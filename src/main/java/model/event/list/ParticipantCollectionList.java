@@ -225,7 +225,7 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	@Override
 	public boolean add(E collection) {
 		check(collection);
-		participants.addAll(collection);
+		participants.addAll(collection.getParticipants());
 		return super.add(collection);
 	}
 
@@ -238,7 +238,10 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 */
 	@Override
 	public boolean remove(Object object) {
-		participants.remove(object);
+		if (!(object instanceof ParticipantCollection)) {
+			return false;
+		}
+		((ParticipantCollection) object).getParticipants().forEach(participants::remove); // optimized for speed (by IntelliJ)
 		return super.remove(object);
 	}
 
@@ -270,7 +273,7 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 		for (E e : c) {
 			check(e);
 		}
-		c.forEach(participants::addAll);
+		c.forEach(collection -> participants.addAll(collection.getParticipants()));
 		return super.addAll(c);
 	}
 
@@ -294,7 +297,7 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 		for (E e : c) {
 			check(e);
 		}
-		c.forEach(participants::addAll);
+		c.forEach(collection -> participants.addAll(collection.getParticipants()));
 		return super.addAll(index, c);
 	}
 
@@ -308,10 +311,9 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 *
 	 * @throws ClassCastException if the class of an element of {@code this} is incompatible with the specified {@link Collection}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		((Collection<Collection<?>>) c).forEach(participants::removeAll);
+		c.forEach(collection -> ((ParticipantCollection) collection).getParticipants().forEach(participants::remove)); // optimized for speed (by IntelliJ)
 		return super.removeAll(c);
 	}
 
@@ -324,10 +326,9 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 *
 	 * @throws ClassCastException if the class of an element of {@code this} is incompatible with the specified {@link Collection}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		((Collection<Collection<?>>) c).forEach(participants::retainAll);
+		c.forEach(collection -> participants.retainAll(((ParticipantCollection) collection).getParticipants()));
 		return super.retainAll(c);
 	}
 
@@ -352,9 +353,9 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 		check(element);
 		E oldElement =  super.set(index, element);
 		if (oldElement != null) {
-			oldElement.forEach(participants::remove); //optimized for speed (by IntelliJ)
+			oldElement.getParticipants().forEach(participants::remove); //optimized for speed (by IntelliJ)
 		}
-		participants.addAll(element);
+		participants.addAll(element.getParticipants());
 		return oldElement;
 	}
 
@@ -368,14 +369,14 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 * @param index   index at which the specified element is to be inserted
 	 * @param element element to be inserted
 	 *
-	 * @throws NullPointerException if element is or contains {@code null}
+	 * @throws NullPointerException if the element is or contains {@code null}
 	 * @throws IllegalArgumentException if {@code this} already contains the {@link ParticipantCollection} or a {@link Participant}
 	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
 	public void add (int index, E element) {
 		check(element);
-		participants.addAll(element);
+		participants.addAll(element.getParticipants());
 		super.add(index, element);
 	}
 
@@ -393,7 +394,7 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	public E remove(int index) {
 		E oldElement = super.remove(index);
 		if (oldElement != null) {
-			participants.addAll(oldElement);
+			participants.addAll(oldElement.getParticipants());
 		}
 		return oldElement;
 	}

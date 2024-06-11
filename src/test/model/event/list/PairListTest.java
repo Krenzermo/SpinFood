@@ -66,4 +66,13 @@ class PairListTest {
 
 		return true;
 	}
+
+	@Test
+	void remove() {
+		InputData inputData = InputData.getInstance();
+		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
+		PairList pairList = new PairList(inputData, pairingWeights);
+
+		Assertions.assertTrue(pairList.remove(pairList.getPairs().get(0)));
+	}
 }
