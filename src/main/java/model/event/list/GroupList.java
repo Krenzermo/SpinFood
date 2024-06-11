@@ -288,17 +288,19 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		switch (pair1.getFoodType()) {
 			case MEAT:
 				if (testedPair.getFoodType() == FoodType.MEAT) return weight;
-				return (testedPair.getFoodType() == FoodType.NONE) ? 0.5 * weight : -1000;
+				return (testedPair.getFoodType() == FoodType.NONE) ? weight : -1000;
 			case VEGGIE:
 				if (testedPair.getFoodType() == FoodType.VEGGIE) return weight;
 				if (testedPair.getFoodType() == FoodType.VEGAN) return 0.5 * weight;
-				return (testedPair.getFoodType() == FoodType.NONE) ? 0.25 * weight : -1000;
+				return (testedPair.getFoodType() == FoodType.NONE) ? 0.33 * weight : -1000;
 			case VEGAN:
 				if (testedPair.getFoodType() == FoodType.VEGAN) return weight;
 				if (testedPair.getFoodType() == FoodType.VEGGIE) return 0.5 * weight;
 				return (testedPair.getFoodType() == FoodType.NONE) ? 0.25 * weight : -1000;
 			case NONE:
-				return (testedPair.getFoodType() == FoodType.NONE || testedPair.getFoodType() == FoodType.MEAT) ? 0.5 * weight : 0.25 * weight;
+				if (testedPair.getFoodType() == FoodType.NONE || testedPair.getFoodType() == FoodType.MEAT) return weight;
+				if (testedPair.getFoodType() == FoodType.VEGGIE) return 0.33 * weight;
+				return 0.25 * weight;
 			default:
 				return 0;
 		}
