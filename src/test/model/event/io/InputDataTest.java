@@ -1,7 +1,8 @@
-package model.event;
+package model.event.io;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import model.event.Location;
 import model.event.collection.Pair;
 import model.event.io.InputData;
 import model.kitchen.Kitchen;

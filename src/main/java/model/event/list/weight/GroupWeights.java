@@ -1,4 +1,4 @@
-package model.event.weight;
+package model.event.list.weight;
 
 /**
  * This class represents the weights used in grouping participants based on various criteria specific to groups.

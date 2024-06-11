@@ -1,7 +1,7 @@
 package model.event.list;
 
 import model.event.io.InputData;
-import model.event.weight.PairingWeights;
+import model.event.list.weight.PairingWeights;
 import model.event.collection.Pair;
 import model.person.FoodType;
 import model.person.Participant;

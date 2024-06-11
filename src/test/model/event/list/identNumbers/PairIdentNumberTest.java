@@ -1,7 +1,7 @@
 package model.event.list.identNumbers;
 
 import model.event.io.InputData;
-import model.event.weight.PairingWeights;
+import model.event.list.weight.PairingWeights;
 import model.event.list.PairList;
 import model.event.list.ParticipantCollectionList;
 import org.junit.jupiter.api.Assertions;

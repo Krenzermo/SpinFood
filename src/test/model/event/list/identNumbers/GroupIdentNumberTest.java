@@ -1,8 +1,8 @@
 package model.event.list.identNumbers;
 
-import model.event.weight.GroupWeights;
+import model.event.list.weight.GroupWeights;
 import model.event.io.InputData;
-import model.event.weight.PairingWeights;
+import model.event.list.weight.PairingWeights;
 import model.event.list.GroupList;
 import model.event.list.PairList;
 import model.event.list.ParticipantCollectionList;

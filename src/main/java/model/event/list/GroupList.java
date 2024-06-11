@@ -1,7 +1,7 @@
 package model.event.list;
 
 import model.event.Course;
-import model.event.weight.GroupWeights;
+import model.event.list.weight.GroupWeights;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.collection.ParticipantCollection;
