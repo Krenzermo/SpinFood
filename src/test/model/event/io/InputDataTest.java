@@ -102,6 +102,7 @@ public class InputDataTest {
     public void testParticipantSuccessorLoading() {
         ArrayList<Participant> successorParticipants = inputData.getParticipantSuccessorList();
         Assertions.assertTrue(successorParticipants.isEmpty());
+        //if a singular Participant with a duplicate Kitchen signs up, that Participants Kitchen will be "forgotten"
         for (Participant participant : successorParticipants) { // will not be executed as there are no Successors
             Assertions.assertNotSame(participant.isHasKitchen(), KitchenAvailability.NO);
         }
@@ -129,8 +130,9 @@ public class InputDataTest {
         ArrayList<Pair> successorPairs = inputData.getPairSuccessorList();
 
         Assertions.assertTrue(successorParticipants.isEmpty());
-        // Check that all successors have kitchens that are used more than 3 times
-        for (Participant participant : successorParticipants) {
+
+        //if a singular Participant with a duplicate Kitchen signs up, that Participants Kitchen will be "forgotten"
+        for (Participant participant : successorParticipants) { // Check that all successors have kitchens that are used more than 3 times
             Kitchen kitchen = participant.getKitchen();
             Assertions.assertNotNull(kitchen);
             Assertions.assertTrue(inputData.getKitchenCountMap().get(kitchen) > 3);

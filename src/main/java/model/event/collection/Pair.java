@@ -133,7 +133,13 @@ public class Pair implements ParticipantCollection {
         }
 
         this.groups = groups;
+    }
 
+    /**
+     * Clears this {@link Pair} of the instances of {@link Group}.
+     */
+    public void clearGroups() {
+        groups = new Group[] {null, null, null};
     }
 
     /**
