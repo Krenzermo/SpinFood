@@ -195,7 +195,10 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 		// Sort Groups by if their Kitchens are used in the respective Courses
 		for (Pair[] pairs : groupedPairs) {
-
+			/*
+			 * This approach will not work, as it may be possible that all Kitchens in a pre-grouped Group
+			 * are already used in one of the three Courses.
+			 */
 		}
 
 		Group group1 = new Group(pairs1[0], pairs1[1], pairs1[2], Course.STARTER, matchedPairList.get(0).getKitchen());

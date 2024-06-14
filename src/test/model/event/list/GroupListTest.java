@@ -127,7 +127,7 @@ class GroupListTest {
 				.collect(Collectors.groupingBy(Group::getId, Collectors.counting()))
 				.values()
 				.stream()
-				.noneMatch(count -> count != 3);
+				.allMatch(count -> count == 3);
 	}
 
 	boolean eachKitchenOnlyUsedOncePerCourse(GroupList groupList) {
@@ -135,27 +135,15 @@ class GroupListTest {
 				 .collect(Collectors.groupingBy(Group::getKitchen))
 				 .values()
 				 .stream()
-				 .map(this::getKitchenList)
-				 .allMatch(this::containsEachKitchenExactlyOnce);
+				 .allMatch(this::onlyOneKitchenPerCourse);
 	}
 
-	List<Kitchen> getKitchenList(List<Group> groupList) {
-		 List<Kitchen> kitchens = new ArrayList<>();
-
-		 groupList.forEach(group -> kitchens.add(group.getKitchen()));
-		 return kitchens;
-	}
-
-	boolean containsEachKitchenExactlyOnce(List<Kitchen> kitchens) {
-		 List<Kitchen> temp = new ArrayList<>(kitchens);
-
-		 for (Kitchen kitchen : kitchens) {
-			 temp.remove(kitchen);
-			 if (temp.contains(kitchen)) {
-				 return false;
-			 }
-		 }
-		 return true;
+	boolean onlyOneKitchenPerCourse(List<Group> groupList) {
+		 return groupList.stream()
+				 .collect(Collectors.groupingBy(Group::getCourse))
+				 .values()
+				 .stream()
+				 .allMatch(list -> list.size() == 1);
 	}
 
 	/**
