@@ -6,6 +6,7 @@ import model.event.io.OutputData;
 import model.event.list.weight.PairingWeights;
 import model.event.list.GroupList;
 import model.event.list.PairList;
+import view.MainFrame;
 
 /**
  * @author Finn Brecher
@@ -15,7 +16,7 @@ import model.event.list.PairList;
  */
 public class Main {
 	public static void main(String[] args) {
-
+		//MainFrame.launchFXML(args);
 		// path should directly lead to files from data directory
 		InputData inputData = InputData.getInstance("src/main/java/data/teilnehmerliste.csv" , "src/main/java/data/partylocation.csv");
 
