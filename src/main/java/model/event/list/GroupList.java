@@ -171,15 +171,42 @@ public class GroupList extends ParticipantCollectionList<Group> {
 			}
 		}
 
-		Group group1 = new Group(matchedPairList.get(0), matchedPairList.get(3), matchedPairList.get(6), Course.STARTER, matchedPairList.get(0).getKitchen());
-		Group group2 = new Group(matchedPairList.get(1), matchedPairList.get(4), matchedPairList.get(7), Course.STARTER, matchedPairList.get(1).getKitchen());
-		Group group3 = new Group(matchedPairList.get(2), matchedPairList.get(5), matchedPairList.get(8), Course.STARTER, matchedPairList.get(2).getKitchen());
-		Group group4 = new Group(matchedPairList.get(0), matchedPairList.get(4), matchedPairList.get(8), Course.MAIN, matchedPairList.get(4).getKitchen());
-		Group group5 = new Group(matchedPairList.get(1), matchedPairList.get(5), matchedPairList.get(6), Course.MAIN, matchedPairList.get(5).getKitchen());
-		Group group6 = new Group(matchedPairList.get(2), matchedPairList.get(3), matchedPairList.get(7), Course.MAIN, matchedPairList.get(3).getKitchen());
-		Group group7 = new Group(matchedPairList.get(0), matchedPairList.get(5), matchedPairList.get(7), Course.DESSERT, matchedPairList.get(7).getKitchen());
-		Group group8 = new Group(matchedPairList.get(1), matchedPairList.get(3), matchedPairList.get(8), Course.DESSERT, matchedPairList.get(8).getKitchen());
-		Group group9 = new Group(matchedPairList.get(2), matchedPairList.get(4), matchedPairList.get(6), Course.DESSERT, matchedPairList.get(6).getKitchen());
+		Pair[] pairs1 = new Pair[] {matchedPairList.get(0), matchedPairList.get(3), matchedPairList.get(6)};
+		Pair[] pairs2 = new Pair[] {matchedPairList.get(1), matchedPairList.get(4), matchedPairList.get(7)};
+		Pair[] pairs3 = new Pair[] {matchedPairList.get(2), matchedPairList.get(5), matchedPairList.get(8)};
+		Pair[] pairs4 = new Pair[] {matchedPairList.get(0), matchedPairList.get(4), matchedPairList.get(8)};
+		Pair[] pairs5 = new Pair[] {matchedPairList.get(1), matchedPairList.get(5), matchedPairList.get(6)};
+		Pair[] pairs6 = new Pair[] {matchedPairList.get(2), matchedPairList.get(3), matchedPairList.get(7)};
+		Pair[] pairs7 = new Pair[] {matchedPairList.get(0), matchedPairList.get(5), matchedPairList.get(7)};
+		Pair[] pairs8 = new Pair[] {matchedPairList.get(1), matchedPairList.get(3), matchedPairList.get(8)};
+		Pair[] pairs9 = new Pair[] {matchedPairList.get(2), matchedPairList.get(4), matchedPairList.get(6)};
+
+		List<Pair[]> groupedPairs = new ArrayList<>();
+		groupedPairs.add(pairs1);
+		groupedPairs.add(pairs2);
+		groupedPairs.add(pairs3);
+		groupedPairs.add(pairs4);
+		groupedPairs.add(pairs5);
+		groupedPairs.add(pairs6);
+		groupedPairs.add(pairs7);
+		groupedPairs.add(pairs8);
+		groupedPairs.add(pairs9);
+
+
+		// Sort Groups by if their Kitchens are used in the respective Courses
+		for (Pair[] pairs : groupedPairs) {
+
+		}
+
+		Group group1 = new Group(pairs1[0], pairs1[1], pairs1[2], Course.STARTER, matchedPairList.get(0).getKitchen());
+		Group group2 = new Group(pairs2[0], pairs2[1], pairs2[2], Course.STARTER, matchedPairList.get(1).getKitchen());
+		Group group3 = new Group(pairs3[0], pairs3[1], pairs3[2], Course.STARTER, matchedPairList.get(2).getKitchen());
+		Group group4 = new Group(pairs4[0], pairs4[1], pairs4[2], Course.MAIN, matchedPairList.get(4).getKitchen());
+		Group group5 = new Group(pairs5[0], pairs5[1], pairs5[2], Course.MAIN, matchedPairList.get(5).getKitchen());
+		Group group6 = new Group(pairs6[0], pairs6[1], pairs6[2], Course.MAIN, matchedPairList.get(3).getKitchen());
+		Group group7 = new Group(pairs7[0], pairs7[1], pairs7[2], Course.DESSERT, matchedPairList.get(7).getKitchen());
+		Group group8 = new Group(pairs8[0], pairs8[1], pairs8[2], Course.DESSERT, matchedPairList.get(8).getKitchen());
+		Group group9 = new Group(pairs9[0], pairs9[1], pairs9[2], Course.DESSERT, matchedPairList.get(6).getKitchen());
 
 		matchedPairList.get(0).setGroups(new Group[] {group1, group4, group7});
 		matchedPairList.get(1).setGroups(new Group[] {group2, group5, group8});

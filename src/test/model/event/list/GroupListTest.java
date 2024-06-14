@@ -6,14 +6,14 @@ import model.event.io.InputData;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
+import model.kitchen.Kitchen;
 import model.person.FoodType;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Objects;
+import java.security.Key;
+import java.util.*;
 import java.util.stream.Collectors;
 
 class GroupListTest {
@@ -33,6 +33,7 @@ class GroupListTest {
 
 		Assertions.assertTrue(allGroupsLegal(groups));
 		Assertions.assertTrue(eachGroupIdContainedThrice(groups));
+		Assertions.assertTrue(eachKitchenOnlyUsedOncePerCourse(groups));
 	}
 
 	@Test
@@ -43,6 +44,7 @@ class GroupListTest {
 		GroupList groups1 = new GroupList(pairs, weights1);
 		Assertions.assertTrue(allGroupsLegal(groups1));
 		Assertions.assertTrue(eachGroupIdContainedThrice(groups1));
+		Assertions.assertTrue(eachKitchenOnlyUsedOncePerCourse(groups1));
 
 		IdentNumber identNumber1 = groups1.getIdentNumber();
 
@@ -53,6 +55,7 @@ class GroupListTest {
 		GroupList groups2 = new GroupList(pairs, weights2);
 		Assertions.assertTrue(allGroupsLegal(groups2));
 		Assertions.assertTrue(eachGroupIdContainedThrice(groups2));
+		Assertions.assertTrue(eachKitchenOnlyUsedOncePerCourse(groups2));
 
 		Assertions.assertNotEquals(identNumber1.toString(), groups2.getIdentNumber().toString());
 	}
@@ -125,6 +128,34 @@ class GroupListTest {
 				.values()
 				.stream()
 				.noneMatch(count -> count != 3);
+	}
+
+	boolean eachKitchenOnlyUsedOncePerCourse(GroupList groupList) {
+		 return groupList.stream()
+				 .collect(Collectors.groupingBy(Group::getKitchen))
+				 .values()
+				 .stream()
+				 .map(this::getKitchenList)
+				 .allMatch(this::containsEachKitchenExactlyOnce);
+	}
+
+	List<Kitchen> getKitchenList(List<Group> groupList) {
+		 List<Kitchen> kitchens = new ArrayList<>();
+
+		 groupList.forEach(group -> kitchens.add(group.getKitchen()));
+		 return kitchens;
+	}
+
+	boolean containsEachKitchenExactlyOnce(List<Kitchen> kitchens) {
+		 List<Kitchen> temp = new ArrayList<>(kitchens);
+
+		 for (Kitchen kitchen : kitchens) {
+			 temp.remove(kitchen);
+			 if (temp.contains(kitchen)) {
+				 return false;
+			 }
+		 }
+		 return true;
 	}
 
 	/**
