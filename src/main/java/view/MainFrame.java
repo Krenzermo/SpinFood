@@ -6,17 +6,20 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
+import java.io.File;
 import java.net.URL;
 
 public class MainFrame extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        URL url = getClass().getResource("/fxml/source.fxml");
-        System.out.println(url);
-        Parent root = FXMLLoader.load(getClass().getResource("/fxml/source.fxml"));
-        stage.setTitle("FXML Example");
-        stage.setScene(new Scene(root, 300, 275));
+        String relPath = "src/main/resources/fxml/source.fxml";
+        File file = new File(relPath);
+        String absPath = file.getAbsolutePath();
+        URL url = new URL("file:///" + absPath);
+        Parent root = FXMLLoader.load(url);
+        stage.setTitle("SpinfoodPlaner");
+        stage.setScene(new Scene(root, 900, 600));
         stage.show();
     }
 
