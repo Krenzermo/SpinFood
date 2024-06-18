@@ -13,7 +13,7 @@ public class MainFrame extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        String relPath = "src/main/resources/fxml/source.fxml";
+        String relPath = "src/main/java/view/fxml/source.fxml";
         File file = new File(relPath);
         String absPath = file.getAbsolutePath();
         URL url = new URL("file:///" + absPath);
