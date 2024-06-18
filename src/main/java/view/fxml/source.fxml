@@ -46,21 +46,21 @@
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
-                                    <TableView prefHeight="258.0" prefWidth="674.0">
+                                    <TableView fx:id="pairTable" prefHeight="258.0" prefWidth="674.0">
                                       <columns>
-                                        <TableColumn prefWidth="170.0" text="Person 1" />
-                                        <TableColumn prefWidth="170.0" text="Person 2" />
-                                          <TableColumn prefWidth="260.8000793457031" text="Küche" />
-                                          <TableColumn minWidth="0.0" prefWidth="70.4000244140625" text="Kochgang" />
+                                        <TableColumn fx:id="partOneColPair" prefWidth="170.0" text="Person 1" />
+                                        <TableColumn fx:id="partTwoColPair" prefWidth="170.0" text="Person 2" />
+                                          <TableColumn fx:id="kitchenColPair" prefWidth="260.8000793457031" text="Küche" />
+                                          <TableColumn fx:id="courseColPair" minWidth="0.0" prefWidth="70.4000244140625" text="Kochgang" />
                                       </columns>
                                     </TableView>
-                                    <ListView layoutX="674.0" prefHeight="257.0" prefWidth="223.0" />
+                                    <ListView fx:id="pairIdentNumbersList" layoutX="674.0" prefHeight="257.0" prefWidth="223.0" />
                                     <Text layoutX="682.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Kennzahlen" />
                                  </children>
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
-                                    <ListView prefHeight="282.0" prefWidth="900.0" />
+                                    <ListView fx:id="successorListPair" prefHeight="282.0" prefWidth="900.0" />
                                     <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nachfolger">
                                        <font>
                                           <Font size="14.0" />
