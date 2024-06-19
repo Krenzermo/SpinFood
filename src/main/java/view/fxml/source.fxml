@@ -50,11 +50,11 @@
                                       <columns>
                                         <TableColumn fx:id="partOneColPair" prefWidth="170.0" text="Person 1" />
                                         <TableColumn fx:id="partTwoColPair" prefWidth="170.0" text="Person 2" />
-                                          <TableColumn fx:id="kitchenColPair" prefWidth="260.8000793457031" text="Küche" />
-                                          <TableColumn fx:id="courseColPair" minWidth="0.0" prefWidth="70.4000244140625" text="Kochgang" />
+                                          <TableColumn fx:id="kitchenColPair" prefWidth="255.0" text="Küche" />
+                                          <TableColumn fx:id="courseColPair" minWidth="0.0" prefWidth="77.0" text="Kochgang" />
                                       </columns>
                                     </TableView>
-                                    <ListView fx:id="pairIdentNumbersList" layoutX="674.0" prefHeight="257.0" prefWidth="223.0" />
+                                    <ListView fx:id="pairIdentNumbersList" layoutX="674.0" layoutY="30.0" prefHeight="227.0" prefWidth="223.0" />
                                     <Text layoutX="682.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Kennzahlen" />
                                  </children>
                               </AnchorPane>

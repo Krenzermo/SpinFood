@@ -1,5 +1,7 @@
 package model.person;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import java.util.Objects;
 
 /**
@@ -37,5 +39,9 @@ public record Name(String firstName, String lastName) {
 
     public String asOutputString() {
         return firstName + lastName;
+    }
+
+    public SimpleStringProperty asProperty() {
+        return new SimpleStringProperty(firstName + " " + lastName);
     }
 }

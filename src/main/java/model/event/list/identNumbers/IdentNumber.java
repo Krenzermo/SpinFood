@@ -1,5 +1,7 @@
 package model.event.list.identNumbers;
 
+import javafx.beans.Observable;
+import javafx.util.Callback;
 import model.event.collection.Pair;
 import model.event.collection.ParticipantCollection;
 import model.event.list.GroupList;
@@ -76,5 +78,13 @@ public abstract class IdentNumber {
     @Override
     public String toString() {
         return "Anzahl: " + numElems + " Nachrücker: " + numSuccessors + " Geschlechterdiversität: " + genderDiversity + " Altersunterschied: " + ageDifference + " Vorliebenabweichung: " + preferenceDeviation;
+    }
+
+    public List<Double> asList() {
+        return List.of(
+                ageDifference,
+                genderDiversity,
+                preferenceDeviation
+        );
     }
 }
