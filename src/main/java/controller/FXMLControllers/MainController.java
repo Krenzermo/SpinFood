@@ -68,7 +68,11 @@ public class MainController {
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Öffnen Sie die Teilnehmerliste");
-        participantListPath = fileChooser.showOpenDialog(stage).getAbsolutePath();
+        try {
+            participantListPath = fileChooser.showOpenDialog(stage).getAbsolutePath();
+        } catch (NullPointerException e) {
+            participantListPath = null;
+        }
     }
 
     @FXML
@@ -81,7 +85,11 @@ public class MainController {
         Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Öffnen Sie die Partylocation");
-        locationPath = fileChooser.showOpenDialog(stage).getAbsolutePath();
+        try {
+            locationPath = fileChooser.showOpenDialog(stage).getAbsolutePath();
+        } catch (NullPointerException e) {
+            locationPath = null;
+        }
     }
 
     @FXML
