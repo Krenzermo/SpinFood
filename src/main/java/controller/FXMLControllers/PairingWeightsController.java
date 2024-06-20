@@ -48,8 +48,8 @@ public class PairingWeightsController {
     }
 
     public static class ButtonFlag {
-        boolean flag;
-        PairingWeights pairingWeights;
+        volatile boolean flag;
+        volatile PairingWeights pairingWeights;
 
         public ButtonFlag() {
             flag = false;
