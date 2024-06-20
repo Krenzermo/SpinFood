@@ -43,7 +43,7 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="543.0" prefWidth="900.0">
                      <children>
-                        <SplitPane dividerPositions="0.4758" orientation="VERTICAL" prefHeight="546.0" prefWidth="900.0">
+                        <SplitPane fx:id="pairSplitPane" dividerPositions="0.4758" orientation="VERTICAL" prefHeight="546.0" prefWidth="900.0">
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
@@ -61,7 +61,7 @@
                               </AnchorPane>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
-                                    <ListView fx:id="successorListPair" prefHeight="282.0" prefWidth="900.0" />
+                                    <ListView fx:id="successorListPair" layoutY="35.0" prefHeight="247.0" prefWidth="900.0" />
                                     <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nachfolger">
                                        <font>
                                           <Font size="14.0" />

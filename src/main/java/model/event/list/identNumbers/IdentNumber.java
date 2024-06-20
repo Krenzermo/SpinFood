@@ -80,11 +80,11 @@ public abstract class IdentNumber {
         return "Anzahl: " + numElems + " Nachrücker: " + numSuccessors + " Geschlechterdiversität: " + genderDiversity + " Altersunterschied: " + ageDifference + " Vorliebenabweichung: " + preferenceDeviation;
     }
 
-    public List<Double> asList() {
+    public List<String> asList() {
         return List.of(
-                ageDifference,
-                genderDiversity,
-                preferenceDeviation
+                "Altersdifferenz:\t\t" + Math.round(ageDifference * 1_000_000) / 1_000_000d,
+                "Geschlechterdiversität:\t" + Math.round(genderDiversity * 1_000_000) / 1_000_000d,
+                "Vorliebenabweichung:\t" + Math.round(preferenceDeviation * 1_000_000) / 1_000_000d
         );
     }
 }

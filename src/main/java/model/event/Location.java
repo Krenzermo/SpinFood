@@ -27,7 +27,7 @@ public record Location(double longitude, double latitude) {
 
 	@Override
 	public String toString() {
-		return "@Location{" + "latitude: " + latitude + ", longitude: " + longitude + "}";
+		return "latitude: " + latitude + ", longitude: " + longitude;
 	}
 
 	@Override

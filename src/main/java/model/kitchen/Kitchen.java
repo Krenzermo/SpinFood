@@ -24,7 +24,7 @@ public record Kitchen(Location location, int story){
 
     @Override
     public String toString() {
-        return "@Kitchen{" + location + ", Story: " + story + "}";
+        return location + ", Story: " + story;
     }
 
     /** Return an output String for this Kitchen which basically is the output String of it's
