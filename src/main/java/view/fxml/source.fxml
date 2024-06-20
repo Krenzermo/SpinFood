@@ -27,6 +27,7 @@
           <Menu mnemonicParsing="false" text="Erstellen">
             <items>
               <MenuItem fx:id="createPairs" mnemonicParsing="false" onAction="#executePairAlgorithm" text="Paare erstellen" />
+                  <MenuItem fx:id="createGroups" mnemonicParsing="false" onAction="#executeGroupAlgo" text="Gruppen erstellen" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Hilfe">

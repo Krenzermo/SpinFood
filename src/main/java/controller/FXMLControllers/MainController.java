@@ -72,6 +72,9 @@ public class MainController {
     private TableColumn<Pair, String> courseColPair;
 
     @FXML
+    private MenuItem createGroups;
+
+    @FXML
     void openFileChooserPartList(ActionEvent event) {
 
         if (!thread.isAlive()) {
@@ -103,6 +106,11 @@ public class MainController {
         } catch (NullPointerException e) {
             locationPath = null;
         }
+    }
+
+    @FXML
+    void executeGroupAlgo(ActionEvent event) {
+
     }
 
     @FXML
