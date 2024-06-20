@@ -10,7 +10,7 @@ import model.person.Participant;
  * @param latitude the latitude
  * @param longitude the longitude
  */
-public record Location(double latitude, double longitude) {
+public record Location(double longitude, double latitude) {
 	public double getDistance(Location other) {
 		return Math.sqrt(
 				Math.pow(Math.abs(this.latitude-other.latitude), 2)
