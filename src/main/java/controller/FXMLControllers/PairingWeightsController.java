@@ -34,8 +34,8 @@ public class PairingWeightsController {
 
         PairingWeights pairingWeights = new PairingWeights(
                 ageDiffWeightSliderPair.getValue(),
-                fooPrefWeightSliderPair.getValue(),
-                genDivWeightSliderPair.getValue()
+                genDivWeightSliderPair.getValue(),
+                fooPrefWeightSliderPair.getValue()
         );
         acceptButtonFlag.pairingWeights = pairingWeights;
         acceptButtonFlag.flag = true;

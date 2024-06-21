@@ -188,6 +188,7 @@ public class MainController {
      * Writes the pair data to the table.
      */
     private void receivePairingWeights() {
+        System.out.println(PairingWeightsController.acceptButtonFlag.pairingWeights);
         this.pairList = new PairList(inputData, PairingWeightsController.acceptButtonFlag.pairingWeights);
         this.pairIdentNumber = this.pairList.getIdentNumber();
         writePairDataToTab();

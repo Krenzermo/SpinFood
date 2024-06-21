@@ -49,10 +49,10 @@
                                  <children>
                                     <TableView fx:id="pairTable" prefHeight="258.0" prefWidth="674.0">
                                       <columns>
-                                        <TableColumn fx:id="partOneColPair" prefWidth="170.0" text="Person 1" />
-                                        <TableColumn fx:id="partTwoColPair" prefWidth="170.0" text="Person 2" />
-                                          <TableColumn fx:id="kitchenColPair" prefWidth="255.0" text="Küche" />
-                                          <TableColumn fx:id="courseColPair" minWidth="0.0" prefWidth="77.0" text="Kochgang" />
+                                        <TableColumn fx:id="partOneColPair" prefWidth="170.0" resizable="false" text="Person 1" />
+                                        <TableColumn fx:id="partTwoColPair" prefWidth="170.0" resizable="false" text="Person 2" />
+                                          <TableColumn fx:id="kitchenColPair" prefWidth="255.0" resizable="false" text="Küche" />
+                                          <TableColumn fx:id="courseColPair" minWidth="0.0" prefWidth="77.0" resizable="false" text="Kochgang" />
                                       </columns>
                                     </TableView>
                                     <ListView fx:id="pairIdentNumbersList" layoutX="674.0" layoutY="30.0" prefHeight="227.0" prefWidth="223.0" />
