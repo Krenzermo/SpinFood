@@ -2,20 +2,26 @@ package controller.FXMLControllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
-import javafx.scene.control.Slider;
-import javafx.stage.Stage;
-import model.event.collection.Pair;
-import model.event.list.weight.PairingWeights;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import model.event.list.weight.PairingWeights;
 
-public class PairingWeightsController {
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
+import java.util.Objects;
 
-    public static volatile ButtonFlag acceptButtonFlag = new ButtonFlag();
+public class PairingWeightsController extends Dialog<PairingWeights> {
+
     public static Stage stage;
+    public AnchorPane pairingWeightsPane;
 
     @FXML
-    private AnchorPane pairingWeightsPane;
+    private DialogPane root;
 
     @FXML
     Button acceptPairingWeightsButton;
@@ -24,36 +30,63 @@ public class PairingWeightsController {
     private Slider ageDiffWeightSliderPair;
 
     @FXML
-    private Slider fooPrefWeightSliderPair;
+    private Slider foodPrefWeightSliderPair;
 
     @FXML
-    private Slider genDivWeightSliderPair;
+    private Slider genderDivWeightSliderPair;
 
     @FXML
-    void pairingWeiightsAccetpted(ActionEvent event) {
-
-        PairingWeights pairingWeights = new PairingWeights(
-                ageDiffWeightSliderPair.getValue(),
-                genDivWeightSliderPair.getValue(),
-                fooPrefWeightSliderPair.getValue()
-        );
-        acceptButtonFlag.pairingWeights = pairingWeights;
-        acceptButtonFlag.flag = true;
-
-        stage.close();
-        ageDiffWeightSliderPair.setValue(1);
-        fooPrefWeightSliderPair.setValue(1);
-        genDivWeightSliderPair.setValue(1);
-
+    private void initialize() {
+        ageDiffWeightSliderPair.setValue(1.0);
+        genderDivWeightSliderPair.setValue(1.0);
+        foodPrefWeightSliderPair.setValue(1.0);
     }
 
-    public static class ButtonFlag {
-        volatile boolean flag;
-        volatile PairingWeights pairingWeights;
+    public void init(Window owner) {
+        try {
+            String relPath = "src/main/java/view/fxml/pairingWeights.fxml";
+            File file = new File(relPath);
+            String absPath = file.getAbsolutePath();
+            URL url = new URL("file:///" + absPath);
+            FXMLLoader loader = new FXMLLoader(url);
 
-        public ButtonFlag() {
-            flag = false;
+            loader.setController(this);
+            DialogPane pane = loader.load();
+
+            pane.getButtonTypes().addAll(ButtonType.CLOSE);
+            pane.getButtonTypes().addAll(ButtonType.APPLY);
+
+            pane.lookupButton(ButtonType.APPLY).addEventFilter(ActionEvent.ANY, this::pairingWeightsAccepted);
+            setResultConverter(buttonType -> {
+                if(!Objects.equals(ButtonBar.ButtonData.OK_DONE, buttonType.getButtonData())) {
+                    return null;
+                }
+
+                return getPairingWeights();
+            });
+
+            initOwner(owner);
+            initModality(Modality.APPLICATION_MODAL);
+            setResizable(false);
+            setTitle("Paar Parameter einstellen");
+            setDialogPane(pane);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
+    @FXML
+    void pairingWeightsAccepted(ActionEvent event) {
+        setResult(getPairingWeights());
+        event.consume();
+        close();
+    }
+
+    private PairingWeights getPairingWeights() {
+        return new PairingWeights(
+                ageDiffWeightSliderPair.getValue(),
+                genderDivWeightSliderPair.getValue(),
+                foodPrefWeightSliderPair.getValue()
+        );
+    }
 }

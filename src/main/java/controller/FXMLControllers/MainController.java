@@ -13,7 +13,9 @@ import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
+import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
@@ -31,6 +33,7 @@ import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.PairingWeights;
 import model.person.Name;
 import model.person.Participant;
+import view.MainFrame;
 
 import java.io.File;
 import java.net.URL;
@@ -44,16 +47,15 @@ import java.util.stream.Collectors;
  * @author Daniel Hinkelmann
  */
 public class MainController {
-
-    private Thread thread = new Thread(() -> this.monitor());
-    private Thread pairingWeightsAcceptThread = new Thread(() -> this.monitorAcceptPairingWeight());
-
-    private InputData inputData;
+    private InputData inputData = InputData.getInstance();
     private PairList pairList;
     private IdentNumber pairIdentNumber;
 
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
+
+    @FXML
+    private VBox root;
 
     @FXML
     private MenuItem openParticipantList;
@@ -109,6 +111,8 @@ public class MainController {
     @FXML
     private TableColumn<Group, String> courseColGroup;
 
+    //private Stage primaryStage = (Stage) root.getScene().getWindow();
+
     @FXML
     public void initialize() {
         pairTable.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
@@ -157,20 +161,10 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartList(ActionEvent event) {
-        if (thread.isInterrupted()) {
-            participantListPath = null;
-            thread = new Thread(() -> this.monitor());
-        }
-
-        if (!thread.isAlive()) {
-            thread.start();
-        }
-
-        Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Öffnen Sie die Teilnehmerliste");
         try {
-            participantListPath = fileChooser.showOpenDialog(stage).getAbsolutePath();
+            participantListPath = fileChooser.showOpenDialog(root.getScene().getWindow()).getAbsolutePath();
         } catch (NullPointerException e) {
             participantListPath = null;
         }
@@ -184,20 +178,10 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartLoc(ActionEvent event) {
-        if (thread.isInterrupted()) {
-            locationPath = null;
-            thread = new Thread(() -> this.monitor());
-        }
-
-        if (!thread.isAlive()) {
-            thread.start();
-        }
-
-        Stage stage = new Stage();
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Öffnen Sie die Partylocation");
         try {
-            locationPath = fileChooser.showOpenDialog(stage).getAbsolutePath();
+            locationPath = fileChooser.showOpenDialog(root.getScene().getWindow()).getAbsolutePath();
         } catch (NullPointerException e) {
             locationPath = null;
         }
@@ -222,37 +206,22 @@ public class MainController {
      */
     @FXML
     void executePairAlgorithm(ActionEvent event) throws Exception {
-        if (pairingWeightsAcceptThread.isInterrupted()) {
-            PairingWeightsController.acceptButtonFlag.flag = false;
-            pairingWeightsAcceptThread = new Thread(() -> this.monitorAcceptPairingWeight());
-        }
-
         String relPath = "src/main/java/view/fxml/pairingWeights.fxml";
         File file = new File(relPath);
         String absPath = file.getAbsolutePath();
+        PairingWeightsController dialog = new PairingWeightsController();
+        dialog.init(root.getScene().getWindow());
 
-        URL url = new URL("file:///" + absPath);
-        Parent root = FXMLLoader.load(url);
-        Stage stage = new Stage();
-        stage.setTitle("Paar Parameter einstellen");
-        stage.setScene(new Scene(root, 369, 232));
-        stage.show();
+        PairingWeights weights = dialog.showAndWait().orElse(null);
 
-        PairingWeightsController.stage = stage;
-
-        pairingWeightsAcceptThread.start();
+        if (weights != null) {
+            this.pairList = new PairList(inputData, weights);
+            this.pairIdentNumber = this.pairList.getIdentNumber();
+            writePairDataToTab();
+        }
+        event.consume();
     }
 
-    /**
-     * Receives the pairing weights set by the user and updates the pairlist and identnumbers.
-     * Writes the pair data to the table.
-     */
-    private void receivePairingWeights() {
-        System.out.println(PairingWeightsController.acceptButtonFlag.pairingWeights);
-        this.pairList = new PairList(inputData, PairingWeightsController.acceptButtonFlag.pairingWeights);
-        this.pairIdentNumber = this.pairList.getIdentNumber();
-        writePairDataToTab();
-    }
 
     /**
      * Writes the pair data to the table in the UI.
@@ -332,38 +301,5 @@ public class MainController {
             }
             successorListPair.setItems(data);
         });
-    }
-
-    /**
-     * Monitors the paths of the participant list and location files, initializing input data once both are set.
-     * Interrupts the monitoring thread once the data is initialized.
-     */
-    private void monitor() {
-        while (participantListPath == null || locationPath == null) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-        Thread.currentThread().interrupt();
-        this.inputData = InputData.getInstance(participantListPath, locationPath);
-    }
-
-    /**
-     * Monitors the acceptance of pairing weights by the user, then updates the pair data in the UI.
-     * Interrupts the monitoring thread once the data is updated.
-     */
-    private void monitorAcceptPairingWeight() {
-        while (PairingWeightsController.acceptButtonFlag == null || !PairingWeightsController.acceptButtonFlag.flag) {
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        Thread.currentThread().interrupt();
-        receivePairingWeights();
     }
 }

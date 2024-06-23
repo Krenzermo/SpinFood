@@ -1,9 +1,12 @@
 package view;
 
+import controller.FXMLControllers.MainController;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
@@ -17,14 +20,17 @@ public class MainFrame extends Application {
         File file = new File(relPath);
         String absPath = file.getAbsolutePath();
         URL url = new URL("file:///" + absPath);
-        Parent root = FXMLLoader.load(url);
+
+        FXMLLoader loader = new FXMLLoader(url);
+        stage.setScene(new Scene(loader.load()));
+
         stage.setTitle("SpinfoodPlaner");
-        stage.setScene(new Scene(root, 900, 600));
         stage.setMinWidth(900);
         stage.setMinHeight(600);
         stage.sizeToScene();
         stage.show();
     }
+
 
     public static void main(String[] args) {
         launch(args);
