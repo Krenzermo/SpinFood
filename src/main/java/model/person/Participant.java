@@ -72,7 +72,7 @@ public class Participant {
     @Override
     public String toString() {
         //Don't call kitchen.toString() explicitly as kitchen may be null and this would yield a NullPointerException
-        return "@Participant{ID: " + id + ", Name: " + name.toString() + ", " + foodType + ", " + ageRange + ", " + gender + ", " + hasKitchen + ", " + kitchen + "}";
+        return "ID: " + id + ", Name: " + name.toString() + ", " + foodType + ", " + ageRange + ", " + gender + ", " + hasKitchen + ", " + kitchen;
     }
 
 

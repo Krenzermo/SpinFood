@@ -471,6 +471,10 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return successors;
 	}
 
+	public static List<Pair> getSuccessorPairs() {
+		return successorPairs;
+	}
+
 	/**
 	 * Gets the pair list.
 	 *

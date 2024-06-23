@@ -36,27 +36,24 @@ public class Group implements ParticipantCollection{
 	}
 
 	private void setPairIds(){
-		if (kitchen.equals(pairs[0].getKitchen())){
-			pairs[0].setCourse(course);
-		} else if (kitchen.equals(pairs[1].getKitchen())){
-			pairs[1].setCourse(course);
-		} else if(kitchen.equals(pairs[2].getKitchen())){
-			pairs[2].setCourse(course);
-		}
+
 		if (this.course == Course.STARTER){
 			pairs[0].setStarterNumber(id);
 			pairs[1].setStarterNumber(id);
 			pairs[2].setStarterNumber(id);
+			pairs[0].setCourse(course);
 
 		}else if (this.course == Course.MAIN){
 			pairs[0].setMainNumber(id);
 			pairs[1].setMainNumber(id);
 			pairs[2].setMainNumber(id);
+			pairs[1].setCourse(course);
 
 		}else {
 			pairs[0].setDessertNumber(id);
 			pairs[1].setDessertNumber(id);
 			pairs[2].setDessertNumber(id);
+			pairs[2].setCourse(course);
 		}
 	}
 
