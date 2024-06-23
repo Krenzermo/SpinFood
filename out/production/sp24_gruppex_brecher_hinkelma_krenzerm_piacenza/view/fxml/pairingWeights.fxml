@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane fx:id="pairingWeightsPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="232.0" prefWidth="369.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.FXMLControllers.PairingWeightsController">
+   <children>
+      <Text layoutX="14.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Stellen Sie die Wichtigkeit der folgenden Parameter ein.">
+         <font>
+            <Font size="14.0" />
+         </font>
+      </Text>
+      <Slider fx:id="ageDiffWeightSliderPair" layoutX="186.0" layoutY="54.0" max="10.0" min="1.0" value="1.0" />
+      <Slider fx:id="genDivWeightSliderPair" layoutX="186.0" layoutY="109.0" max="10.0" min="1.0" value="1.0" />
+      <Slider fx:id="fooPrefWeightSliderPair" layoutX="186.0" layoutY="166.0" max="10.0" min="1.0" value="1.0" />
+      <Text layoutX="31.0" layoutY="66.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Altersunterschied" />
+      <Text layoutX="31.0" layoutY="121.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Geschlechterdiversität" />
+      <Text layoutX="31.0" layoutY="178.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Vorliebenabweichung" />
+      <Button fx:id="acceptPairingWeightsButton" layoutX="290.0" layoutY="193.0" mnemonicParsing="false" onAction="#pairingWeiightsAccetpted" text="Bestätigen" />
+   </children>
+</AnchorPane>
