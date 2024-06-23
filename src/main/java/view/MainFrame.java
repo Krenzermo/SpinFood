@@ -20,6 +20,9 @@ public class MainFrame extends Application {
         Parent root = FXMLLoader.load(url);
         stage.setTitle("SpinfoodPlaner");
         stage.setScene(new Scene(root, 900, 600));
+        stage.setMinWidth(900);
+        stage.setMinHeight(600);
+        stage.sizeToScene();
         stage.show();
     }
 

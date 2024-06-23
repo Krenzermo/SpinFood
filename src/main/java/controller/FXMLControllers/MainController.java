@@ -3,6 +3,7 @@ package controller.FXMLControllers;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
@@ -22,6 +23,7 @@ import javafx.util.Callback;
 
 import model.event.Course;
 import model.event.Location;
+import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.io.InputData;
 import model.event.list.PairList;
@@ -75,19 +77,77 @@ public class MainController {
     private TableColumn<Pair, String> partTwoColPair;
 
     @FXML
-    private ListView<String> successorListPair;
-
-    @FXML
     private TableColumn<Pair, String> kitchenColPair;
 
     @FXML
     private TableColumn<Pair, String> courseColPair;
 
     @FXML
+    private ListView<String> successorListPair;
+
+    @FXML
     private MenuItem createGroups;
 
     @FXML
     private SplitPane pairSplitPane;
+
+    @FXML
+    private TableView<Group> groupTable;
+
+    @FXML
+    private TableColumn<Group, String> pairOneColGroup;
+
+    @FXML
+    private TableColumn<Group, String> pairTwoColGroup;
+
+    @FXML
+    private TableColumn<Group, String> pairThreeColGroup;
+
+    @FXML
+    private TableColumn<Group, String> kitchenColGroup;
+
+    @FXML
+    private TableColumn<Group, String> courseColGroup;
+
+    @FXML
+    public void initialize() {
+        pairTable.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
+        partOneColPair.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
+        partTwoColPair.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
+        kitchenColPair.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
+        courseColPair.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
+
+        partOneColPair.setReorderable(false);
+        partTwoColPair.setReorderable(false);
+        kitchenColPair.setReorderable(false);
+        courseColPair.setReorderable(false);
+
+
+        groupTable.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
+        pairOneColGroup.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
+        pairTwoColGroup.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
+        pairThreeColGroup.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
+        kitchenColGroup.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
+        courseColGroup.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
+
+        pairOneColGroup.setReorderable(false);
+        pairTwoColGroup.setReorderable(false);
+        pairThreeColGroup.setReorderable(false);
+        kitchenColGroup.setReorderable(false);
+        courseColGroup.setReorderable(false);
+    }
+
+    private <E> void adjustColumnWidths(TableView<E> tableView) {
+        long visibleColumns = tableView.getColumns().stream().filter(TableColumn::isVisible).count();
+        if (visibleColumns > 0) {
+            double newWidth = tableView.getWidth() / visibleColumns;
+            for (TableColumn<E, ?> column : tableView.getColumns()) {
+                if (column.isVisible()) {
+                    column.setPrefWidth(newWidth);
+                }
+            }
+        }
+    }
 
     /**
      * Opens a file chooser for selecting the participant list file.
