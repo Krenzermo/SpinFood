@@ -47,7 +47,8 @@ import java.util.stream.Collectors;
  * @author Daniel Hinkelmann
  */
 public class MainController {
-    private InputData inputData = InputData.getInstance();
+    private Thread monitorFileSelection = new Thread(this::monitorFileSelection);
+    private InputData inputData;
     private PairList pairList;
     private IdentNumber pairIdentNumber;
 
@@ -161,6 +162,13 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartList(ActionEvent event) {
+        participantListPath = null;
+        if (monitorFileSelection.isInterrupted()) {
+            monitorFileSelection = new Thread(this::monitorFileSelection);
+        } else if (!monitorFileSelection.isAlive()) {
+            monitorFileSelection.start();
+        }
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Öffnen Sie die Teilnehmerliste");
         try {
@@ -178,6 +186,13 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartLoc(ActionEvent event) {
+        locationPath = null;
+        if (monitorFileSelection.isInterrupted()) {
+            monitorFileSelection = new Thread(this::monitorFileSelection);
+        } else if (!monitorFileSelection.isAlive()) {
+            monitorFileSelection.start();
+        }
+
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Öffnen Sie die Partylocation");
         try {
@@ -215,8 +230,17 @@ public class MainController {
         PairingWeights weights = dialog.showAndWait().orElse(null);
 
         if (weights != null) {
-            this.pairList = new PairList(inputData, weights);
-            this.pairIdentNumber = this.pairList.getIdentNumber();
+            try {
+                this.pairList = new PairList(inputData, weights);
+                this.pairIdentNumber = this.pairList.getIdentNumber();
+            } catch (NullPointerException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Dateifehler");
+                alert.setHeaderText("Ein Fehler ist aufgetreten!");
+                alert.setContentText("Es wurden noch keine Dateien für die Teilnehmerdaten und/oder die After-Dinner-Location ausgewählt");
+                alert.showAndWait();
+                return;
+            }
             writePairDataToTab();
         }
         event.consume();
@@ -301,5 +325,23 @@ public class MainController {
             }
             successorListPair.setItems(data);
         });
+    }
+
+    private void monitorFileSelection() {
+        while (participantListPath == null || locationPath == null) {
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+
+        if (inputData == null) {
+            inputData = InputData.getInstance(participantListPath, locationPath);
+        } else {
+            inputData.setDataFiles(participantListPath, locationPath);
+        }
+
+        Thread.currentThread().interrupt();
     }
 }

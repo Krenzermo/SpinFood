@@ -34,6 +34,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights the weights used for pairing criteria
      */
     public PairList(InputData inputData, PairingWeights pairingWeights) {
+        successors.clear();
         List<Participant> sortedParticipantList = sortParticipants(inputData.getParticipantInputData());
         setList(buildBestPairs(sortedParticipantList, pairingWeights));
         addAll(inputData.getPairInputData());
