@@ -217,8 +217,17 @@ public class MainController {
         PairingWeights weights = dialog.showAndWait().orElse(null);
 
         if (weights != null) {
-            this.pairList = new PairList(inputData, weights);
-            this.pairIdentNumber = this.pairList.getIdentNumber();
+            try {
+                this.pairList = new PairList(inputData, weights);
+                this.pairIdentNumber = this.pairList.getIdentNumber();
+            } catch (NullPointerException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Dateifehler");
+                alert.setHeaderText("Ein Fehler ist aufgetreten!");
+                alert.setContentText("Es wurden noch keine Dateien für die Teilnehmerdaten und/oder die After-Dinner-Location ausgewählt.");
+                alert.showAndWait();
+                return;
+            }
             writePairDataToTab();
         }
         event.consume();
