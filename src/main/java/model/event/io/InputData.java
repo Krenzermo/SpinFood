@@ -97,7 +97,7 @@ public class InputData {
     }
 
     /**
-     * @return InputData instance
+     * @return {@link InputData} instance
      */
     public static synchronized InputData getInstance() {
         if (inputData == null) {
