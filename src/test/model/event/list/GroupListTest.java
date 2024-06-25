@@ -21,7 +21,7 @@ class GroupListTest {
 
 	@BeforeEach
 	void setUp() {
-		InputData inputData = InputData.getInstance();
+		InputData inputData = InputData.getInstanceDebug();
 		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
 		pairs = new PairList(inputData, pairingWeights);
 	}

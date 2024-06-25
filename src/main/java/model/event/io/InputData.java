@@ -25,24 +25,25 @@ import java.nio.file.Paths;
  * in the corresponding classes in ArrayLists to return them all together
  */
 public class InputData {
-    private final ArrayList<Participant> participantInputData;
-    private final ArrayList<Pair> pairInputData;
-    private final ArrayList<Participant> participantSuccessorList; // List to store participants with overused kitchens
-    private final ArrayList<Pair> pairSuccessorList; // List to store pairs with overused kitchens
+    private ArrayList<Participant> participantInputData;
+    private ArrayList<Pair> pairInputData;
+    private ArrayList<Participant> participantSuccessorList; // List to store participants with overused kitchens
+    private ArrayList<Pair> pairSuccessorList; // List to store pairs with overused kitchens
     private Location eventLocation;
     // TODO: add more robust logic for receiving the data
     private String participantDataFilePath;
     private String eventLocationDataFilePath;
-    private static final String participantsPathTemp = "src/main/java/data/teilnehmerliste.csv";
-    private static final String eventLocationPathTemp = "src/main/java/data/partylocation.csv";
+    private static final String participantsPathDebug = "src/main/java/data/teilnehmerliste.csv";
+    private static final String eventLocationPathDebug = "src/main/java/data/partylocation.csv";
 
-    private final Map<Kitchen, Integer> kitchenCountMap; // Map to count kitchen usage
+    private Map<Kitchen, Integer> kitchenCountMap; // Map to count kitchen usage
 
     private static InputData inputData; // Singleton
 
     /**
      * constructor for InputData
      */
+    /*
     private InputData(String participantDataFilePath, String eventLocationDataFilePath) {
         inputData = this;
         this.participantInputData = new ArrayList<>();
@@ -56,17 +57,65 @@ public class InputData {
         saveParticipants();
     }
 
+     */
+
+    public InputData() {
+        inputData = this;
+        this.participantInputData = null;
+        this.pairInputData = null;
+        this.participantSuccessorList = null;
+        this.pairSuccessorList = null;
+        this.kitchenCountMap = null;
+        this.eventLocationDataFilePath = null;
+        this.participantDataFilePath = null;
+        this.eventLocation = null;
+    }
+
+    public void init(String participantDataFilePath, String eventLocationDataFilePath) {
+        initEventLocation(eventLocationDataFilePath);
+        initParticipants(participantDataFilePath);
+    }
+
+    public void initParticipants(String participantDataFilePath) {
+        this.participantInputData = new ArrayList<>();
+        this.participantSuccessorList = new ArrayList<>();
+        this.pairInputData = new ArrayList<>();
+        this.pairSuccessorList = new ArrayList<>();
+        this.kitchenCountMap = new HashMap<>();
+        this.participantDataFilePath = participantDataFilePath;
+        saveParticipants();
+
+    }
+
+    public void initEventLocation(String eventLocationDataFilePath) {
+        this.eventLocationDataFilePath = eventLocationDataFilePath;
+        saveLocation();
+    }
+
+    private void initDebug() {
+        init(participantsPathDebug, eventLocationPathDebug);
+    }
+
     /**
      * @return InputData instance
      */
     public static synchronized InputData getInstance() {
         if (inputData == null) {
-            new InputData(participantsPathTemp, eventLocationPathTemp);
+            new InputData();
         }
 
         return inputData;
     }
 
+    public static synchronized InputData getInstanceDebug() {
+        if (inputData == null) {
+            InputData inputData = new InputData();
+            inputData.initDebug();
+        }
+        return inputData;
+    }
+
+    /*
     public static synchronized InputData getInstance(String participantDataFilePath, String eventLocationDataFilePath) {
         if (inputData == null) {
             inputData = new InputData(participantDataFilePath, eventLocationDataFilePath);
@@ -74,6 +123,7 @@ public class InputData {
 
         return inputData;
     }
+     */
 
     /**
      * method to save the EventLocation

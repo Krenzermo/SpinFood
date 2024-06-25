@@ -27,7 +27,7 @@ public class InputDataTest {
 
     @BeforeAll
     public static void setUp() {
-        inputData = InputData.getInstance();
+        inputData = InputData.getInstanceDebug();
     }
 
     /**
