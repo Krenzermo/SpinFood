@@ -165,6 +165,7 @@ public class MainController {
         fileChooser.setTitle("Öffnen Sie die Teilnehmerliste");
         try {
             participantListPath = fileChooser.showOpenDialog(root.getScene().getWindow()).getAbsolutePath();
+            inputData.initParticipants(participantListPath);
         } catch (NullPointerException e) {
             participantListPath = null;
         }
@@ -182,6 +183,7 @@ public class MainController {
         fileChooser.setTitle("Öffnen Sie die Partylocation");
         try {
             locationPath = fileChooser.showOpenDialog(root.getScene().getWindow()).getAbsolutePath();
+            inputData.initEventLocation(locationPath);
         } catch (NullPointerException e) {
             locationPath = null;
         }
@@ -258,7 +260,13 @@ public class MainController {
         );
 
         courseColPair.setCellValueFactory(
-                cell -> cell.getValue().getCourse().asProperty()
+                cell -> {
+                    Course course = cell.getValue().getCourse();
+                    if (course == null) {
+                        return new SimpleStringProperty("n.V.");
+                    }
+                    return course.asProperty();
+                }
         );
     }
 

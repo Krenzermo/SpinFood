@@ -20,7 +20,7 @@ class ParticipantCollectionListTest {
 
 	@BeforeEach
 	void setUp() {
-		inputData = InputData.getInstance();
+		inputData = InputData.getInstanceDebug();
 		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
 		pCL = new PairList(inputData, pairingWeights);
 	}

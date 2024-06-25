@@ -13,7 +13,7 @@ import java.util.List;
 class PairListTest {
 	@Test
 	void pairListTest() {
-		InputData inputData = InputData.getInstance();
+		InputData inputData = InputData.getInstanceDebug();
 		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
 		PairList pairList = new PairList(inputData, pairingWeights);
 
@@ -22,7 +22,7 @@ class PairListTest {
 
 	@Test
 	void pairListTestVariedPairingWeights() {
-		InputData inputData = InputData.getInstance();
+		InputData inputData = InputData.getInstanceDebug();
 
 		PairingWeights pairingWeights = new PairingWeights(1, 3, 5);
 		PairingWeights pairingWeights1 = new PairingWeights(1, 1, 1);

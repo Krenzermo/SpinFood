@@ -27,8 +27,7 @@ public class Pair implements ParticipantCollection {
     private final Participant[] participants = new Participant[2];
     private Kitchen kitchen;
     private boolean kitchenOf;
-    private double distance;
-    private Course course = Course.DESSERT; //TODO: delete dummy value for course when implemented correctly
+    private Course course; //TODO: delete dummy value for course when implemented correctly
     private Group[] groups = new Group[3];
     private FoodType foodType;
     private int starterNumber;
@@ -50,7 +49,6 @@ public class Pair implements ParticipantCollection {
         this.signedUpTogether = signedUpTogether;
         this.kitchen = autoAssignKitchen();
         this.foodType = autoAssignFoodType();
-        this.distance = kitchen.location().getDistance(InputData.getInstance().getEventLocation());
     }
 
     private FoodType autoAssignFoodType() {
@@ -295,7 +293,7 @@ public class Pair implements ParticipantCollection {
     }
 
     public double getDistance() {
-        return distance;
+        return kitchen.location().getDistance(InputData.getInstance().getEventLocation());
     }
 
     public boolean hasKitchen() {

@@ -53,8 +53,7 @@ public class PairingWeightsController extends Dialog<PairingWeights> {
             loader.setController(this);
             DialogPane pane = loader.load();
 
-            pane.getButtonTypes().addAll(ButtonType.CLOSE);
-            pane.getButtonTypes().addAll(ButtonType.APPLY);
+            pane.getButtonTypes().addAll(ButtonType.CLOSE, ButtonType.APPLY);
 
             pane.lookupButton(ButtonType.APPLY).addEventFilter(ActionEvent.ANY, this::pairingWeightsAccepted);
             setResultConverter(buttonType -> {
