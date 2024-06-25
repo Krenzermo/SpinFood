@@ -15,6 +15,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 
@@ -162,6 +163,10 @@ public class MainController {
     @FXML
     void openFileChooserPartList(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
+        ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
+        ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
+
+        fileChooser.getExtensionFilters().addAll(csvFilter, txtFilter);
         fileChooser.setTitle("Öffnen Sie die Teilnehmerliste");
         try {
             participantListPath = fileChooser.showOpenDialog(root.getScene().getWindow()).getAbsolutePath();
@@ -180,6 +185,10 @@ public class MainController {
     @FXML
     void openFileChooserPartLoc(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
+        ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
+        ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
+
+        fileChooser.getExtensionFilters().addAll(csvFilter, txtFilter);
         fileChooser.setTitle("Öffnen Sie die Partylocation");
         try {
             locationPath = fileChooser.showOpenDialog(root.getScene().getWindow()).getAbsolutePath();

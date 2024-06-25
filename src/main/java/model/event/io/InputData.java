@@ -197,6 +197,18 @@ public class InputData {
         return pair;
     }
 
+    public void setDataFiles(String participantListPath, String locationPath) {
+        this.participantDataFilePath = participantListPath;
+        this.eventLocationDataFilePath = locationPath;
+        kitchenCountMap.clear();
+        participantInputData.clear();
+        pairInputData.clear();
+        pairSuccessorList.clear();
+        participantSuccessorList.clear();
+        saveLocation();
+        saveParticipants();
+    }
+
     /**
      * A structure to shortly hold the data given from the input data document for one participant or pair
      *
