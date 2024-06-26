@@ -267,36 +267,6 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
             }
 		}
-		/*
-		for (int i =0; i < 3;i++){
-            if (starterKitchens.contains(testedPairList.get(i).getKitchen())) {
-                doubledKitchen = true;
-				if(mixedGroup&&(testedPairList.get(i).getFoodType().equals(FoodType.MEAT)||testedPairList.get(i).getFoodType().equals(FoodType.NONE))){
-					doubledKitchenMeat = true;
-				}
-
-            }
-		}
-		for (int i =3; i < 6;i++){
-			if (mainKitchens.contains(testedPairList.get(i).getKitchen())) {
-				doubledKitchen = true;
-				if(mixedGroup&&(testedPairList.get(i).getFoodType().equals(FoodType.MEAT)||testedPairList.get(i).getFoodType().equals(FoodType.NONE))){
-					doubledKitchenMeat = true;
-				}
-
-			}
-		}
-		for (int i =6; i < 9;i++){
-			if (dessertKitchens.contains(testedPairList.get(i).getKitchen())) {
-				doubledKitchen = true;
-				if(mixedGroup&&(testedPairList.get(i).getFoodType().equals(FoodType.MEAT)||testedPairList.get(i).getFoodType().equals(FoodType.NONE))){
-					doubledKitchenMeat = true;
-				}
-
-			}
-		}
-
-		 */
 		if(!doubledKitchen){
 			return testedPairList2;
 		}
