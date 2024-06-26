@@ -42,7 +42,7 @@ class CancellationHandlerTest {
 
     @BeforeEach
     void setUp() {
-        // Initialisiere Teilnehmer und Pärchen
+        // Initialize participants and pairs
         participant1 = new Participant("1", new Name("Alice", "Smith"), FoodType.VEGGIE, (byte) 25, Gender.FEMALE, KitchenAvailability.YES, 1, 0.0, 0.0);
         participant2 = new Participant("2", new Name("Bob", "Brown"), FoodType.MEAT, (byte) 30, Gender.MALE, KitchenAvailability.NO, 1, 0.0, 0.0);
         participant3 = new Participant("3", new Name("Charlie", "Davis"), FoodType.NONE, (byte) 35, Gender.MALE, KitchenAvailability.YES, 1, 0.0, 0.0);
@@ -79,18 +79,20 @@ class CancellationHandlerTest {
         List<Participant> cancelledParticipants = new ArrayList<>();
         cancelledParticipants.add(participant1);
 
+
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
 
         cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
 
-        // Verifiziere, dass der Teilnehmer entfernt wurde und der verbleibende Teilnehmer zum Nachfolger hinzugefügt wurde
+        // Verify that the participant was removed and the remaining participant was added to successors
+        assertFalse(pairList.contains(pair1));
         assertFalse(pairList.getPairs().stream().flatMap(p -> p.getParticipants().stream()).anyMatch(p -> p.equals(participant1)));
         assertTrue(pairList.getSuccessors().contains(participant2));
     }
 
     @Test
-    void testHandlePairCancellation() {
+    void testHandleFullPairCancellation() {
         List<Participant> cancelledParticipants = new ArrayList<>();
         cancelledParticipants.add(participant1);
         cancelledParticipants.add(participant2);
@@ -100,9 +102,10 @@ class CancellationHandlerTest {
 
         cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
 
-        // Verifiziere, dass das Paar entfernt wurde und die Gruppen entsprechend aktualisiert wurden
-        assertFalse(pairList.contains(pair1)); // Hier sicherstellen, dass das Paar entfernt wurde
+        // Verify that the pair was removed and the groups were updated accordingly
+        assertFalse(pairList.contains(pair1)); // Ensure the pair was removed
         assertFalse(pairList.getPairs().stream().anyMatch(p -> p.equals(pair1)));
+        assertFalse(groupList.getGroups().contains(group1)); // Ensure the group was updated
     }
 
     @Test
@@ -118,8 +121,8 @@ class CancellationHandlerTest {
 
         cancellationHandler.updateGroups(pairingWeights, groupWeights);
 
-        // Verifiziere, dass die Gruppenliste entsprechend aktualisiert wurde
-        assertFalse(groupList.contains(group1)); // Hier sicherstellen, dass die Gruppe entfernt wurde
-        // Weitere Überprüfungen je nach spezifischen Anforderungen
+        // Verify that the groups list was updated accordingly
+        assertFalse(groupList.contains(group1)); // Ensure the group was removed
+        // Additional checks depending on specific requirements
     }
 }

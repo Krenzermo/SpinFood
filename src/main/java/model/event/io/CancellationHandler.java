@@ -8,6 +8,7 @@ import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
 import model.person.Participant;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class CancellationHandler {
@@ -22,13 +23,20 @@ public class CancellationHandler {
         this.groupList = groupList;
         this.participantSuccessors = pairList.getSuccessors();
         this.pairSuccessors = groupList.getSuccessorPairs();
+
     }
 
     public void handleCancellation(List<Participant> cancelledParticipants, PairingWeights pairingWeights, GroupWeights groupWeights) {
         for (Participant cancelledParticipant : cancelledParticipants) {
             Pair affectedPair = findAffectedPair(cancelledParticipant);
             if (affectedPair != null) {
-                handlePairCancellation(affectedPair, cancelledParticipant, pairingWeights, groupWeights);
+                Participant partner = findPartner(affectedPair, cancelledParticipant);
+                if (cancelledParticipants.contains(partner)) {
+                    cancelledParticipants.remove(partner);
+                    handleFullPairCancellation(affectedPair);
+                } else {
+                    handlePartialPairCancellation(affectedPair, cancelledParticipant, pairingWeights, groupWeights);
+                }
             } else {
                 handleSingleCancellation(cancelledParticipant, pairingWeights, groupWeights);
             }
@@ -46,11 +54,25 @@ public class CancellationHandler {
         return null;
     }
 
-    private void handlePairCancellation(Pair affectedPair, Participant cancelledParticipant, PairingWeights pairingWeights, GroupWeights groupWeights) {
-        Participant remainingParticipant = affectedPair.getParticipants().stream()
-                .filter(p -> !p.equals(cancelledParticipant))
+    private Participant findPartner(Pair pair, Participant participant) {
+        return pair.getParticipants().stream()
+                .filter(p -> !p.equals(participant))
                 .findFirst()
                 .orElse(null);
+    }
+
+    private void handleFullPairCancellation(Pair affectedPair) {
+        pairList.remove(affectedPair);
+
+        for (Group group : affectedPair.getGroups()) {
+            if (group != null) {
+                groupList.remove(group);
+            }
+        }
+    }
+
+    private void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant, PairingWeights pairingWeights, GroupWeights groupWeights) {
+        Participant remainingParticipant = findPartner(affectedPair, cancelledParticipant);
 
         pairList.remove(affectedPair);
 
@@ -75,10 +97,9 @@ public class CancellationHandler {
     private void handleSingleCancellation(Participant cancelledParticipant, PairingWeights pairingWeights, GroupWeights groupWeights) {
         participantSuccessors.remove(cancelledParticipant);
 
-        Pair newPair = findSuccessorPairForSingle(cancelledParticipant, pairingWeights);
-        if (newPair != null) {
-            pairList.add(newPair);
-            updateGroups(pairingWeights, groupWeights);
+        Pair affectedPair = findAffectedPair(cancelledParticipant);
+        if (affectedPair != null) {
+            handlePartialPairCancellation(affectedPair, cancelledParticipant, pairingWeights, groupWeights);
         } else {
             rerunPairingAlgorithm(pairingWeights);
         }
@@ -115,5 +136,6 @@ public class CancellationHandler {
         GroupList newGroupList = new GroupList(pairList, groupWeights);
         groupList.clear();
         groupList.addAll(newGroupList.getGroups());
+
     }
 }
