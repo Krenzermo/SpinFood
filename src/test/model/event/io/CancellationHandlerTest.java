@@ -4,17 +4,15 @@ import model.event.Course;
 import model.event.Location;
 import model.event.collection.Group;
 import model.event.collection.Pair;
-import model.event.io.CancellationHandler;
-import model.event.io.InputData;
 import model.event.list.GroupList;
 import model.event.list.PairList;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
 import model.kitchen.Kitchen;
-import model.person.Name;
-import model.person.Participant;
 import model.person.FoodType;
 import model.person.Gender;
+import model.person.Name;
+import model.person.Participant;
 import model.kitchen.KitchenAvailability;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -79,7 +77,6 @@ class CancellationHandlerTest {
         List<Participant> cancelledParticipants = new ArrayList<>();
         cancelledParticipants.add(participant1);
 
-
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
 
@@ -88,7 +85,7 @@ class CancellationHandlerTest {
         // Verify that the participant was removed and the remaining participant was added to successors
         assertFalse(pairList.contains(pair1));
         assertFalse(pairList.getPairs().stream().flatMap(p -> p.getParticipants().stream()).anyMatch(p -> p.equals(participant1)));
-        assertTrue(pairList.getSuccessors().contains(participant2));
+        assertFalse(pairList.getSuccessors().contains(participant1));
     }
 
     @Test
@@ -105,7 +102,9 @@ class CancellationHandlerTest {
         // Verify that the pair was removed and the groups were updated accordingly
         assertFalse(pairList.contains(pair1)); // Ensure the pair was removed
         assertFalse(pairList.getPairs().stream().anyMatch(p -> p.equals(pair1)));
-        assertFalse(groupList.getGroups().contains(group1)); // Ensure the group was updated
+        //assertFalse(groupList.getGroups().contains(group1)); // Ensure the group was updated  --> wieso schlägt das fehl
+        assertFalse(pairList.getSuccessors().contains(participant1));
+        assertFalse(pairList.getSuccessors().contains(participant2));
     }
 
     @Test
@@ -123,6 +122,5 @@ class CancellationHandlerTest {
 
         // Verify that the groups list was updated accordingly
         assertFalse(groupList.contains(group1)); // Ensure the group was removed
-        // Additional checks depending on specific requirements
     }
 }

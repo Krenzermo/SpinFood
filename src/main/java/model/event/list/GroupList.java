@@ -106,7 +106,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param groupWeights the weights used for grouping criteria
 	 * @return the list of groups
 	 */
-	private static List<Group> buildBestGroups(List<Pair> pairList, GroupWeights groupWeights) {
+	public static List<Group> buildBestGroups(List<Pair> pairList, GroupWeights groupWeights) {
 		List<Pair> sortedPairList = new ArrayList<>(pairList);
 		List<Group> bestGroupList = new ArrayList<>();
 
@@ -478,5 +478,4 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		duplicateElementCheck(collection);
 		// no duplicateParticipantCheck as each Pair is contained in exactly three Groups
 	}
-
 }

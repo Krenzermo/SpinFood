@@ -46,7 +46,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights  the weights used for pairing criteria
      * @return a list of the best pairs of participants
      */
-    private static List<Pair> buildBestPairs(List<Participant> participantList, PairingWeights pairingWeights) {
+    public static List<Pair> buildBestPairs(List<Participant> participantList, PairingWeights pairingWeights) {
         List<Pair> bestPairList = new ArrayList<>();
 
         while (participantList.size() >= 2) {
