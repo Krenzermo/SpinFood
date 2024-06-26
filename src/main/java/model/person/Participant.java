@@ -10,6 +10,8 @@ import model.kitchen.KitchenAvailability;
 import java.util.Objects;
 
 /**
+ * A simple class that holds information about a Participant.
+ *
  * @author Daniel Hinkelmann
  * @author Davide Piacenza
  * @author Finn Brecher
@@ -70,7 +72,7 @@ public class Participant {
     @Override
     public String toString() {
         //Don't call kitchen.toString() explicitly as kitchen may be null and this would yield a NullPointerException
-        return "@Participant{ID: " + id + ", Name: " + name.toString() + ", " + foodType + ", " + ageRange + ", " + gender + ", " + hasKitchen + ", " + kitchen + "}";
+        return "ID: " + id + ", Name: " + name.toString() + ", " + foodType + ", " + ageRange + ", " + gender + ", " + hasKitchen + ", " + kitchen;
     }
 
 

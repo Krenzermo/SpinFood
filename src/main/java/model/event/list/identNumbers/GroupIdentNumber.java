@@ -1,17 +1,21 @@
 package model.event.list.identNumbers;
 
-import model.event.InputData;
+import model.event.io.InputData;
 import model.event.Location;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.ParticipantCollectionList;
-import model.kitchen.Kitchen;
-import model.person.Participant;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**A class that holds and calculates the IdentNumbers for a {@link Group}
+ *
+ * @author Ole Krenzer
+ * @author Davide Piacenza
+ *
+ */
 public class GroupIdentNumber extends IdentNumber {
     private double averagePathLength;
     private double totalPathLength;
@@ -20,6 +24,7 @@ public class GroupIdentNumber extends IdentNumber {
 
     public GroupIdentNumber(GroupList participantCollection) {
         super(participantCollection);
+        this.numSuccessors = GroupList.getSuccessorPairs().size();
         this.groupList = participantCollection;
         genderDiversity = calcGenderDiversity(participantCollection);
         ageDifference = calcAgeDifference(participantCollection);

@@ -1,7 +1,7 @@
 package model.event.list;
 
-import model.event.InputData;
-import model.event.PairingWeights;
+import model.event.io.InputData;
+import model.event.list.weight.PairingWeights;
 import model.event.collection.Pair;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.identNumbers.PairIdentNumber;
@@ -34,6 +34,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights the weights used for pairing criteria
      */
     public PairList(InputData inputData, PairingWeights pairingWeights) {
+        successors.clear();
         List<Participant> sortedParticipantList = sortParticipants(inputData.getParticipantInputData());
         setList(buildBestPairs(sortedParticipantList, pairingWeights));
         addAll(inputData.getPairInputData());

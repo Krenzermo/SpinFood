@@ -1,8 +1,12 @@
 package model.person;
 
+import javafx.beans.property.SimpleStringProperty;
+
 import java.util.Objects;
 
 /**
+ * The name of a participant
+ *
  * @author Davide Piacenza
  *
  * @param firstName the participants first name
@@ -35,5 +39,9 @@ public record Name(String firstName, String lastName) {
 
     public String asOutputString() {
         return firstName + lastName;
+    }
+
+    public SimpleStringProperty asProperty() {
+        return new SimpleStringProperty(firstName + " " + lastName);
     }
 }

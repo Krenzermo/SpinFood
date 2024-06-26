@@ -1,6 +1,6 @@
 package model.kitchen;
 
-import model.event.InputData;
+import model.event.io.InputData;
 import model.event.Location;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -16,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public class KitchenTest {
     @BeforeAll
     public static void setUp() {
-        InputData inputData = InputData.getInstance();
+        InputData inputData = InputData.getInstanceDebug();
     }
     @Test
     public void testConstruction() {
@@ -32,7 +32,7 @@ public class KitchenTest {
         Location location = new Location(-8.668413178974852, 50.574996578974854); // Example location values
         int story = 0;
         Kitchen kitchen = new Kitchen(location, story);
-        assertEquals("@Kitchen{" + location + ", Story: " + story + "}", kitchen.toString());
+        assertEquals(location + ", Story: " + story, kitchen.toString());
     }
 
     @Test

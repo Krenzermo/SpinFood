@@ -1,19 +1,18 @@
 package model.event.list.identNumbers;
 
-import model.event.InputData;
-import model.event.PairingWeights;
+import model.event.collection.Pair;
+import model.event.io.InputData;
+import model.event.list.weight.PairingWeights;
 import model.event.list.PairList;
 import model.event.list.ParticipantCollectionList;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class PairIdentNumberTest {
 
-    static ParticipantCollectionList pairList1;
-    static ParticipantCollectionList pairList2;
+    static ParticipantCollectionList<Pair> pairList1;
+    static ParticipantCollectionList<Pair> pairList2;
 
     @BeforeAll
     static void setUp() {
@@ -23,8 +22,6 @@ class PairIdentNumberTest {
 
         pairList1 = new PairList(inputData, pairingWeights1);
         pairList2 = new PairList(inputData, pairingWeights2);
-
-
     }
 
     @Test

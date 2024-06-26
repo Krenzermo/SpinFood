@@ -9,8 +9,9 @@ import java.util.*;
 /**
  * This class provides a baseline {@link List} implementation for any {@link List} of {@link ParticipantCollection} objects.
  * Trying to add {@code null} or a {@link ParticipantCollection} containing {@code null} elements
- * will result in a {@link NullPointerException}.
- * Trying to add duplicates will result in an {@link IllegalArgumentException}.
+ * may result in a {@link NullPointerException}.
+ * Trying to add duplicates may result in an {@link IllegalArgumentException}
+ * (Inheriting classes may override check method).
  *
  * @author Finn Brecher
  *
@@ -51,9 +52,9 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	}
 
 	/**
-	 * Calculates the amount of unique instances of {@link Participant} in this {@link ParticipantCollectionList}.
+	 * Calculates the number of unique instances of {@link Participant} in this {@link ParticipantCollectionList}.
 	 *
-	 * @return the amount of unique instances of {@link Participant} in {@code this}
+	 * @return the number of unique instances of {@link Participant} in {@code this}
 	 */
 	public int getParticipantCount() {
 		return participants.size();
@@ -140,9 +141,10 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	/**
 	 * Clears this {@link ParticipantCollectionList} and adds all elements of the specified {@link List}.
 	 *
-	 * @param list the {@link List} to be set as this
+	 * @param list the {@link List} to be set as {@code this}
 	 *
-	 * @throws IllegalArgumentException if the type check fails
+	 * @throws NullPointerException if any {@link ParticipantCollection} is or contains {@code null}
+	 * @throws IllegalArgumentException if any {@link Participant} or {@link ParticipantCollection} is already in {@code this}
 	 */
 	public void setList(List<E> list) {
 		clear();
@@ -156,10 +158,37 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 *
 	 * @throws NullPointerException if the {@link ParticipantCollection} is or contains {@code null}
 	 */
-	private void nullCheck(E collection) {
+	protected void nullCheck(E collection) {
 		Objects.requireNonNull(collection);
 		if (collection.contains(null)) { // TODO: may need to be changed if Pair or Group throw NullPointerException
 			throw new NullPointerException("Collection contains null element");
+		}
+	}
+
+	/**
+	 * Checks if the specified {@link ParticipantCollection} is already contained in this {@link ParticipantCollectionList}.
+	 *
+	 * @param collection the {@link ParticipantCollection} to be checked
+	 *
+	 * @throws IllegalArgumentException if the {@link ParticipantCollection} is already contained in {@code this}
+	 */
+	protected void duplicateElementCheck(E collection) {
+		if (contains(collection)) {
+			throw new IllegalArgumentException("This ParticipantCollectionList already contains the collection: " + collection);
+		}
+	}
+
+	/**
+	 * Checks if any {@link Participant} from the specified {@link ParticipantCollection}
+	 * is already contained in this {@link ParticipantCollectionList}.
+	 *
+	 * @param collection the {@link ParticipantCollection} to be checked
+	 *
+	 * @throws IllegalArgumentException if any {@link Participant} is already contained in {@code this}
+	 */
+	protected void duplicateParticipantCheck(E collection) {
+		if (containsAnyParticipant(collection)) {
+			throw new IllegalArgumentException("This ParticipantCollectionList already contains a participant: " + collection);
 		}
 	}
 
@@ -171,14 +200,10 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 * @throws NullPointerException if the {@link ParticipantCollection} is or contains {@code null}
 	 * @throws IllegalArgumentException if any {@link Participant} or the {@link ParticipantCollection} is already contained in {@code this}
 	 */
-	private void check(E collection) {
+	protected void check(E collection) {
 		nullCheck(collection);
-		if (contains(collection)) {
-			throw new IllegalArgumentException("This ParticipantCollectionList already contains the collection: " + collection);
-		}
-		if (containsAnyParticipant(collection)) {
-			throw new IllegalArgumentException("This ParticipantCollectionList already contains a participant: " + collection);
-		}
+		duplicateElementCheck(collection);
+		duplicateParticipantCheck(collection);
 	}
 
 
@@ -186,8 +211,9 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 
 	/**
 	 * Adds the specified {@link ParticipantCollection} to this {@link ParticipantCollectionList}.
-	 * The element will not be added if this {@link ParticipantCollectionList}
+	 * The element may not be added if this {@link ParticipantCollectionList}
 	 * already contains at least one of the instances of {@link Participant}.
+	 * (The {@link #check} method may be overwritten to change this behavior.)
 	 *
 	 * @param collection element whose presence in {@code this} is to be ensured
 	 *
@@ -199,7 +225,7 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	@Override
 	public boolean add(E collection) {
 		check(collection);
-		participants.addAll(collection);
+		participants.addAll(collection.getParticipants());
 		return super.add(collection);
 	}
 
@@ -212,7 +238,10 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 */
 	@Override
 	public boolean remove(Object object) {
-		participants.remove(object);
+		if (!(object instanceof ParticipantCollection)) {
+			return false;
+		}
+		((ParticipantCollection) object).getParticipants().forEach(participants::remove); // optimized for speed (by IntelliJ)
 		return super.remove(object);
 	}
 
@@ -228,6 +257,9 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 
 	/**
 	 * Adds all specified elements to this {@link ParticipantCollectionList}, if possible.
+	 * The elements may not be added if this {@link ParticipantCollectionList}
+	 * already contains at least one of the instances of {@link Participant}.
+	 * (The {@link #check} method may be overwritten to change this behavior.)
 	 *
 	 * @param c {@link Collection} containing elements to be added to {@code this}
 	 *
@@ -241,12 +273,15 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 		for (E e : c) {
 			check(e);
 		}
-		c.forEach(participants::addAll);
+		c.forEach(collection -> participants.addAll(collection.getParticipants()));
 		return super.addAll(c);
 	}
 
 	/**
 	 * Adds all specified elements to this {@link ParticipantCollectionList}, if possible.
+	 * The element may not be added if this {@link ParticipantCollectionList}
+	 * already contains at least one of the instances of {@link Participant}.
+	 * (The {@link #check} method may be overwritten to change this behavior.)
 	 *
 	 * @param index index at which to insert the first element from the specified {@link Collection}
 	 * @param c {@link Collection} containing elements to be added to {@code this}
@@ -262,7 +297,7 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 		for (E e : c) {
 			check(e);
 		}
-		c.forEach(participants::addAll);
+		c.forEach(collection -> participants.addAll(collection.getParticipants()));
 		return super.addAll(index, c);
 	}
 
@@ -276,10 +311,9 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 *
 	 * @throws ClassCastException if the class of an element of {@code this} is incompatible with the specified {@link Collection}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean removeAll(Collection<?> c) {
-		((Collection<Collection<?>>) c).forEach(participants::removeAll);
+		c.forEach(collection -> ((ParticipantCollection) collection).getParticipants().forEach(participants::remove)); // optimized for speed (by IntelliJ)
 		return super.removeAll(c);
 	}
 
@@ -292,15 +326,17 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 *
 	 * @throws ClassCastException if the class of an element of {@code this} is incompatible with the specified {@link Collection}
 	 */
-	@SuppressWarnings("unchecked")
 	@Override
 	public boolean retainAll(Collection<?> c) {
-		((Collection<Collection<?>>) c).forEach(participants::retainAll);
+		c.forEach(collection -> participants.retainAll(((ParticipantCollection) collection).getParticipants()));
 		return super.retainAll(c);
 	}
 
 	/**
 	 * Adds the specified element to this {@link ParticipantCollectionList} at the specified index.
+	 * The element may not be added if this {@link ParticipantCollectionList}
+	 * already contains at least one of the instances of {@link Participant}.
+	 * (The {@link #check} method may be overwritten to change this behavior.)
 	 *
 	 *
 	 * @param index   index of the element to replace
@@ -308,7 +344,7 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 *
 	 * @return the element previously at the specified position
 	 *
-	 * @throws NullPointerException if element is or contains {@code null}
+	 * @throws NullPointerException if the element is or contains {@code null}
 	 * @throws IllegalArgumentException if {@code this} already contains the {@link ParticipantCollection} or a {@link Participant}
 	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
@@ -317,27 +353,30 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 		check(element);
 		E oldElement =  super.set(index, element);
 		if (oldElement != null) {
-			oldElement.forEach(participants::remove); //optimized for speed (by IntelliJ)
+			oldElement.getParticipants().forEach(participants::remove); //optimized for speed (by IntelliJ)
 		}
-		participants.addAll(element);
+		participants.addAll(element.getParticipants());
 		return oldElement;
 	}
 
 	/**
-	 * Inserts the specified element at the specified position in this {@link ParticipantCollectionList} (optional operation).
+	 * Inserts the specified element at the specified position in this {@link ParticipantCollectionList}.
 	 * Shifts the element currently at that position (if any) and any subsequent elements to the right (adds one to their indices).
+	 * The element may not be added if this {@link ParticipantCollectionList}
+	 * already contains at least one of the instances of {@link Participant}.
+	 * (The {@link #check} method may be overwritten to change this behavior.)
 	 *
 	 * @param index   index at which the specified element is to be inserted
 	 * @param element element to be inserted
 	 *
-	 * @throws NullPointerException if element is or contains {@code null}
+	 * @throws NullPointerException if the element is or contains {@code null}
 	 * @throws IllegalArgumentException if {@code this} already contains the {@link ParticipantCollection} or a {@link Participant}
 	 * @throws IndexOutOfBoundsException if the index is out of range ({@code index < 0 || index > size()})
 	 */
 	@Override
 	public void add (int index, E element) {
 		check(element);
-		participants.addAll(element);
+		participants.addAll(element.getParticipants());
 		super.add(index, element);
 	}
 
@@ -353,9 +392,13 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 */
 	@Override
 	public E remove(int index) {
-		E oldElement =  super.remove(index);
+		E oldElement = super.remove(index);
 		if (oldElement != null) {
-			participants.addAll(oldElement);
+			participants.retainAll(
+					this.stream()
+					.flatMap(collection -> collection.getParticipants().stream())
+					.toList()
+			);
 		}
 		return oldElement;
 	}

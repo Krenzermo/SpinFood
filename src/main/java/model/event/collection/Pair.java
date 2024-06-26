@@ -8,13 +8,15 @@ import model.person.FoodType;
 import model.person.Gender;
 import model.person.Participant;
 import model.event.Course;
-import model.event.InputData;
+import model.event.io.InputData;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
-/**
+/** This class represents one Pair of {@link Participant} that complies with the defined rules.
+ *
  * @author Finn Brecher
  * @author Davide Piacenza
  * @author Daniel Hinkelmann
@@ -25,8 +27,7 @@ public class Pair implements ParticipantCollection {
     private final Participant[] participants = new Participant[2];
     private Kitchen kitchen;
     private boolean kitchenOf;
-    private double distance;
-    private Course course = Course.DESSERT; //TODO: delete dummy value for course when implemented correctly
+    private Course course; //TODO: delete dummy value for course when implemented correctly
     private Group[] groups = new Group[3];
     private FoodType foodType;
     private int starterNumber;
@@ -48,7 +49,6 @@ public class Pair implements ParticipantCollection {
         this.signedUpTogether = signedUpTogether;
         this.kitchen = autoAssignKitchen();
         this.foodType = autoAssignFoodType();
-        this.distance = kitchen.location().getDistance(InputData.getInstance().getEventLocation());
     }
 
     private FoodType autoAssignFoodType() {
@@ -107,7 +107,7 @@ public class Pair implements ParticipantCollection {
     }
 
     public List<Group> getGroups() {
-        return List.of(groups);
+        return Arrays.asList(groups);
     }
 
     public void setKitchen(Kitchen kitchen) {
@@ -131,6 +131,13 @@ public class Pair implements ParticipantCollection {
         }
 
         this.groups = groups;
+    }
+
+    /**
+     * Clears this {@link Pair} of the instances of {@link Group}.
+     */
+    public void clearGroups() {
+        groups = new Group[] {null, null, null};
     }
 
     /**
@@ -286,7 +293,7 @@ public class Pair implements ParticipantCollection {
     }
 
     public double getDistance() {
-        return distance;
+        return kitchen.location().getDistance(InputData.getInstance().getEventLocation());
     }
 
     public boolean hasKitchen() {
