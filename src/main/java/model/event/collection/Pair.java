@@ -10,6 +10,7 @@ import model.person.Participant;
 import model.event.Course;
 import model.event.InputData;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -118,9 +119,9 @@ public class Pair implements ParticipantCollection {
     }
 
     public void setGroups(Group[] groups) {
-        for (ParticipantCollection group: groups)  {
+        for (Group group: groups)  {
             // TODO: may need to be changed once Group is implemented.
-            if (!group.contains(this)) {
+            if (!Arrays.asList(group.getPairs()).contains(this)) {
                 throw new RuntimeException("cannot assign a Group to this Pair if the group does not contain the Pair");
             }
         }
@@ -130,7 +131,6 @@ public class Pair implements ParticipantCollection {
         }
 
         this.groups = groups;
-
     }
 
     /**

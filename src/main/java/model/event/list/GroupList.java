@@ -43,9 +43,9 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	private IdentNumber identNumber;
 	private static final List<Participant> successors = new ArrayList<>();
 	private static final List<Pair> successorPairs = new ArrayList<>();
-	static List<Kitchen> starterKitchens = new ArrayList<>();
-	static List<Kitchen> mainKitchens = new ArrayList<>();
-	static List<Kitchen> dessertKitchens = new ArrayList<>();
+	private final List<Kitchen> starterKitchens = new ArrayList<>();
+	private final List<Kitchen> mainKitchens = new ArrayList<>();
+	private final List<Kitchen> dessertKitchens = new ArrayList<>();
 
 	/**
 	 * Constructs a GroupList instance.
@@ -72,7 +72,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param pairList the list of pairs to be sorted
 	 * @return the sorted list of pairs
 	 */
-	private static List<Pair> sortPairs(PairList pairList) {     //TODO hier direkt List<Pair> genommen
+	private List<Pair> sortPairs(PairList pairList) {     //TODO hier direkt List<Pair> genommen
 		List<Pair> sortedPairList = new ArrayList<>();
 
 		for (Pair pair : pairList) {
@@ -110,7 +110,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param groupWeights the weights used for grouping criteria
 	 * @return the list of groups
 	 */
-	private static List<Group> buildBestGroups(List<Pair> pairList, GroupWeights groupWeights) {
+	private List<Group> buildBestGroups(List<Pair> pairList, GroupWeights groupWeights) {
 		List<Pair> sortedPairList = new ArrayList<>(pairList);
 		List<Group> bestGroupList = new ArrayList<>();
 
@@ -146,13 +146,13 @@ public class GroupList extends ParticipantCollectionList<Group> {
 				matchedPairList.clear();
 			} else {
 				List<Group> tempList = makeGroups(matchedPairList);
-				//System.out.println("hey" + tempList.size());
+				System.out.println("Zahl in Gruppe" + tempList.size());
 				if(tempList.size() <9){
-					//System.out.println("ho" +matchedPairList.size());
+					System.out.println("Zahl wenn Gruppe unter 9 teiln: " + tempList.size());
 					successorPairs.addAll(matchedPairList);
 				}
 				if(tempList.size() == 9){
-					//System.out.println("hi" +matchedPairList.size());
+					System.out.println("Zahl wenn Gruppe gut(sollte 9 sein) " +tempList.size());
 					bestGroupList.addAll(tempList);
 				}
 			}
@@ -169,7 +169,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param pairsToBeGrouped the list of matched pairs
 	 * @return the list of groups
 	 */
-	private static List<Group> makeGroups(List<Pair> pairsToBeGrouped) {
+	private List<Group> makeGroups(List<Pair> pairsToBeGrouped) {
 		List<Group> groupList = new ArrayList<>();
 		if (pairsToBeGrouped.size() < 9) {
 			System.out.println("Error: matchedPairList has fewer than 9 elements. Size: " + pairsToBeGrouped.size());
@@ -243,7 +243,8 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return groupList;
 	}
 
-	private static List<Pair> removeDoubleKitchens(List<Pair> testedPairList) {
+	private List<Pair> removeDoubleKitchens(List<Pair> testedPairList2) {
+		List<Pair> testedPairList = new ArrayList<>(testedPairList2);
 		List<Pair> nulledList = new ArrayList<>();
 		List<Pair> meatList = new ArrayList<>();
 		boolean doubledKitchen = false;
@@ -257,7 +258,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		int meatCount = listCountFoodType(testedPairList, FoodType.MEAT) + listCountFoodType(testedPairList, FoodType.NONE);
 		boolean mixedGroup = vegCount > 0 && meatCount > 1;
 
-		/*for (int i =0; i < 3;i ++){               //TODO constraint entspannen-done
+		for (Pair pair: testedPairList){               //TODO constraint entspannen?
             if (starterKitchens.contains(pair.getKitchen()) || mainKitchens.contains(pair.getKitchen()) || dessertKitchens.contains(pair.getKitchen())) {
                 doubledKitchen = true;
 				if(mixedGroup&&(pair.getFoodType().equals(FoodType.MEAT)||pair.getFoodType().equals(FoodType.NONE))){
@@ -265,8 +266,9 @@ public class GroupList extends ParticipantCollectionList<Group> {
 				}
 
             }
-		}*/
-		for (int i =0; i < 3;i ++){
+		}
+		/*
+		for (int i =0; i < 3;i++){
             if (starterKitchens.contains(testedPairList.get(i).getKitchen())) {
                 doubledKitchen = true;
 				if(mixedGroup&&(testedPairList.get(i).getFoodType().equals(FoodType.MEAT)||testedPairList.get(i).getFoodType().equals(FoodType.NONE))){
@@ -275,7 +277,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
             }
 		}
-		for (int i =3; i < 6;i ++){
+		for (int i =3; i < 6;i++){
 			if (mainKitchens.contains(testedPairList.get(i).getKitchen())) {
 				doubledKitchen = true;
 				if(mixedGroup&&(testedPairList.get(i).getFoodType().equals(FoodType.MEAT)||testedPairList.get(i).getFoodType().equals(FoodType.NONE))){
@@ -284,7 +286,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 			}
 		}
-		for (int i =6; i < 9;i ++){
+		for (int i =6; i < 9;i++){
 			if (dessertKitchens.contains(testedPairList.get(i).getKitchen())) {
 				doubledKitchen = true;
 				if(mixedGroup&&(testedPairList.get(i).getFoodType().equals(FoodType.MEAT)||testedPairList.get(i).getFoodType().equals(FoodType.NONE))){
@@ -293,18 +295,21 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 			}
 		}
+
+		 */
 		if(!doubledKitchen){
-			return testedPairList;
+			return testedPairList2;
 		}
 
-		if(doubledKitchenMeat){             //bei mixed group,meat doppel kitchen dies an anfang
+		if(mixedGroup) {//bei mixed group,meat doppel kitchen dies an anfang
 			//sortPairs(matchedPairList);
-			for (Pair pair : testedPairList){
-				if(pair.getFoodType().equals(FoodType.MEAT)||pair.getFoodType().equals(FoodType.NONE)){
-					meatList.add(pair);
+			for (Pair pairMeat : testedPairList) {
+				if (pairMeat.getFoodType().equals(FoodType.MEAT) || pairMeat.getFoodType().equals(FoodType.NONE)) {
+					meatList.add(pairMeat);
 				}
 			}
 		}
+
 
 
 		if (mixedGroup) {
@@ -340,26 +345,23 @@ public class GroupList extends ParticipantCollectionList<Group> {
 							if(meatList.size() == 3){
 								nulledList.set(2,meatList.get(2));
 							}
+							continue;
 
-						}
-
-
-						if (mainPossible) {
+						} else if (mainPossible) {
 							nulledList.set(3,meatList.get(0));
 							nulledList.set(4,meatList.get(1));
 							if(meatList.size() == 3){
 								nulledList.set(5,meatList.get(2));
 							}
+							continue;
 
-						}
-
-
-						if (dessertPossible) {
+						}else if (dessertPossible) {
 							nulledList.set(6,meatList.get(0));
 							nulledList.set(7,meatList.get(1));
 							if(meatList.size() == 3){
 								nulledList.set(8,meatList.get(2));
 							}
+							continue;
 
 						}
 
@@ -382,11 +384,10 @@ public class GroupList extends ParticipantCollectionList<Group> {
 						}
 
 
-						if (mainKitchens.contains(pairMixed.getKitchen())) {
+						if (!mainKitchens.contains(pairMixed.getKitchen())) {
 							for (int i = 3; i < 6; i++) {
 								if (nulledList.get(i) == null) {
 									nulledList.set(i, pairMixed);
-									;
 									break;
 								}
 							}
@@ -396,11 +397,10 @@ public class GroupList extends ParticipantCollectionList<Group> {
 						}
 
 
-						if (dessertKitchens.contains(pairMixed.getKitchen())) {
+						if (!dessertKitchens.contains(pairMixed.getKitchen())) {
 							for (int i = 6; i < 9; i++) {
 								if (nulledList.get(i) == null) {
 									nulledList.set(i, pairMixed);
-									;
 									break;
 								}
 							}
@@ -412,7 +412,47 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 
 
+
 			}
+
+			if(!doubledKitchenMeat){   // meat zuordnen, falls meat nicht die gedopellte Küche ist
+				if(meatList.size()==3){
+					if(nulledList.get(0) == null && nulledList.get(1) == null && nulledList.get(2) == null){
+						nulledList.set(0,meatList.get(0));
+						nulledList.set(1,meatList.get(1));
+						nulledList.set(2,meatList.get(2));
+
+					} else if(nulledList.get(3) == null && nulledList.get(4) == null && nulledList.get(5) == null){
+						nulledList.set(3,meatList.get(0));
+						nulledList.set(4,meatList.get(1));
+						nulledList.set(5,meatList.get(2));
+
+					} else if(nulledList.get(6) == null && nulledList.get(7) == null && nulledList.get(8) == null){
+						nulledList.set(6,meatList.get(0));
+						nulledList.set(7,meatList.get(1));
+						nulledList.set(8,meatList.get(2));
+
+					} else {return nulledList;}
+				}
+				if(meatList.size()==2){
+					if(nulledList.get(1) == null && nulledList.get(2) == null){
+						nulledList.set(1,meatList.get(0));
+						nulledList.set(2,meatList.get(1));
+
+					}else if(nulledList.get(4) == null && nulledList.get(5) == null){
+						nulledList.set(4,meatList.get(0));
+						nulledList.set(5,meatList.get(1));
+
+					} else if(nulledList.get(7) == null && nulledList.get(8) == null){
+						nulledList.set(7,meatList.get(0));
+						nulledList.set(8,meatList.get(1));
+
+					} else {return nulledList;}
+
+				}
+			}
+
+
 			//nicht hinzugefügte paare adden
 			for(Pair placedPair : nulledList){
 				testedPairList.remove(placedPair);
@@ -426,56 +466,51 @@ public class GroupList extends ParticipantCollectionList<Group> {
 				}
 			}
 
-
-
-
-
-
 		}
 			else { // non mixed groups
 			for (Pair pairPure : testedPairList) {
-					  //mind. eine kitchen in der gruppe doppelt belegt + reine gruppe
+				if ((starterKitchens.contains(pairPure.getKitchen()) || mainKitchens.contains(pairPure.getKitchen()) || dessertKitchens.contains(pairPure.getKitchen()))) {
+					//mind. eine kitchen in der gruppe doppelt belegt + reine gruppe
 
-				if (!starterKitchens.contains(pairPure.getKitchen())) {
-					for (int i = 0; i < 3; i++) {
-						if (nulledList.get(i) == null) {
-							nulledList.set(i, pairPure);
-							break;
+					if (!starterKitchens.contains(pairPure.getKitchen())) {
+						for (int i = 0; i < 3; i++) {
+							if (nulledList.get(i) == null) {
+								nulledList.set(i, pairPure);
+								break;
+							}
+						}
+						if (nulledList.contains(pairPure)) {
+							continue;
 						}
 					}
-					if (nulledList.contains(pairPure)) {
-						continue;
-					}
-				}
 
 
-				if (mainKitchens.contains(pairPure.getKitchen())) {
-					for (int i = 3; i < 6; i++) {
-						if (nulledList.get(i) == null) {
-							nulledList.set(i, pairPure);
-							;
-							break;
+					if (!mainKitchens.contains(pairPure.getKitchen())) {
+						for (int i = 3; i < 6; i++) {
+							if (nulledList.get(i) == null) {
+								nulledList.set(i, pairPure);
+								break;
+							}
+						}
+						if (nulledList.contains(pairPure)) {
+							continue;
 						}
 					}
-					if (nulledList.contains(pairPure)) {
-						continue;
-					}
-				}
 
 
-				if (dessertKitchens.contains(pairPure.getKitchen())) {
-					for (int i = 6; i < 9; i++) {
-						if (nulledList.get(i) == null) {
-							nulledList.set(i, pairPure);
-							;
-							break;
+					if (!dessertKitchens.contains(pairPure.getKitchen())) {
+						for (int i = 6; i < 9; i++) {
+							if (nulledList.get(i) == null) {
+								nulledList.set(i, pairPure);
+								break;
+							}
+						}
+						if (!nulledList.contains(pairPure)) {
+							return nulledList;
 						}
 					}
-					if (!nulledList.contains(pairPure)) {
-						return nulledList;
-					}
-				}
 
+				}
 			}
 
 			//nicht hinzugefügte paare adden

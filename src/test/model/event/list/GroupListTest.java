@@ -1,0 +1,122 @@
+package model.event.list;
+
+import model.event.GroupWeights;
+import model.event.InputData;
+import model.event.PairingWeights;
+import model.event.collection.Group;
+import model.event.collection.Pair;
+
+import model.event.list.identNumbers.IdentNumber;
+
+import model.person.FoodType;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import java.util.Arrays;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+class GroupListTest {
+	private static PairList pairs;
+
+	@BeforeEach
+	void setUp() {
+		InputData inputData = InputData.getInstance();
+		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
+		pairs = new PairList(inputData, pairingWeights);
+	}
+
+	@Test
+	void groupListTest() {
+		GroupWeights weights = new GroupWeights(1,1,1,1);
+		GroupList groups = new GroupList(pairs, weights);
+
+		Assertions.assertTrue(allGroupsLegal(groups));
+		Assertions.assertTrue(eachGroupIdContainedThrice());
+	}
+
+	@Test
+	void groupedListTestVariedGroupWeights() {
+		GroupWeights weights1 = new GroupWeights(1,2,0.5,1);
+		GroupWeights weights2 = new GroupWeights(2,0.5,1,2);
+
+		GroupList groups1 = new GroupList(pairs, weights1);
+		Assertions.assertTrue(allGroupsLegal(groups1));
+		Assertions.assertTrue(eachGroupIdContainedThrice());
+
+		IdentNumber identNumber1 = groups1.getIdentNumber();
+
+		GroupList groups2 = new GroupList(pairs, weights2);
+		Assertions.assertTrue(allGroupsLegal(groups2));
+		Assertions.assertTrue(eachGroupIdContainedThrice());
+
+		Assertions.assertNotEquals(identNumber1.toString(), groups2.getIdentNumber().toString());
+	}
+
+	/**
+	 * Checks if the specified {@link Group} is legal
+	 *
+	 * @param group the {@link Group} to be checked
+	 * @return {@code true} if the {@link Group} is legal, {@code false} otherwise
+	 */
+	boolean isGroupLegal(Group group) {
+		return !containsMoreMeatThanVeggie(group) && !GroupContainsPairMoreThanOnce(group);
+	}
+
+	/**
+	 * Checks if the specified {@link Group} contains more Meat/None than Veggie/Vegan.
+	 *
+	 * @param group the {@link Group} to be checked
+	 * @return {@code true} if the {@link Group} contains more Meat/None than Veggie/Vegan, {@code false} otherwise
+	 */
+	boolean containsMoreMeatThanVeggie(Group group) {
+		FoodType[] foodTypes = new FoodType[] {group.getPairs()[0].getFoodType(), group.getPairs()[1].getFoodType(), group.getPairs()[2].getFoodType()};
+
+		Map<Integer, Long> map = Arrays.stream(foodTypes)
+				.collect(Collectors.groupingBy(FoodType::getValue, Collectors.counting()));
+
+		return ((map.containsKey(FoodType.MEAT.getValue()) && map.get(FoodType.MEAT.getValue()) >= 2)
+				|| (map.containsKey(FoodType.NONE.getValue()) && map.get(FoodType.NONE.getValue()) >= 2))
+				&& (map.containsKey(FoodType.VEGAN.getValue()) || map.containsKey(FoodType.VEGGIE.getValue()));
+	}
+
+	/**
+	 * Checks if the specified {@link Group} contains any {@link Pair} more than once.
+	 *
+	 * @param group the {@link Group} to be checked
+	 * @return {@code true} if the {@link Group} contains any {@link Pair} more than once, {@code false} otherwise
+	 */
+	boolean GroupContainsPairMoreThanOnce(Group group) {
+		return Arrays.stream(group.getPairs()).collect(Collectors.groupingBy(Pair::hashCode, Collectors.counting())).size() != 3;
+	}
+
+	/**
+	 * Checks if each {@link Group} is referenced exactly three times.
+	 *
+	 * @return {@code true} if each {@link Group} is referenced exactly three times, {@code false} otherwise
+	 */
+	 boolean eachGroupIdContainedThrice() {
+		return pairs.stream()
+				.flatMap(pair -> pair.getGroups().stream())
+				.collect(Collectors.groupingBy(Group::getId, Collectors.counting()))
+				.values()
+				.stream()
+				.noneMatch(count -> count != 3);
+	}
+
+	/**
+	 * Checks if the specified instances of {@link Group} are legal
+	 *
+	 * @param groupList the {@link GroupList} containing the instances of {@link Group}
+	 * @return {@code true} if all instances of {@link Group} are legal, {@code false} otherwise
+	 */
+	boolean allGroupsLegal(GroupList groupList) {
+		for (Group group : groupList.getGroups()) {
+			if (!isGroupLegal(group)) {
+				return false;
+			}
+		}
+		return true;
+	}
+}
