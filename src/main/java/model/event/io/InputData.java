@@ -59,7 +59,7 @@ public class InputData {
 
      */
 
-    public InputData() {
+    private InputData() {
         inputData = this;
         this.participantInputData = null;
         this.pairInputData = null;
