@@ -6,11 +6,8 @@ import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.list.identNumbers.GroupIdentNumber;
 import model.event.list.identNumbers.IdentNumber;
-<<<<<<< Updated upstream
 import model.event.list.identNumbers.PairIdentNumber;
-=======
 import model.kitchen.Kitchen;
->>>>>>> Stashed changes
 import model.person.FoodType;
 import model.person.Participant;
 
@@ -192,18 +189,6 @@ public class GroupList extends ParticipantCollectionList<Group> {
 			}
 		}
 
-<<<<<<< Updated upstream
-		groupList.add(new Group(matchedPairList.get(0), matchedPairList.get(3), matchedPairList.get(6), Course.STARTER, matchedPairList.get(0).getKitchen()));
-		groupList.add(new Group(matchedPairList.get(1), matchedPairList.get(4), matchedPairList.get(7), Course.STARTER, matchedPairList.get(1).getKitchen()));
-		groupList.add(new Group(matchedPairList.get(2), matchedPairList.get(5), matchedPairList.get(8), Course.STARTER, matchedPairList.get(2).getKitchen()));
-		groupList.add(new Group(matchedPairList.get(0), matchedPairList.get(4), matchedPairList.get(8), Course.MAIN, matchedPairList.get(4).getKitchen()));
-		groupList.add(new Group(matchedPairList.get(1), matchedPairList.get(5), matchedPairList.get(6), Course.MAIN, matchedPairList.get(5).getKitchen()));
-		groupList.add(new Group(matchedPairList.get(2), matchedPairList.get(3), matchedPairList.get(7), Course.MAIN, matchedPairList.get(3).getKitchen()));
-		groupList.add(new Group(matchedPairList.get(0), matchedPairList.get(5), matchedPairList.get(7), Course.DESSERT, matchedPairList.get(7).getKitchen()));
-		groupList.add(new Group(matchedPairList.get(1), matchedPairList.get(3), matchedPairList.get(8), Course.DESSERT, matchedPairList.get(8).getKitchen()));
-		groupList.add(new Group(matchedPairList.get(2), matchedPairList.get(4), matchedPairList.get(6), Course.DESSERT, matchedPairList.get(6).getKitchen()));
-=======
-
 		List<Pair> pairsToBeGrouped5 = removeDoubleKitchens(pairsToBeGrouped);
 		boolean test = true;
 		for(int i = 0; i<9; i++){
@@ -255,8 +240,6 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		groupList.add(group7);
 		groupList.add(group8);
 		groupList.add(group9);
->>>>>>> Stashed changes
-
 		return groupList;
 	}
 
