@@ -1,12 +1,11 @@
 package model.event.list;
 
 import model.event.Course;
-import model.event.GroupWeights;
+import model.event.list.weight.GroupWeights;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.list.identNumbers.GroupIdentNumber;
 import model.event.list.identNumbers.IdentNumber;
-import model.event.list.identNumbers.PairIdentNumber;
 import model.kitchen.Kitchen;
 import model.person.FoodType;
 import model.person.Participant;
@@ -22,7 +21,7 @@ import java.util.List;
  *
  * This class extends ParticipantCollectionList and uses GroupWeights for grouping logic.
  *
- * @see model.event.GroupWeights
+ * @see model.event.list.weight.GroupWeights
  * @see model.event.collection.Group
  * @see model.event.collection.Pair
  * @see model.event.list.ParticipantCollectionList
@@ -144,15 +143,15 @@ public class GroupList extends ParticipantCollectionList<Group> {
 				successorPairs.add(matchedPairList.remove(0));
 				sortedPairList.addAll(matchedPairList);
 				matchedPairList.clear();
-			} else {
+			} else { // TODO: remove print statements
 				List<Group> tempList = makeGroups(matchedPairList);
-				System.out.println("Zahl in Gruppe" + tempList.size());
+				//System.out.println("Zahl in Gruppe" + tempList.size());
 				if(tempList.size() <9){
-					System.out.println("Zahl wenn Gruppe unter 9 teiln: " + tempList.size());
+					//System.out.println("Zahl wenn Gruppe unter 9 teiln: " + tempList.size());
 					successorPairs.addAll(matchedPairList);
 				}
 				if(tempList.size() == 9){
-					System.out.println("Zahl wenn Gruppe gut(sollte 9 sein) " +tempList.size());
+					//System.out.println("Zahl wenn Gruppe gut(sollte 9 sein) " +tempList.size());
 					bestGroupList.addAll(tempList);
 				}
 			}
@@ -743,6 +742,10 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 */
 	public List<Participant> getSuccessors() {
 		return successors;
+	}
+
+	public List<Pair> getSuccessorPairs() {
+		return successorPairs;
 	}
 
 	/**
