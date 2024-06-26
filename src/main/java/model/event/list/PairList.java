@@ -26,7 +26,6 @@ public class PairList extends ParticipantCollectionList<Pair> {
     private final IdentNumber identNumber;
     private static final List<Participant> successors = new ArrayList<>();
 
-
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
      *
@@ -86,7 +85,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights  the weights used for pairing criteria
      * @return the score for pairing the two participants
      */
-    private static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+    public static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         double score = 0;
         double kitchenScore = compareKitchen(participant1, testedParticipant);
         if (kitchenScore == Double.NEGATIVE_INFINITY) {
@@ -310,5 +309,21 @@ public class PairList extends ParticipantCollectionList<Pair> {
         }
         sb.append("}");
         return sb.toString();
+    }
+
+    @Override
+    public boolean add(Pair pair) {
+        if (pair == null || contains(pair)) {
+            return false;
+        }
+        return super.add(pair);
+    }
+
+    @Override
+    public boolean remove(Object o) {
+        if (!(o instanceof Pair)) {
+            return false;
+        }
+        return super.remove(o);
     }
 }
