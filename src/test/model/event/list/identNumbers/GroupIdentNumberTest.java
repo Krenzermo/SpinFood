@@ -16,7 +16,7 @@ public class GroupIdentNumberTest {
     static ParticipantCollectionList pairList;
     @BeforeAll
     static void setUp() {
-        InputData inputData = InputData.getInstance();
+        InputData inputData = InputData.getInstanceDebug();
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         pairList = new PairList(inputData, pairingWeights);
         GroupWeights groupPairingWeights = new GroupWeights(1, 1, 1, 1);
