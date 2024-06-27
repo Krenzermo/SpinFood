@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ButtonType?>
 <?import javafx.scene.control.DialogPane?>
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.Menu?>
@@ -8,11 +9,12 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TitledPane?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<DialogPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+<DialogPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="controller.FXMLControllers.PairListComparisonController">
     <header>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="24.0" prefWidth="900.0">
          <children>
@@ -49,12 +51,20 @@
                               </AnchorPane>
                               <AnchorPane prefHeight="252.0" prefWidth="130.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <ListView layoutX="161.0" prefHeight="252.0" prefWidth="265.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <TitledPane animated="false" collapsible="false" layoutX="-42.0" layoutY="14.0" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <ListView prefHeight="252.0" prefWidth="265.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </TitledPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane HBox.hgrow="ALWAYS">
+                              <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="96.0" HBox.hgrow="NEVER">
                                  <children>
-                                    <Button layoutX="39.0" layoutY="114.0" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <Button layoutX="39.0" layoutY="114.0" mnemonicParsing="false" text="Übernehmen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                            </children>
@@ -77,23 +87,27 @@
                               </AnchorPane>
                               <AnchorPane prefHeight="253.0" prefWidth="130.0" HBox.hgrow="ALWAYS">
                                  <children>
-                                    <ListView layoutX="14.0" layoutY="14.0" prefHeight="252.0" prefWidth="265.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <TitledPane animated="false" collapsible="false" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                      <content>
+                                        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                             <children>
+                                                <ListView prefHeight="252.0" prefWidth="265.0" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
+                                             </children>
+                                          </AnchorPane>
+                                      </content>
+                                    </TitledPane>
                                  </children>
                               </AnchorPane>
-                              <AnchorPane HBox.hgrow="ALWAYS">
+                              <AnchorPane maxWidth="-Infinity" minWidth="-Infinity" prefWidth="96.0" HBox.hgrow="NEVER">
                                  <children>
-                                    <Button layoutY="65.0" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                    <Button layoutY="65.0" mnemonicParsing="false" text="Übernehmen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                  </children>
                               </AnchorPane>
                            </children>
                         </HBox>
                      </children>
                   </AnchorPane>
-                  <AnchorPane prefHeight="48.0" prefWidth="880.0">
-                     <children>
-                        <Button layoutX="404.0" layoutY="1.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="72.0" text="Schließen" AnchorPane.bottomAnchor="1.0" AnchorPane.leftAnchor="404.0" AnchorPane.rightAnchor="404.0" AnchorPane.topAnchor="1.0" />
-                     </children>
-                  </AnchorPane>
+                  <AnchorPane prefHeight="48.0" prefWidth="880.0" />
                </children>
             </VBox>
          </children></AnchorPane>
@@ -101,4 +115,7 @@
     <expandableContent>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="200.0" prefWidth="320.0" />
     </expandableContent>
+   <buttonTypes>
+      <ButtonType fx:constant="CLOSE" />
+   </buttonTypes>
 </DialogPane>
