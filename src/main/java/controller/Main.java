@@ -27,7 +27,7 @@ public class Main {
 		System.out.println(pairList);
 		System.out.println(pairList.getIdentNumber());
 
-		GroupWeights groupWeights = new GroupWeights(1,1,1,1);
+		GroupWeights groupWeights = new GroupWeights(1,1,1,10);
 		GroupList groupList = new GroupList(pairList,groupWeights);
 		System.out.println(groupList.getIdentNumber());
 
