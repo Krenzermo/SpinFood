@@ -16,7 +16,7 @@ class PairIdentNumberTest {
 
     @BeforeAll
     static void setUp() {
-        InputData inputData = InputData.getInstance();
+        InputData inputData = InputData.getInstanceDebug();
         PairingWeights pairingWeights1 = new PairingWeights(1, 1, 1);
         PairingWeights pairingWeights2 = new PairingWeights(7, 3, 5);
 
