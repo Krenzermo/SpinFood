@@ -59,7 +59,7 @@ public class InputData {
 
      */
 
-    public InputData() {
+    private InputData() {
         inputData = this;
         this.participantInputData = null;
         this.pairInputData = null;
@@ -97,7 +97,7 @@ public class InputData {
     }
 
     /**
-     * @return InputData instance
+     * @return {@link InputData} instance
      */
     public static synchronized InputData getInstance() {
         if (inputData == null) {
