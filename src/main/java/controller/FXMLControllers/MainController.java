@@ -74,6 +74,9 @@ public class MainController {
     private TableView<Pair> pairTable;
 
     @FXML
+    private TableColumn<Pair, String> idColPair;
+
+    @FXML
     private TableColumn<Pair, String> partOneColPair;
 
     @FXML
@@ -111,6 +114,9 @@ public class MainController {
 
     @FXML
     private TableColumn<Group, String> courseColGroup;
+
+    @FXML
+    private MenuItem comparePairList;
 
     //private Stage primaryStage = (Stage) root.getScene().getWindow();
 
@@ -247,7 +253,7 @@ public class MainController {
      * Writes the pair data to the table in the UI.
      * Clears existing items if necessary and sets up value factories for the table columns.
      */
-    private synchronized void writePairDataToTab() {
+    protected synchronized void writePairDataToTab() {
         Platform.runLater(() -> {
             if (!pairTable.getItems().isEmpty()) {
                 pairTable.getItems().clear();
@@ -265,7 +271,11 @@ public class MainController {
     /**
      * Sets up the value factories for the table columns to display the pair data.
      */
-    private void setupValueFactories() {
+    protected void setupValueFactories() {
+        idColPair.setCellValueFactory(
+                cell -> cell.getValue().getIdAsProperty()
+        );
+
         partOneColPair.setCellValueFactory(
                 cell -> cell.getValue().getParticipants().get(0).getName().asProperty()
         );
@@ -327,5 +337,22 @@ public class MainController {
             }
             successorListPair.setItems(data);
         });
+    }
+
+    @FXML
+    void comparePairList(ActionEvent event) {
+        MainFrame.stage.hide();
+        PairListComparisonController dialog = new PairListComparisonController();
+        dialog.init(root.getScene().getWindow());
+
+        try {
+            this.pairList = dialog.showAndWait().orElse(pairList);
+            this.pairIdentNumber = pairList.getIdentNumber();
+            writePairDataToTab();
+        } catch (ClassCastException | NullPointerException e) {
+            MainFrame.stage.show();
+            return;
+        }
+        MainFrame.stage.show();
     }
 }
