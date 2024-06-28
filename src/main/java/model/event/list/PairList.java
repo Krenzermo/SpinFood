@@ -39,6 +39,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
         setList(buildBestPairs(sortedParticipantList, pairingWeights));
         addAll(inputData.getPairInputData());
         this.identNumber = deriveIdentNumber();
+        //this.printFoodNumbers();
     }
 
     /**
@@ -311,5 +312,38 @@ public class PairList extends ParticipantCollectionList<Pair> {
         }
         sb.append("}");
         return sb.toString();
+    }
+    /**
+     * Returns the composition by foodtype of the PairList for debug purposes.
+     *
+     *
+     */
+    public void printFoodNumbers(){
+        int meatParticipants = 0;
+        int noneParticipants = 0;
+        int veggieParticipants = 0;
+        int veganParticipants = 0;
+        for (Pair pair : this){
+            if (pair.getFoodType() == FoodType.MEAT){
+                meatParticipants++;
+            }
+            if (pair.getFoodType() == FoodType.NONE){
+                noneParticipants++;
+            }
+            if (pair.getFoodType() == FoodType.VEGGIE){
+                veggieParticipants++;
+            }
+            if (pair.getFoodType() == FoodType.VEGAN){
+                veganParticipants++;
+            }
+        }
+        System.out.println("Meat: " + meatParticipants);
+        System.out.println("None: " + noneParticipants);
+        System.out.println("Veggie: " + veggieParticipants);
+        System.out.println("Vegan: " + veganParticipants);
+        System.out.println("Meat: " + meatParticipants);
+        System.out.println("AllMeat: " + (meatParticipants + noneParticipants) + "divided by 9: " + ((meatParticipants + noneParticipants) / 9.0));
+        System.out.println("AllVeggie: " + (veganParticipants + veggieParticipants));
+
     }
 }

@@ -1,6 +1,7 @@
 package model.event.list;
 
 import model.event.Course;
+import model.event.Location;
 import model.event.list.weight.GroupWeights;
 import model.event.collection.Group;
 import model.event.collection.Pair;
@@ -175,6 +176,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 			return groupList;
 		}
 		pairsToBeGrouped.sort(Comparator.comparingDouble(Pair::getDistance).reversed());
+		pairsToBeGrouped = sortGroupCluster(pairsToBeGrouped);
 
 		int vegCount = listCountFoodType(pairsToBeGrouped, FoodType.VEGGIE) + listCountFoodType(pairsToBeGrouped, FoodType.VEGAN);
 		int meatCount = listCountFoodType(pairsToBeGrouped, FoodType.MEAT) + listCountFoodType(pairsToBeGrouped, FoodType.NONE);
@@ -241,6 +243,40 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		groupList.add(group9);
 		return groupList;
 	}
+
+	private List<Pair> sortGroupCluster(List<Pair> pairsToBeGrouped) {
+		List<Pair> sortedCluster = new ArrayList<>();
+
+		sortedCluster.add(pairsToBeGrouped.remove(0));
+		sortedCluster.add(pairsToBeGrouped.remove(0));
+		sortedCluster.add(pairsToBeGrouped.remove(0));
+
+		sortedCluster.add(pairsToBeGrouped.remove(findNearestPair(sortedCluster.get(0),pairsToBeGrouped)));
+		sortedCluster.add(pairsToBeGrouped.remove(findNearestPair(sortedCluster.get(1),pairsToBeGrouped)));
+		sortedCluster.add(pairsToBeGrouped.remove(findNearestPair(sortedCluster.get(2),pairsToBeGrouped)));
+		sortedCluster.add(pairsToBeGrouped.remove(findNearestPair(sortedCluster.get(3),pairsToBeGrouped)));
+		sortedCluster.add(pairsToBeGrouped.remove(findNearestPair(sortedCluster.get(4),pairsToBeGrouped)));
+		sortedCluster.add(pairsToBeGrouped.remove(findNearestPair(sortedCluster.get(5),pairsToBeGrouped)));
+
+
+
+		return  sortedCluster;
+	}
+
+	private int findNearestPair(Pair cookingPair, List<Pair> pairsToBeGrouped) {
+		int nearestPairPos = 0;
+		double distance = 1;
+		for(int i = 0; i < pairsToBeGrouped.size(); i++){
+			double kitchenDistance = cookingPair.getKitchen().location().getDistance(pairsToBeGrouped.get(i).getKitchen().location());
+			if (kitchenDistance < distance){
+				distance = kitchenDistance;
+				nearestPairPos = i;
+			}
+		}
+
+		return  nearestPairPos;
+	}
+
 
 	private List<Pair> removeDoubleKitchens(List<Pair> testedPairList2) {
 		List<Pair> testedPairList = new ArrayList<>(testedPairList2);
@@ -603,7 +639,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		switch (pair1.getFoodType()) {
 			case MEAT:
 				if (testedPair.getFoodType() == FoodType.MEAT) return weight;
-				return (testedPair.getFoodType() == FoodType.NONE) ? 0.5 * weight : -1000;
+				return (testedPair.getFoodType() == FoodType.NONE) ? weight : -1000;
 			case VEGGIE:
 				if (testedPair.getFoodType() == FoodType.VEGGIE) return weight;
 				if (testedPair.getFoodType() == FoodType.VEGAN) return 0.5 * weight;
@@ -613,7 +649,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 				if (testedPair.getFoodType() == FoodType.VEGGIE) return 0.5 * weight;
 				return (testedPair.getFoodType() == FoodType.NONE) ? 0.25 * weight : -1000;
 			case NONE:
-				return (testedPair.getFoodType() == FoodType.NONE || testedPair.getFoodType() == FoodType.MEAT) ? 0.5 * weight : 0.25 * weight;
+				return (testedPair.getFoodType() == FoodType.NONE || testedPair.getFoodType() == FoodType.MEAT) ? weight : 0.25 * weight;
 			default:
 				return 0;
 		}

@@ -27,12 +27,13 @@ public class Main {
 		System.out.println(pairList);
 		System.out.println(pairList.getIdentNumber());
 
-		GroupWeights groupWeights = new GroupWeights(1,1,1,10);
+		GroupWeights groupWeights = new GroupWeights(1,1,1,1);
 		GroupList groupList = new GroupList(pairList,groupWeights);
 		System.out.println(groupList.getIdentNumber());
 
 		OutputData outputData = new OutputData("src/main/java/data", groupList);
 		outputData.makePairOutputFile();
 		outputData.makeGroupOutputFile();
+
 	}
 }
