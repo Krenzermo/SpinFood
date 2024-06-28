@@ -2,6 +2,7 @@ package model.event.list.identNumbers;
 
 import javafx.beans.Observable;
 import javafx.util.Callback;
+import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.collection.ParticipantCollection;
 import model.event.list.GroupList;
