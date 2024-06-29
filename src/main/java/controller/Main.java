@@ -23,7 +23,7 @@ public class Main {
 		System.out.println(inputData);
 
 		PairingWeights pairingWeights = new PairingWeights(1,1,1);
-		PairList pairList = new PairList(inputData,pairingWeights);
+		PairList pairList = new PairList(pairingWeights);
 		System.out.println(pairList);
 		System.out.println(pairList.getIdentNumber());
 

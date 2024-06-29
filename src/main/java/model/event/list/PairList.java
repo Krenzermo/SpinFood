@@ -23,22 +23,25 @@ import java.util.List;
  * @author Davide Piacenza
  */
 public class PairList extends ParticipantCollectionList<Pair> {
+    private static final InputData inputData = InputData.getInstance();
     private final IdentNumber identNumber;
     private static final List<Participant> successors = new ArrayList<>();
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
      *
-     * @param inputData      the input data containing participant and pair information
      * @param pairingWeights the weights used for pairing criteria
      */
-    public PairList(InputData inputData, PairingWeights pairingWeights) {
+    public PairList(PairingWeights pairingWeights) {
+        this(buildBestPairs(sortParticipants(inputData.getParticipantInputData()), pairingWeights));
+        //this.printFoodNumbers();
+    }
+
+    public PairList(List<Pair> pairList) {
         successors.clear();
-        List<Participant> sortedParticipantList = sortParticipants(inputData.getParticipantInputData());
-        setList(buildBestPairs(sortedParticipantList, pairingWeights));
+        setList(pairList);
         addAll(inputData.getPairInputData());
         this.identNumber = deriveIdentNumber();
-        //this.printFoodNumbers();
     }
 
     /**

@@ -50,14 +50,13 @@ public class PairingWeightsController extends Dialog<PairingWeights> {
             URL url = new URL("file:///" + absPath);
             FXMLLoader loader = new FXMLLoader(url);
 
-            loader.setController(this);
+            loader.setController(this); // Do not delete!!! It does not work in any other way!
             DialogPane pane = loader.load();
 
             pane.getButtonTypes().addAll(ButtonType.CLOSE, ButtonType.APPLY);
 
-            pane.lookupButton(ButtonType.APPLY).addEventFilter(ActionEvent.ANY, this::pairingWeightsAccepted);
             setResultConverter(buttonType -> {
-                if(!Objects.equals(ButtonBar.ButtonData.OK_DONE, buttonType.getButtonData())) {
+                if(!Objects.equals(ButtonBar.ButtonData.APPLY, buttonType.getButtonData())) {
                     return null;
                 }
 
@@ -72,13 +71,6 @@ public class PairingWeightsController extends Dialog<PairingWeights> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-
-    @FXML
-    void pairingWeightsAccepted(ActionEvent event) {
-        setResult(getPairingWeights());
-        event.consume();
-        close();
     }
 
     private PairingWeights getPairingWeights() {

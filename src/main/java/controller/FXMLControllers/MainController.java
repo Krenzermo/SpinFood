@@ -39,6 +39,7 @@ import view.MainFrame;
 import java.io.File;
 import java.net.URL;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -48,7 +49,7 @@ import java.util.stream.Collectors;
  * @author Daniel Hinkelmann
  */
 public class MainController {
-    private InputData inputData = InputData.getInstance();
+    private final InputData inputData = InputData.getInstance();
     private PairList pairList;
     private IdentNumber pairIdentNumber;
 
@@ -122,25 +123,17 @@ public class MainController {
 
     @FXML
     public void initialize() {
+        // this does not work 100%, but I haven't found a suitable property to attach the listener to
+        // this works, but you may have to resize the window after hiding/showing columns.
+        pairTable.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
         pairTable.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
-        partOneColPair.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
-        partTwoColPair.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
-        kitchenColPair.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
-        courseColPair.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
-
         partOneColPair.setReorderable(false);
         partTwoColPair.setReorderable(false);
         kitchenColPair.setReorderable(false);
         courseColPair.setReorderable(false);
 
-
+        groupTable.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
         groupTable.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
-        pairOneColGroup.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
-        pairTwoColGroup.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
-        pairThreeColGroup.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
-        kitchenColGroup.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
-        courseColGroup.visibleProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
-
         pairOneColGroup.setReorderable(false);
         pairTwoColGroup.setReorderable(false);
         pairThreeColGroup.setReorderable(false);
@@ -148,13 +141,16 @@ public class MainController {
         courseColGroup.setReorderable(false);
     }
 
-    private <E> void adjustColumnWidths(TableView<E> tableView) {
+    // copy contained in PairListComparisonController
+    private static <E> void adjustColumnWidths(TableView<E> tableView) {
         long visibleColumns = tableView.getColumns().stream().filter(TableColumn::isVisible).count();
         if (visibleColumns > 0) {
             double newWidth = tableView.getWidth() / visibleColumns;
             for (TableColumn<E, ?> column : tableView.getColumns()) {
                 if (column.isVisible()) {
                     column.setPrefWidth(newWidth);
+                    //column.setMinWidth(newWidth);
+                    //column.setMaxWidth(newWidth);
                 }
             }
         }
@@ -233,7 +229,7 @@ public class MainController {
 
         if (weights != null) {
             try {
-                this.pairList = new PairList(inputData, weights);
+                this.pairList = new PairList(weights);
                 this.pairIdentNumber = this.pairList.getIdentNumber();
             } catch (NullPointerException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -344,7 +340,11 @@ public class MainController {
         MainFrame.stage.hide();
         PairListComparisonController dialog = new PairListComparisonController();
         dialog.init(root.getScene().getWindow());
-
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.setMinWidth(910); // additional space to prevent clipping
+        stage.setMinHeight(635); // extra space for buttons
+        stage.setResizable(true);
+        stage.sizeToScene();
         try {
             this.pairList = dialog.showAndWait().orElse(pairList);
             this.pairIdentNumber = pairList.getIdentNumber();
