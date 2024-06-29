@@ -41,9 +41,9 @@ public class OutputData {
      * See {@link Pair#asOutputString()} for the format of each entry
      *
      */
-    public void makePairOutputFile() {
+    public void makePairOutputFile(String string) {
         List<Pair> pairs = groupList.getPairList().getPairs();
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath + "/pairs.csv"))) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath + "/" + string + ".csv"))) {
             Iterator<Pair> iter = pairs.iterator();
             while (iter.hasNext()) {
                 writer.write(iter.next().asOutputString());
@@ -56,9 +56,9 @@ public class OutputData {
         }
     }
 
-    public void makeGroupOutputFile() {
+    public void makeGroupOutputFile(String string) {
         List<Group> groups = groupList.getGroups().stream().sorted(Comparator.comparing(Group::getCourse)).toList();
-        try(BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath + "/groups.csv"))) {
+        try(BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath + "/" + string + ".csv"))) {
             Iterator<Group> iter = groups.iterator();
             while (iter.hasNext()) {
                 writer.write(iter.next().asOutputString());

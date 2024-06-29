@@ -163,7 +163,7 @@ public class GroupIdentNumber extends IdentNumber {
                 ", Geschlechterdiversität: " + genderDiversity +
                 ", Altersunterschied: " + ageDifference +
                 ", Vorliebenabweichung: " + preferenceDeviation +
-                ", Durchschnittliche Pfadlänge: " + averagePathLength +
+                ", \nDurchschnittliche Pfadlänge: " + averagePathLength +
                 ", Gesamte Pfadlänge: " + totalPathLength +
                 ", Standardabweichung der Pfadlängen: " + pathLengthStdDev;
     }
