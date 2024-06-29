@@ -20,8 +20,8 @@ class PairIdentNumberTest {
         PairingWeights pairingWeights1 = new PairingWeights(1, 1, 1);
         PairingWeights pairingWeights2 = new PairingWeights(7, 3, 5);
 
-        pairList1 = new PairList(inputData, pairingWeights1);
-        pairList2 = new PairList(inputData, pairingWeights2);
+        pairList1 = new PairList(pairingWeights1);
+        pairList2 = new PairList(pairingWeights2);
     }
 
     @Test

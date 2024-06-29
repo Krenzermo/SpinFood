@@ -41,7 +41,7 @@ public class Main {
 				"of elements:");
 		PairingWeights pairingWeightsA = new PairingWeights(5,1,10);
 		GroupWeights groupWeightsA = new GroupWeights(3,1,10,5);
-		PairList pairListA = new PairList(inputData,pairingWeightsA);
+		PairList pairListA = new PairList(pairingWeightsA);
 		GroupList groupListA = new GroupList(pairListA,groupWeightsA);
 		System.out.println(pairListA.getIdentNumber());
 		System.out.println(groupListA.getIdentNumber());
@@ -55,7 +55,7 @@ public class Main {
 
 		PairingWeights pairingWeightsB = new PairingWeights(5,1,10);
 		GroupWeights groupWeightsB = new GroupWeights(3,1,10,5);
-		PairList pairListB = new PairList(inputData,pairingWeightsB);
+		PairList pairListB = new PairList(pairingWeightsB);
 		GroupList groupListB = new GroupList(pairListB,groupWeightsB);
 		System.out.println(pairListB.getIdentNumber());
 		System.out.println(groupListB.getIdentNumber());
@@ -69,7 +69,7 @@ public class Main {
 
 		PairingWeights pairingWeightsC = new PairingWeights(5,10,1);
 		GroupWeights groupWeightsC = new GroupWeights(5,10,3,1);
-		PairList pairListC = new PairList(inputData,pairingWeightsC);
+		PairList pairListC = new PairList(pairingWeightsC);
 		GroupList groupListC = new GroupList(pairListC,groupWeightsC);
 		System.out.println(pairListC.getIdentNumber());
 		System.out.println(groupListC.getIdentNumber());

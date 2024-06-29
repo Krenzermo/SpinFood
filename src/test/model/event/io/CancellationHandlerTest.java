@@ -37,6 +37,7 @@ class CancellationHandlerTest {
     private Pair pair2;
     private Pair pair3;
     private Group group1;
+    private static InputData inputData = InputData.getInstanceDebug();
 
     @BeforeEach
     void setUp() {
@@ -52,11 +53,10 @@ class CancellationHandlerTest {
         pair2 = new Pair(participant3, participant4);
         pair3 = new Pair(participant5, participant6);
 
-        InputData inputData = InputData.getInstance();
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
 
-        pairList = new PairList(inputData, pairingWeights);
+        pairList = new PairList(pairingWeights);
         pairList.add(pair1);
         pairList.add(pair2);
         pairList.add(pair3);
