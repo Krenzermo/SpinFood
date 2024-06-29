@@ -34,5 +34,6 @@ public class Main {
 		OutputData outputData = new OutputData("src/main/java/data", groupList);
 		outputData.makePairOutputFile();
 		outputData.makeGroupOutputFile();
+
 	}
 }

@@ -273,7 +273,8 @@ public class Pair implements ParticipantCollection {
      */
     public String asOutputString() {
         int signedUpTogether = this.signedUpTogether ? 1 : 0;
-        return participants[0].getName().asOutputString() + ";" + participants[1].getName().asOutputString() + ";" + signedUpTogether + ";" + kitchen.asOutputString() + ";" + foodType.getOtherName() + ";" + id + ";" + starterNumber + ";" + mainNumber + ";" + dessertNumber + ";" + kitchenOf + ";" + course.getAsInt();
+        String s = course == null ? "NV" : String.valueOf(course.getAsInt());
+        return participants[0].getName().asOutputString() + ";" + participants[1].getName().asOutputString() + ";" + signedUpTogether + ";" + kitchen.asOutputString() + ";" + foodType.getOtherName() + ";" + id + ";" + starterNumber + ";" + mainNumber + ";" + dessertNumber + ";" + kitchenOf + ";" + s;
     }
 
     /** Calculates the deviation of Food preferences of the Participants of this Pair
