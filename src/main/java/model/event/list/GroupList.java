@@ -42,9 +42,9 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	private IdentNumber identNumber;
 	private static final List<Participant> successors = new ArrayList<>();
 	private static final List<Pair> successorPairs = new ArrayList<>();
-	private final List<Kitchen> starterKitchens = new ArrayList<>();
-	private final List<Kitchen> mainKitchens = new ArrayList<>();
-	private final List<Kitchen> dessertKitchens = new ArrayList<>();
+	//private final List<Kitchen> starterKitchens = new ArrayList<>();
+	//private final List<Kitchen> mainKitchens = new ArrayList<>();
+	//private final List<Kitchen> dessertKitchens = new ArrayList<>();
 
 	/**
 	 * Constructs a GroupList instance.
@@ -109,9 +109,13 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param groupWeights the weights used for grouping criteria
 	 * @return the list of groups
 	 */
-	private List<Group> buildBestGroups(List<Pair> pairList, GroupWeights groupWeights) {
+	public static List<Group> buildBestGroups(List<Pair> pairList, GroupWeights groupWeights) {
 		List<Pair> sortedPairList = new ArrayList<>(pairList);
 		List<Group> bestGroupList = new ArrayList<>();
+
+		List<Kitchen> starterKitchens = new ArrayList<>();
+		List<Kitchen> mainKitchens = new ArrayList<>();
+		List<Kitchen> dessertKitchens = new ArrayList<>();
 
 		while (sortedPairList.size() >= 9) {
 			List<Pair> matchedPairList = new ArrayList<>();
@@ -144,7 +148,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 				sortedPairList.addAll(matchedPairList);
 				matchedPairList.clear();
 			} else { // TODO: remove print statements
-				List<Group> tempList = makeGroups(matchedPairList);
+				List<Group> tempList = makeGroups(matchedPairList, starterKitchens, mainKitchens, dessertKitchens);
 				//System.out.println("Zahl in Gruppe" + tempList.size());
 				if(tempList.size() <9){
 					//System.out.println("Zahl wenn Gruppe unter 9 teiln: " + tempList.size());
@@ -168,7 +172,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param pairsToBeGrouped the list of matched pairs
 	 * @return the list of groups
 	 */
-	private List<Group> makeGroups(List<Pair> pairsToBeGrouped) {
+	private static List<Group> makeGroups(List<Pair> pairsToBeGrouped, List<Kitchen> starterKitchens, List<Kitchen> mainKitchens, List<Kitchen> dessertKitchens) {
 		List<Group> groupList = new ArrayList<>();
 		if (pairsToBeGrouped.size() < 9) {
 			System.out.println("Error: matchedPairList has fewer than 9 elements. Size: " + pairsToBeGrouped.size());
@@ -189,7 +193,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 			}
 		}
 
-		List<Pair> pairsToBeGrouped5 = removeDoubleKitchens(pairsToBeGrouped);
+		List<Pair> pairsToBeGrouped5 = removeDoubleKitchens(pairsToBeGrouped, starterKitchens, mainKitchens, dessertKitchens);
 		boolean test = true;
 		for (int i = 0; i < 9; i++) {
 			if (pairsToBeGrouped5.get(i) == null) {
@@ -244,7 +248,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return groupList;
 	}
 
-	private List<Pair> sortGroupCluster(List<Pair> pairsToBeGrouped) {
+	private static List<Pair> sortGroupCluster(List<Pair> pairsToBeGrouped) {
 		List<Pair> sortedCluster = new ArrayList<>();
 
 		sortedCluster.add(pairsToBeGrouped.remove(0));
@@ -263,7 +267,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return  sortedCluster;
 	}
 
-	private int findNearestPair(Pair cookingPair, List<Pair> pairsToBeGrouped) {
+	private static int findNearestPair(Pair cookingPair, List<Pair> pairsToBeGrouped) {
 		int nearestPairPos = 0;
 		double distance = 1;
 		for(int i = 0; i < pairsToBeGrouped.size(); i++){
@@ -278,7 +282,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	}
 
 
-	private List<Pair> removeDoubleKitchens(List<Pair> testedPairList2) {
+	private static List<Pair> removeDoubleKitchens(List<Pair> testedPairList2, List<Kitchen> starterKitchens, List<Kitchen> mainKitchens, List<Kitchen> dessertKitchens) {
 		List<Pair> testedPairList = new ArrayList<>(testedPairList2);
 		List<Pair> nulledList = new ArrayList<>();
 		List<Pair> meatList = new ArrayList<>();

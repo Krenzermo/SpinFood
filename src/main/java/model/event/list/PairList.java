@@ -48,7 +48,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights  the weights used for pairing criteria
      * @return a list of the best pairs of participants
      */
-    private static List<Pair> buildBestPairs(List<Participant> participantList, PairingWeights pairingWeights) {
+    public static List<Pair> buildBestPairs(List<Participant> participantList, PairingWeights pairingWeights) {
         List<Pair> bestPairList = new ArrayList<>();
 
         while (participantList.size() >= 2) {
@@ -87,7 +87,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights  the weights used for pairing criteria
      * @return the score for pairing the two participants
      */
-    private static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+    public static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         double score = 0;
         double kitchenScore = compareKitchen(participant1, testedParticipant);
         if (kitchenScore == Double.NEGATIVE_INFINITY) {

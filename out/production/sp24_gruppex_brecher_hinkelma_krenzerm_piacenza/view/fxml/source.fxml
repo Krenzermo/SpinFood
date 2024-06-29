@@ -32,6 +32,11 @@
                         <MenuItem fx:id="createGroups" mnemonicParsing="false" onAction="#executeGroupAlgo" text="Gruppen erstellen" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Vergleichen">
+                    <items>
+                      <MenuItem fx:id="comparePairList" mnemonicParsing="false" onAction="#comparePairList" text="Paarlisten vergleichen" />
+                    </items>
+                  </Menu>
                 <Menu mnemonicParsing="false" text="Hilfe">
                   <items>
                     <MenuItem mnemonicParsing="false" text="About" />
@@ -59,6 +64,7 @@
                                                    <children>
                                                       <TableView fx:id="pairTable" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                         <columns>
+                                                            <TableColumn fx:id="idColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" resizable="false" text="ID" />
                                                           <TableColumn fx:id="partOneColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" resizable="false" text="Person 1" />
                                                           <TableColumn fx:id="partTwoColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" resizable="false" text="Person 2" />
                                                             <TableColumn fx:id="kitchenColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="100.0" prefWidth="-1.0" resizable="false" text="Küche" />
