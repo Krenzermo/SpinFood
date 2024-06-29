@@ -191,13 +191,13 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 		List<Pair> pairsToBeGrouped5 = removeDoubleKitchens(pairsToBeGrouped);
 		boolean test = true;
-		for(int i = 0; i<9; i++){
-            if (pairsToBeGrouped5.get(i) == null) {
-                test = false;
-                break;
-            }
+		for (int i = 0; i < 9; i++) {
+			if (pairsToBeGrouped5.get(i) == null) {
+				test = false;
+				break;
+			}
 		}
-		if (!test){
+		if (!test) {
 			return groupList;
 		}
 
@@ -221,15 +221,15 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		Group group8 = new Group(pairsToBeGrouped5.get(1), pairsToBeGrouped5.get(3), pairsToBeGrouped5.get(8), Course.DESSERT, pairsToBeGrouped5.get(8).getKitchen());
 		Group group9 = new Group(pairsToBeGrouped5.get(2), pairsToBeGrouped5.get(4), pairsToBeGrouped5.get(6), Course.DESSERT, pairsToBeGrouped5.get(6).getKitchen());
 
-		pairsToBeGrouped5.get(0).setGroups(new Group[] {group1, group4, group7});
-		pairsToBeGrouped5.get(1).setGroups(new Group[] {group2, group5, group8});
-		pairsToBeGrouped5.get(2).setGroups(new Group[] {group3, group6, group9});
-		pairsToBeGrouped5.get(3).setGroups(new Group[] {group1, group6, group8});
-		pairsToBeGrouped5.get(4).setGroups(new Group[] {group2, group4, group9});
-		pairsToBeGrouped5.get(5).setGroups(new Group[] {group3, group5, group7});
-		pairsToBeGrouped5.get(6).setGroups(new Group[] {group1, group5, group9});
-		pairsToBeGrouped5.get(7).setGroups(new Group[] {group2, group6, group7});
-		pairsToBeGrouped5.get(8).setGroups(new Group[] {group3, group4, group8});
+		pairsToBeGrouped5.get(0).setGroups(new Group[]{group1, group4, group7});
+		pairsToBeGrouped5.get(1).setGroups(new Group[]{group2, group5, group8});
+		pairsToBeGrouped5.get(2).setGroups(new Group[]{group3, group6, group9});
+		pairsToBeGrouped5.get(3).setGroups(new Group[]{group1, group6, group8});
+		pairsToBeGrouped5.get(4).setGroups(new Group[]{group2, group4, group9});
+		pairsToBeGrouped5.get(5).setGroups(new Group[]{group3, group5, group7});
+		pairsToBeGrouped5.get(6).setGroups(new Group[]{group1, group5, group9});
+		pairsToBeGrouped5.get(7).setGroups(new Group[]{group2, group6, group7});
+		pairsToBeGrouped5.get(8).setGroups(new Group[]{group3, group4, group8});
 
 		groupList.add(group1);
 		groupList.add(group2);

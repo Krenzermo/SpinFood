@@ -14,8 +14,12 @@ import java.net.URL;
 
 public class MainFrame extends Application {
 
+    public static Stage stage;
+
     @Override
     public void start(Stage stage) throws Exception {
+        MainFrame.stage = stage;
+
         String relPath = "src/main/java/view/fxml/source.fxml";
         File file = new File(relPath);
         String absPath = file.getAbsolutePath();

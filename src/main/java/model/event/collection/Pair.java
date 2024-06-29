@@ -1,5 +1,6 @@
 package model.event.collection;
 
+import javafx.beans.property.SimpleStringProperty;
 import model.event.Location;
 import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
@@ -330,5 +331,9 @@ public class Pair implements ParticipantCollection {
 
     public void setDessertNumber(int dessertNumber) {
         this.dessertNumber = dessertNumber;
+    }
+
+    public SimpleStringProperty getIdAsProperty() {
+        return new SimpleStringProperty(String.valueOf(id));
     }
 }
