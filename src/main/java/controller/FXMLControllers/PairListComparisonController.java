@@ -36,10 +36,10 @@ public class PairListComparisonController extends Dialog<PairList> {
     private MenuItem editWeightsList2;
 
     @FXML
-    private TableColumn<Pair, String> idColList1;
+    private TableColumn<Pair, Integer> idColList1;
 
     @FXML
-    private TableColumn<Pair, String> idColList2;
+    private TableColumn<Pair, Integer> idColList2;
 
     @FXML
     private ListView<String> identNumberList1;
@@ -223,7 +223,7 @@ public class PairListComparisonController extends Dialog<PairList> {
                 pairTable.getItems().clear();
             } else {
                 setupValueFactories(
-                        (TableColumn<Pair, String>) pairTable.getColumns().get(0),
+                        (TableColumn<Pair, Integer>) pairTable.getColumns().get(0),
                         (TableColumn<Pair, String>) pairTable.getColumns().get(1),
                         (TableColumn<Pair, String>) pairTable.getColumns().get(2),
                         (TableColumn<Pair, String>) pairTable.getColumns().get(3),
@@ -241,14 +241,14 @@ public class PairListComparisonController extends Dialog<PairList> {
      * Sets up the value factories for the table columns to display the pair data.
      */
     protected void setupValueFactories(
-            TableColumn<Pair, String> idColPair,
+            TableColumn<Pair, Integer> idColPair,
             TableColumn<Pair, String> partOneColPair,
             TableColumn<Pair, String> partTwoColPair,
             TableColumn<Pair, String> kitchenColPair,
             TableColumn<Pair, String> courseColPair
     ) {
         idColPair.setCellValueFactory(
-                cell -> cell.getValue().getIdAsProperty()
+                cell -> cell.getValue().getIdAsObservable()
         );
 
         partOneColPair.setCellValueFactory(

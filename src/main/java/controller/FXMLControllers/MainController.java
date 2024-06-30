@@ -1,45 +1,33 @@
 package controller.FXMLControllers;
 
 import javafx.application.Platform;
-import javafx.beans.property.SimpleSetProperty;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.util.Callback;
 
 
 import model.event.Course;
-import model.event.Location;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.io.InputData;
+import model.event.list.GroupList;
 import model.event.list.PairList;
 import model.event.list.identNumbers.IdentNumber;
+import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
-import model.person.Name;
 import model.person.Participant;
 import view.MainFrame;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +40,8 @@ public class MainController {
     private final InputData inputData = InputData.getInstance();
     private PairList pairList;
     private IdentNumber pairIdentNumber;
+    private GroupList groupList;
+    private IdentNumber groupIdentNumber;
 
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
@@ -72,10 +62,13 @@ public class MainController {
     private ListView<String> pairIdentNumbersList;
 
     @FXML
+    private ListView<String> groupIdentNumbersList;
+
+    @FXML
     private TableView<Pair> pairTable;
 
     @FXML
-    private TableColumn<Pair, String> idColPair;
+    private TableColumn<Pair, Integer> idColPair;
 
     @FXML
     private TableColumn<Pair, String> partOneColPair;
@@ -90,7 +83,7 @@ public class MainController {
     private TableColumn<Pair, String> courseColPair;
 
     @FXML
-    private ListView<String> successorListPair;
+    private ListView<String> successorsPairList;
 
     @FXML
     private MenuItem createGroups;
@@ -102,19 +95,25 @@ public class MainController {
     private TableView<Group> groupTable;
 
     @FXML
-    private TableColumn<Group, String> pairOneColGroup;
+    private TableColumn<Group, Integer> idColGroup;
 
     @FXML
-    private TableColumn<Group, String> pairTwoColGroup;
+    private TableColumn<Group, Integer> pairOneColGroup;
 
     @FXML
-    private TableColumn<Group, String> pairThreeColGroup;
+    private TableColumn<Group, Integer> pairTwoColGroup;
+
+    @FXML
+    private TableColumn<Group, Integer> pairThreeColGroup;
 
     @FXML
     private TableColumn<Group, String> kitchenColGroup;
 
     @FXML
     private TableColumn<Group, String> courseColGroup;
+
+    @FXML
+    private ListView<String> successorsGroupList;
 
     @FXML
     private MenuItem comparePairList;
@@ -208,7 +207,32 @@ public class MainController {
      */
     @FXML
     void executeGroupAlgo(ActionEvent event) {
-        //TODO: implement
+        String relPath = "src/main/java/view/fxml/groupWeights.fxml";
+        File file = new File(relPath);
+        String absPath = file.getAbsolutePath();
+        GroupWeightsController dialog = new GroupWeightsController();
+        dialog.init(root.getScene().getWindow());
+
+        GroupWeights weights = dialog.showAndWait().orElse(null);
+
+        if (weights != null) {
+            try {
+                this.groupList = new GroupList(pairList, weights);
+                this.groupIdentNumber = this.groupList.getIdentNumber();
+
+                writeGroupDataToTab();
+                writeGroupListIdentNumbersToTab();
+                writeGroupListSuccessorsToTab();
+            } catch (NullPointerException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Dateifehler");
+                alert.setHeaderText("Ein Fehler ist aufgetreten!");
+                alert.setContentText("Es wurden noch keine Dateien für die Teilnehmerdaten und/oder die After-Dinner-Location ausgewählt.");
+                alert.showAndWait();
+                return;
+            }
+        }
+        event.consume();
     }
 
     /**
@@ -231,6 +255,10 @@ public class MainController {
             try {
                 this.pairList = new PairList(weights);
                 this.pairIdentNumber = this.pairList.getIdentNumber();
+
+                writePairDataToTab();
+                writePairListIdentNumbersToTab();
+                writePairListSuccessorsToTab();
             } catch (NullPointerException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Dateifehler");
@@ -239,7 +267,6 @@ public class MainController {
                 alert.showAndWait();
                 return;
             }
-            writePairDataToTab();
         }
         event.consume();
     }
@@ -254,22 +281,33 @@ public class MainController {
             if (!pairTable.getItems().isEmpty()) {
                 pairTable.getItems().clear();
             } else {
-                setupValueFactories();
+                setupPairListValueFactories();
             }
 
             ObservableList<Pair> data = FXCollections.observableArrayList(pairList.getPairs());
             pairTable.setItems(data);
+        });
+    }
 
-            writeIdentNumbersToTab();
+    protected synchronized void writeGroupDataToTab() {
+        Platform.runLater(() -> {
+            if (!groupTable.getColumns().isEmpty()) {
+                groupTable.getItems().clear();
+            } else {
+                setupGroupListValueFactories();
+            }
+
+            ObservableList<Group> data = FXCollections.observableArrayList(groupList.getGroups());
+            groupTable.setItems(data);
         });
     }
 
     /**
      * Sets up the value factories for the table columns to display the pair data.
      */
-    protected void setupValueFactories() {
+    protected void setupPairListValueFactories() {
         idColPair.setCellValueFactory(
-                cell -> cell.getValue().getIdAsProperty()
+                cell -> cell.getValue().getIdAsObservable()
         );
 
         partOneColPair.setCellValueFactory(
@@ -294,10 +332,36 @@ public class MainController {
         );
     }
 
+    protected void setupGroupListValueFactories() {
+        idColGroup.setCellValueFactory(
+                cell -> cell.getValue().getIdAsObservable()
+        );
+
+        pairOneColGroup.setCellValueFactory(
+                cell -> cell.getValue().getPairs()[0].getIdAsObservable()
+        );
+
+        pairTwoColGroup.setCellValueFactory(
+                cell -> cell.getValue().getPairs()[1].getIdAsObservable()
+        );
+
+        pairThreeColGroup.setCellValueFactory(
+                cell -> cell.getValue().getPairs()[2].getIdAsObservable()
+        );
+
+        kitchenColGroup.setCellValueFactory(
+                cell -> cell.getValue().getKitchen().asProperty()
+        );
+
+        courseColGroup.setCellValueFactory(
+                cell -> cell.getValue().getCourse().asProperty()
+        );
+    }
+
     /**
      * Writes the identifier numbers of the pairs to the list view in the UI.
      */
-    private synchronized void writeIdentNumbersToTab() {
+    private synchronized void writePairListIdentNumbersToTab() {
         Platform.runLater(() -> {
             if (!pairIdentNumbersList.getItems().isEmpty()) {
                 pairIdentNumbersList.getItems().clear();
@@ -305,18 +369,27 @@ public class MainController {
 
             ObservableList<String> data = FXCollections.observableArrayList(pairIdentNumber.asList());
             pairIdentNumbersList.setItems(data);
+        });
+    }
 
-            writeSuccessorToTab();
+    private synchronized void writeGroupListIdentNumbersToTab() {
+        Platform.runLater(() -> {
+            if (!groupIdentNumbersList.getItems().isEmpty()) {
+                groupIdentNumbersList.getItems().clear();
+            }
+
+            ObservableList<String> data = FXCollections.observableArrayList(groupIdentNumber.asList());
+            groupIdentNumbersList.setItems(data);
         });
     }
 
     /**
      * Writes the successors to the list view in the UI.
      */
-    private synchronized void writeSuccessorToTab() {
+    private synchronized void writePairListSuccessorsToTab() {
         Platform.runLater(() -> {
-            if (!successorListPair.getItems().isEmpty()) {
-                successorListPair.getItems().clear();
+            if (!successorsPairList.getItems().isEmpty()) {
+                successorsPairList.getItems().clear();
             }
 
             ObservableList<String> data;
@@ -331,7 +404,30 @@ public class MainController {
                                 .collect(Collectors.toList())
                 );
             }
-            successorListPair.setItems(data);
+            successorsPairList.setItems(data);
+        });
+    }
+
+    private synchronized void writeGroupListSuccessorsToTab() {
+        Platform.runLater(() -> {
+            if (!successorsGroupList.getItems().isEmpty()) {
+                successorsGroupList.getItems().clear();
+            }
+
+            ObservableList<String> data;
+            if (groupList.getSuccessorPairs().isEmpty()) {
+                data = FXCollections.observableArrayList(List.of("Keine Nachrücker Paare vorhanden"));
+            } else {
+                data = FXCollections.observableArrayList(
+                        groupList
+                                .getSuccessorPairs()
+                                .stream()
+                                .map(Pair::getId)
+                                .map(String::valueOf)
+                                .toList()
+                );
+            }
+            successorsGroupList.setItems(data);
         });
     }
 

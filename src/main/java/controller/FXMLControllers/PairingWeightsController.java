@@ -16,29 +16,22 @@ import java.net.URL;
 import java.util.Objects;
 
 public class PairingWeightsController extends Dialog<PairingWeights> {
-
-    public static Stage stage;
-    public AnchorPane pairingWeightsPane;
-
     @FXML
     private DialogPane root;
-
-    @FXML
-    Button acceptPairingWeightsButton;
 
     @FXML
     private Slider ageDiffWeightSliderPair;
 
     @FXML
-    private Slider foodPrefWeightSliderPair;
+    private Slider genderDiffWeightSliderPair;
 
     @FXML
-    private Slider genderDivWeightSliderPair;
+    private Slider foodPrefWeightSliderPair;
 
     @FXML
     private void initialize() {
         ageDiffWeightSliderPair.setValue(1.0);
-        genderDivWeightSliderPair.setValue(1.0);
+        genderDiffWeightSliderPair.setValue(1.0);
         foodPrefWeightSliderPair.setValue(1.0);
     }
 
@@ -76,7 +69,7 @@ public class PairingWeightsController extends Dialog<PairingWeights> {
     private PairingWeights getPairingWeights() {
         return new PairingWeights(
                 ageDiffWeightSliderPair.getValue(),
-                genderDivWeightSliderPair.getValue(),
+                genderDiffWeightSliderPair.getValue(),
                 foodPrefWeightSliderPair.getValue()
         );
     }

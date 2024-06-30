@@ -1,5 +1,7 @@
 package model.event.collection;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableValue;
 import model.event.Course;
 import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
@@ -146,5 +148,9 @@ public class Group implements ParticipantCollection{
 
 	public int getId() {
 		return id;
+	}
+
+	public ObservableValue<Integer> getIdAsObservable() {
+		return new SimpleIntegerProperty(id).asObject();
 	}
 }

@@ -1,6 +1,7 @@
 package model.event.collection;
 
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableValue;
 import model.event.Location;
 import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
@@ -11,7 +12,6 @@ import model.person.Participant;
 import model.event.Course;
 import model.event.io.InputData;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -105,6 +105,10 @@ public class Pair implements ParticipantCollection {
     @Override
     public Course getCourse() {
         return course;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public List<Group> getGroups() {
@@ -333,7 +337,7 @@ public class Pair implements ParticipantCollection {
         this.dessertNumber = dessertNumber;
     }
 
-    public SimpleStringProperty getIdAsProperty() {
-        return new SimpleStringProperty(String.valueOf(id));
+    public ObservableValue<Integer> getIdAsObservable() {
+        return new SimpleIntegerProperty(id).asObject();
     }
 }

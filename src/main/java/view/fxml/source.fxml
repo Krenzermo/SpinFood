@@ -98,7 +98,7 @@
                                             <content>
                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                      <ListView fx:id="successorListPair" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
+                                                      <ListView fx:id="successorsPairList" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
                                                    </children>
                                                 </AnchorPane>
                                             </content>
@@ -125,6 +125,7 @@
                                                    <children>
                                                       <TableView fx:id="groupTable" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                         <columns>
+                                                            <TableColumn fx:id="idColGroup" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="ID" />
                                                           <TableColumn fx:id="pairOneColGroup" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Paar 1" />
                                                           <TableColumn fx:id="pairTwoColGroup" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Paar 2" />
                                                             <TableColumn fx:id="pairThreeColGroup" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Paar 3" />
@@ -143,7 +144,7 @@
                                                         <content>
                                                           <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                <children>
-                                                                  <ListView AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
+                                                                  <ListView fx:id="groupIdentNumbersList" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
                                                                </children>
                                                             </AnchorPane>
                                                         </content>
@@ -160,7 +161,7 @@
                                             <content>
                                               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                    <children>
-                                                      <ListView AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
+                                                      <ListView fx:id="successorsGroupList" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
                                                    </children>
                                                 </AnchorPane>
                                             </content>
