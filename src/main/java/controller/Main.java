@@ -68,7 +68,7 @@ public class Main {
 				"of elements");
 
 		PairingWeights pairingWeightsC = new PairingWeights(5,3,1);
-		GroupWeights groupWeightsC = new GroupWeights(5,10,3,1);
+		GroupWeights groupWeightsC = new GroupWeights(5,10,3,0.1);
 		PairList pairListC = new PairList(inputData,pairingWeightsC);
 		GroupList groupListC = new GroupList(pairListC,groupWeightsC);
 		System.out.println(pairListC.getIdentNumber());
