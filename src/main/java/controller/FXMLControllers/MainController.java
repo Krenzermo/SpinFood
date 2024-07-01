@@ -386,6 +386,23 @@ public class MainController {
         event.consume();
     }
 
+    public void splitPair(ActionEvent event) {
+        // TODO: this
+
+    }
+
+    public void createPair(ActionEvent event) {
+        // TODO: this
+    }
+
+    public void splitGroup(ActionEvent event) {
+        // TODO: this
+    }
+
+    public void createGroup(ActionEvent event) {
+        // TODO: this
+    }
+
 
     /**
      * Writes the pair data to the table in the UI.

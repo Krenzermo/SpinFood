@@ -62,8 +62,8 @@
                                        <children>
                                           <ButtonBar nodeOrientation="RIGHT_TO_LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <buttons>
-                                                <Button fx:id="splitPairButton" disable="true" mnemonicParsing="false" text="Paar trennen" />
-                                              <Button fx:id="createPairButton" disable="true" mnemonicParsing="false" text="Paar erstellen" />
+                                                <Button fx:id="splitPairButton" disable="true" mnemonicParsing="false" onAction="#splitPair" text="Paar trennen" />
+                                              <Button fx:id="createPairButton" disable="true" mnemonicParsing="false" onAction="#createPair" text="Paar erstellen" />
                                             </buttons>
                                           </ButtonBar>
                                        </children>
@@ -158,8 +158,8 @@
                                        <children>
                                           <ButtonBar nodeOrientation="RIGHT_TO_LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <buttons>
-                                              <Button fx:id="splitGroupButton" disable="true" mnemonicParsing="false" text="Gruppe trennen" />
-                                                <Button fx:id="createGroupButton" disable="true" mnemonicParsing="false" text="Gruppe erstellen" />
+                                              <Button fx:id="splitGroupButton" disable="true" mnemonicParsing="false" onAction="#splitGroup" text="Gruppe trennen" />
+                                                <Button fx:id="createGroupButton" disable="true" mnemonicParsing="false" onAction="#createGroup" text="Gruppe erstellen" />
                                             </buttons>
                                           </ButtonBar>
                                        </children>
