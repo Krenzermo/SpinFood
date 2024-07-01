@@ -76,6 +76,14 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		List<Pair> sortedPairList = new ArrayList<>();
 
 		for (Pair pair : pairList) {
+			pair.clearGroups();
+			pair.setStarterNumber(0);
+			pair.setMainNumber(0);
+			pair.setDessertNumber(0);
+			pair.setCourse(null);
+		}
+
+		for (Pair pair : pairList) {
 			if (pair.getFoodType() == FoodType.MEAT) {
 				sortedPairList.add(pair);
 			}
