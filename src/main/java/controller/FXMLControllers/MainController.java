@@ -291,7 +291,7 @@ public class MainController {
 
     protected synchronized void writeGroupDataToTab() {
         Platform.runLater(() -> {
-            if (!groupTable.getColumns().isEmpty()) {
+            if (!groupTable.getItems().isEmpty()) {
                 groupTable.getItems().clear();
             } else {
                 setupGroupListValueFactories();

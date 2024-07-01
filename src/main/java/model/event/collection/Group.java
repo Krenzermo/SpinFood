@@ -1,6 +1,7 @@
 package model.event.collection;
 
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import model.event.Course;
 import model.event.list.identNumbers.IdentNumber;
