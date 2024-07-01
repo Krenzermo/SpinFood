@@ -462,14 +462,6 @@ public class MainController {
                 this.pairList = new PairList(weights);
                 this.pairIdentNumber = this.pairList.getIdentNumber();
 
-                if (groupList != null) {
-                    groupList.clear();
-                    groupTable.getItems().clear();
-                    successorsGroupList.getItems().clear();
-                    groupIdentNumber = null;
-                    groupIdentNumbersList.getItems().clear();
-                }
-
                 writePairDataToTab();
                 writePairListIdentNumbersToTab();
                 writePairListSuccessorsToTab();
@@ -519,6 +511,14 @@ public class MainController {
                 pairTable.getItems().clear();
             } else {
                 setupPairListValueFactories();
+            }
+
+            if (!Objects.isNull(groupList) && !groupList.isEmpty()) {
+                groupList.clear();
+                groupTable.getItems().clear();
+                successorsGroupList.getItems().clear();
+                groupIdentNumber = null;
+                groupIdentNumbersList.getItems().clear();
             }
 
             ObservableList<Pair> data = FXCollections.observableArrayList(pairList.getPairs());
@@ -660,9 +660,16 @@ public class MainController {
         stage.setResizable(true);
         stage.sizeToScene();
         try {
-            this.pairList = dialog.showAndWait().orElse(pairList);
-            this.pairIdentNumber = pairList.getIdentNumber();
-            writePairDataToTab();
+            PairList temp = dialog.showAndWait().orElse(pairList);
+            if (temp != pairList) {
+                pairList = temp;
+                this.pairIdentNumber = pairList.getIdentNumber();
+                writePairDataToTab();
+                writePairListIdentNumbersToTab();
+                writePairListSuccessorsToTab();
+
+                tabPane.getSelectionModel().select(pairTab);
+            }
         } catch (ClassCastException | NullPointerException e) {
             MainFrame.stage.show();
             return;
