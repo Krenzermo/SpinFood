@@ -1,4 +1,4 @@
-package model.cancellation;
+package model.event.io;
 
 import model.event.collection.Group;
 import model.event.collection.Pair;
@@ -126,7 +126,9 @@ public class CancellationHandler {
         participantSuccessors.clear();
 
         if (tempParticipantSuccessors.size() >= 2) {
-            List<Pair> newPairs = PairList.buildBestPairs(tempParticipantSuccessors, pairingWeights);
+            PairList pairList = new PairList(pairingWeights);
+            pairList.clear();
+            List<Pair> newPairs = pairList.buildBestPairs(tempParticipantSuccessors, pairingWeights);
             pairSuccessors.addAll(newPairs);
         }
 
@@ -135,7 +137,7 @@ public class CancellationHandler {
             List<Pair> newPairs = new ArrayList<>(pairSuccessors);
             pairSuccessors.clear();
 
-            List<Group> newGroups = new GroupList(newPairs, groupWeights).getGroups();
+            List<Group> newGroups = new GroupList(new PairList(newPairs), groupWeights);
             groupList.addAll(newGroups);
         }
     }

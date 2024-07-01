@@ -40,8 +40,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 	private final PairList pairList;
 	private IdentNumber identNumber;
-	private final List<Participant> successors = new ArrayList<>();
-	private final List<Pair> successorPairs = new ArrayList<>();
+	private List<Pair> successorPairs = new ArrayList<>();
 	//private final List<Kitchen> starterKitchens = new ArrayList<>();
 	//private final List<Kitchen> mainKitchens = new ArrayList<>();
 	//private final List<Kitchen> dessertKitchens = new ArrayList<>();
@@ -781,15 +780,6 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return this;
 	}
 
-	/**
-	 * Gets the list of successor participants.
-	 *
-	 * @return the list of successor participants
-	 */
-	public List<Participant> getSuccessors() {
-		return successors;
-	}
-
 	public List<Pair> getSuccessorPairs() {
 		return successorPairs;
 	}
@@ -826,5 +816,9 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		nullCheck(collection);
 		duplicateElementCheck(collection);
 		// no duplicateParticipantCheck as each Pair is contained in exactly three Groups
+	}
+
+	public List<Participant> getSuccessors() {
+		return pairList.getSuccessors();
 	}
 }

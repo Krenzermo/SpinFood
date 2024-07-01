@@ -1,5 +1,8 @@
 package model.person;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import model.event.collection.Group;
 import model.event.collection.ParticipantCollection;
 import model.event.collection.Pair;
@@ -86,6 +89,10 @@ public class Participant {
 
     public String getId() {
         return id;
+    }
+
+    public ObservableValue<String> getIdAsObservable() {
+        return new SimpleStringProperty(id);
     }
 
     public Name getName() {

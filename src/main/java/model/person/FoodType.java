@@ -1,5 +1,8 @@
 package model.person;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+
 import java.util.function.Function;
 
 /**
@@ -42,5 +45,9 @@ public enum FoodType {
 
     public String getOtherName() {
         return otherName;
+    }
+
+    public ObservableValue<String> asObservable() {
+        return new SimpleStringProperty(this.name());
     }
 }
