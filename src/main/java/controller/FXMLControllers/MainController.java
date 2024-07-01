@@ -183,6 +183,12 @@ public class MainController {
             inputData.initParticipants(participantListPath);
         } catch (NullPointerException e) {
             participantListPath = null;
+        } catch (RuntimeException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Dateifehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Es wurde eine falsche oder fehlerhafte Datei für die Teilnehmerliste ausgewählt.");
+            alert.showAndWait();
         }
     }
 
@@ -205,6 +211,12 @@ public class MainController {
             inputData.initEventLocation(locationPath);
         } catch (NullPointerException e) {
             locationPath = null;
+        } catch (RuntimeException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Dateifehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Es wurde eine falsche oder fehlerhafte Datei für die After-Dinner-Location ausgewählt.");
+            alert.showAndWait();
         }
     }
 
