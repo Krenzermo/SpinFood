@@ -42,7 +42,7 @@ public class OutputData {
      *
      */
     public void makePairOutputFile(String string) {
-        List<Pair> pairs = groupList.getPairList().getPairs();
+        List<Pair> pairs = groupList.getPairListNoSuccessor();
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath + "/" + string + ".csv"))) {
             Iterator<Pair> iter = pairs.iterator();
             while (iter.hasNext()) {

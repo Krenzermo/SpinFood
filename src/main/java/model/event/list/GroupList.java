@@ -42,6 +42,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	private IdentNumber identNumber;
 	private static final List<Participant> successors = new ArrayList<>();
 	private static final List<Pair> successorPairs = new ArrayList<>();
+	private List<Pair> pairListNoSuccessor = new ArrayList<>();
 	//private final List<Kitchen> starterKitchens = new ArrayList<>();
 	//private final List<Kitchen> mainKitchens = new ArrayList<>();
 	//private final List<Kitchen> dessertKitchens = new ArrayList<>();
@@ -58,7 +59,8 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		this.identNumber = getIdentNumber();
 		this.pairList = pairList;
 		this.identNumber = deriveIdentNumber();
-		pairList.removeAll(successorPairs);
+		pairListNoSuccessor = pairList;
+		pairListNoSuccessor.removeAll(successorPairs);
 	}
 
 	public GroupIdentNumber deriveIdentNumber() {
@@ -829,5 +831,9 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		nullCheck(collection);
 		duplicateElementCheck(collection);
 		// no duplicateParticipantCheck as each Pair is contained in exactly three Groups
+	}
+
+	public List<Pair> getPairListNoSuccessor() {
+		return pairListNoSuccessor;
 	}
 }
