@@ -56,6 +56,9 @@ public class MainController {
     private MenuItem openPartyLoc;
 
     @FXML
+    private MenuItem openCancellationsList;
+
+    @FXML
     private MenuItem createPairs;
 
     @FXML
@@ -174,7 +177,10 @@ public class MainController {
 
 
     @FXML
-    private MenuItem comparePairList;
+    private MenuItem comparePairListMenuItem;
+
+    @FXML
+    private MenuItem compareGroupListMenuItem;
 
     @FXML
     private TabPane tabPane;
@@ -197,12 +203,28 @@ public class MainController {
     @FXML
     private Button createGroupButton;
 
+    @FXML
+    private MenuItem changeLanguageGerman;
+
+    @FXML
+    private MenuItem changeLanguageEnglish;
+
+    @FXML
+    private MenuItem savePairListMenuItem;
+
+    @FXML
+    private MenuItem saveGroupListMenuItem;
+
+    @FXML
+    private MenuItem savePartSuccessorsMenuItem;
+
+    @FXML
+    private MenuItem savePairSuccessorsMenuItem;
+
     //private Stage primaryStage = (Stage) root.getScene().getWindow();
 
     @FXML
     public void initialize() {
-        // this does not work 100%, but I haven't found a suitable property to attach the listener to
-        // this works, but you may have to resize the window after hiding/showing columns.
         addListenersToTable(pairTable);
         makeTableNotReorderable(pairTable);
         genderOneColPair.setVisible(false);
@@ -323,6 +345,41 @@ public class MainController {
         }
     }
 
+    @FXML
+    void openFileChooserCancellationsList(ActionEvent event) {
+        // TODO: this
+    }
+
+    @FXML
+    void changeLanguageToGerman(ActionEvent event) {
+        // TODO: this
+    }
+
+    @FXML
+    void changeLanguageToEnglish(ActionEvent event) {
+        // TODO: this
+    }
+
+    @FXML
+    void savePairList(ActionEvent event) {
+        // TODO: this
+    }
+
+    @FXML
+    void saveGroupList(ActionEvent event) {
+        // TODO: this
+    }
+
+    @FXML
+    void saveParticipantSuccessors(ActionEvent event) {
+        // TODO: this
+    }
+
+    @FXML
+    void savePairSuccessorsMenuItem(ActionEvent event) {
+        // TODO: this
+    }
+
     /**
      * Opens a file chooser for selecting the party location file.
      * Starts a monitoring thread if it's not already running.
@@ -440,10 +497,14 @@ public class MainController {
 
     public void splitGroup(ActionEvent event) {
         // TODO: this
+        // this needs to split the entire group cluster.
+        // maybe do this in a separate window and save the groups in some in-between storage?
     }
 
     public void createGroup(ActionEvent event) {
         // TODO: this
+        // this needs to create an entire group cluster.
+        // maybe do this in a separate window and save the groups in some in-between storage?
     }
 
 
@@ -603,5 +664,10 @@ public class MainController {
             return;
         }
         MainFrame.stage.show();
+    }
+
+    @FXML
+    void compareGroupList(ActionEvent event) {
+        // TODO: this
     }
 }

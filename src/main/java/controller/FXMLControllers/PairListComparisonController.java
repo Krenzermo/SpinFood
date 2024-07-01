@@ -30,28 +30,28 @@ public class PairListComparisonController extends Dialog<PairList> {
     private DialogPane dialog;
 
     @FXML
-    private MenuItem editWeightsList1;
+    private MenuItem openList1MenuItem;
 
     @FXML
-    private MenuItem editWeightsList2;
+    private MenuItem openList2MenuItem;
+
+    @FXML
+    private MenuItem editWeightsList1MenuItem;
+
+    @FXML
+    private MenuItem editWeightsList2MenuItem;
+
+    @FXML
+    private TableView<Pair> tableList1;
+
+    @FXML
+    private TableView<Pair> tableList2;
 
     @FXML
     private TableColumn<Pair, Integer> idColList1;
 
     @FXML
     private TableColumn<Pair, Integer> idColList2;
-
-    @FXML
-    private ListView<String> identNumberList1;
-
-    @FXML
-    private ListView<String> identNumbersList2;
-
-    @FXML
-    private TableColumn<Pair, String> kitchenColList1;
-
-    @FXML
-    private TableColumn<Pair, String> kitchenColList2;
 
     @FXML
     private TableColumn<Pair, String> per1ColList1;
@@ -66,10 +66,40 @@ public class PairListComparisonController extends Dialog<PairList> {
     private TableColumn<Pair, String> per2ColList2;
 
     @FXML
-    private TableView<Pair> tableList1;
+    private TableColumn<Pair, String> gender1ColList1;
 
     @FXML
-    private TableView<Pair> tableList2;
+    private TableColumn<Pair, String> gender1ColList2;
+
+    @FXML
+    private TableColumn<Pair, String> gender2ColList1;
+
+    @FXML
+    private TableColumn<Pair, String> gender2ColList2;
+
+    @FXML
+    private TableColumn<Pair, String> kitchenColList1;
+
+    @FXML
+    private TableColumn<Pair, String> kitchenColList2;
+
+    @FXML
+    private TableColumn<Pair, String> foodTypeColList1;
+
+    @FXML
+    private TableColumn<Pair, String> foodTypeColList2;
+
+    @FXML
+    private TableColumn<Pair, String> signedUpTogetherColList1;
+
+    @FXML
+    private TableColumn<Pair, String> signedUpTogetherColList2;
+
+    @FXML
+    private ListView<String> identNumberList1;
+
+    @FXML
+    private ListView<String> identNumbersList2;
 
     private PairList pairList1;
     private IdentNumber pairIdentNumber1;
@@ -81,31 +111,42 @@ public class PairListComparisonController extends Dialog<PairList> {
     @FXML
     private void initialize() {
         // same as in MainController
-        tableList1.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(tableList1));
-        tableList1.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(tableList1));
-        idColList1.setReorderable(false);
-        per1ColList1.setReorderable(false);
-        per2ColList1.setReorderable(false);
-        kitchenColList1.setReorderable(false);
-        courseColList1.setReorderable(false);
+        addListenersToTable(tableList1);
+        makeTableNotReorderable(tableList1);
+        gender1ColList1.setVisible(false);
+        gender2ColList1.setVisible(false);
+        kitchenColList1.setVisible(false);
 
-        tableList2.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(tableList2));
-        tableList2.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(tableList2));
-        idColList2.setReorderable(false);
-        per1ColList2.setReorderable(false);
-        per2ColList2.setReorderable(false);
-        kitchenColList2.setReorderable(false);
-        courseColList2.setReorderable(false);
+        addListenersToTable(tableList2);
+        makeTableNotReorderable(tableList2);
+        gender1ColList2.setVisible(false);
+        gender2ColList2.setVisible(false);
+        kitchenColList2.setVisible(false);
     }
 
     // copy contained in MainController
+    private <E> void addListenersToTable(TableView<E> tableView) {
+        tableView.widthProperty().addListener((observableValue, oldValue, newValue) -> adjustColumnWidths(tableView));
+        for (TableColumn<E, ?> column : tableView.getColumns()) {
+            column.visibleProperty().addListener((observableValue, oldValue, newValue) -> adjustColumnWidths(tableView));
+        }
+    }
+
+    private <E> void makeTableNotReorderable(TableView<E> tableView) {
+        for (TableColumn<E, ?> column : tableView.getColumns()) {
+            column.setReorderable(false);
+        }
+    }
+
     private static <E> void adjustColumnWidths(TableView<E> tableView) {
         long visibleColumns = tableView.getColumns().stream().filter(TableColumn::isVisible).count();
         if (visibleColumns > 0) {
-            double newWidth = tableView.getWidth() / visibleColumns;
+            double newWidth = (tableView.getWidth() -18) / visibleColumns; // 18px extra space for tableMenuButton
             for (TableColumn<E, ?> column : tableView.getColumns()) {
                 if (column.isVisible()) {
                     column.setPrefWidth(newWidth);
+                    //column.setMinWidth(newWidth);
+                    //column.setMaxWidth(newWidth);
                 }
             }
         }
@@ -156,6 +197,16 @@ public class PairListComparisonController extends Dialog<PairList> {
 
     private PairList getPairList2() {
         return pairList2;
+    }
+
+    @FXML
+    void openList1FileChooser(ActionEvent event) {
+        // TODO: this
+    }
+
+    @FXML
+    void openList2FileChooser(ActionEvent event) {
+        // TODO: this
     }
 
     @FXML
