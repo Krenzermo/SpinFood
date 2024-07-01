@@ -23,6 +23,7 @@ import model.event.list.PairList;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
+import model.event.list.weight.Weights;
 import model.person.Participant;
 import view.MainFrame;
 
@@ -42,6 +43,7 @@ public class MainController {
     private IdentNumber pairIdentNumber;
     private GroupList groupList;
     private IdentNumber groupIdentNumber;
+    private GroupWeights groupWeights;
 
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
@@ -221,6 +223,7 @@ public class MainController {
         dialog.init(root.getScene().getWindow());
 
         GroupWeights weights = dialog.showAndWait().orElse(null);
+        this.groupWeights = weights;
 
         if (weights != null) {
             try {
@@ -272,6 +275,8 @@ public class MainController {
                 writePairDataToTab();
                 writePairListIdentNumbersToTab();
                 writePairListSuccessorsToTab();
+
+                replaceGroupData();
             } catch (NullPointerException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Dateifehler");
@@ -457,11 +462,27 @@ public class MainController {
         try {
             this.pairList = dialog.showAndWait().orElse(pairList);
             this.pairIdentNumber = pairList.getIdentNumber();
+
             writePairDataToTab();
+            writePairListIdentNumbersToTab();
+            writePairListSuccessorsToTab();
+
+            replaceGroupData();
         } catch (ClassCastException | NullPointerException e) {
             MainFrame.stage.show();
             return;
         }
         MainFrame.stage.show();
+    }
+
+    private void replaceGroupData() {
+        if (!groupTable.getItems().isEmpty()) {
+            this.groupList = new GroupList(pairList, groupWeights);
+            this.groupIdentNumber = groupList.getIdentNumber();
+
+            writeGroupDataToTab();
+            writeGroupListIdentNumbersToTab();
+            writeGroupListSuccessorsToTab();
+        }
     }
 }

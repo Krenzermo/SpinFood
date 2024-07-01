@@ -27,7 +27,7 @@ public class Group implements ParticipantCollection{
 	private Kitchen kitchen;
 	private Course course;
 	private int id;
-	private static int COUNTER = 0;
+	public static int COUNTER = 0;
 
 
 	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen) {

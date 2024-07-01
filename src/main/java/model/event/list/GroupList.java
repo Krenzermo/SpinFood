@@ -53,6 +53,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param groupWeights the weights used for grouping criteria
 	 */
 	public GroupList(PairList pairList, GroupWeights groupWeights) {
+		Group.COUNTER = 0;
 		List<Pair> sortedPairsList = sortPairs(pairList);
 		setList(buildBestGroups(sortedPairsList, groupWeights));
 		this.identNumber = getIdentNumber();
