@@ -1,4 +1,4 @@
-package model.event.io;
+package model.cancellation;
 
 import model.event.collection.Group;
 import model.event.collection.Pair;
