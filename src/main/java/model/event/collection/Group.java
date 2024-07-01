@@ -28,6 +28,7 @@ public class Group implements ParticipantCollection{
 	private Course course;
 	private int id;
 	private static int COUNTER = 0;
+	private int cookIndex;
 
 
 	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen) {
@@ -36,6 +37,10 @@ public class Group implements ParticipantCollection{
 		this.course = course;
 		this.kitchen = kitchen;
 		setPairIds();
+		cookIndex = getKitchenOwner(kitchen);
+		if (cookIndex < 0) {
+			throw new IllegalStateException("Couldn't find any owner of kitchen: " + kitchen);
+		}
 	}
 
 	private void setPairIds(){
@@ -60,6 +65,15 @@ public class Group implements ParticipantCollection{
 		}
 	}
 
+
+	private int getKitchenOwner(Kitchen kitchen){
+		for (int i = 0; i < pairs.length; i++){
+			if (pairs[i].getKitchen() == kitchen){
+				return i;
+			}
+		}
+		return -1;
+	}
 
 	/**
 	 * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollection
@@ -153,5 +167,9 @@ public class Group implements ParticipantCollection{
 
 	public ObservableValue<Integer> getIdAsObservable() {
 		return new SimpleIntegerProperty(id).asObject();
+	}
+
+	public ObservableValue<Integer> getCookPairIdAsObservable() {
+		return new SimpleIntegerProperty(pairs[cookIndex].getId()).asObject();
 	}
 }
