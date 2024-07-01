@@ -7,6 +7,7 @@ import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.ParticipantCollectionList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -60,7 +61,14 @@ public class GroupIdentNumber extends IdentNumber {
 
     private double calcTotalPathLength(ParticipantCollectionList participantCollection) {
         List<Pair> pairs = getAllPairs(participantCollection);
-        return pairs.stream()
+        List<Pair> pairsNoDuplicate = new ArrayList<>();
+        for (Pair pair : pairs ){
+            if (!pairsNoDuplicate.contains(pair)){
+                pairsNoDuplicate.add(pair);
+            }
+
+        }
+        return pairsNoDuplicate.stream()
                 .mapToDouble(this::calculateTotalDistanceForPair)
                 .sum();
     }

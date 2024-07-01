@@ -60,7 +60,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		this.identNumber = deriveIdentNumber();
 	}
 
-	private GroupIdentNumber deriveIdentNumber() {
+	public GroupIdentNumber deriveIdentNumber() {
 
 		return new GroupIdentNumber(this);
 	}

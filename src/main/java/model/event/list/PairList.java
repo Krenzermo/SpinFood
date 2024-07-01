@@ -266,7 +266,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      *
      * @return the identifying number for the list of pairs
      */
-    private IdentNumber deriveIdentNumber() {
+    public IdentNumber deriveIdentNumber() {
         return new PairIdentNumber(this);
     }
 
