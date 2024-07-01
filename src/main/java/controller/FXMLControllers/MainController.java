@@ -238,6 +238,17 @@ public class MainController {
         groupTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Group>) change -> changeSplitGroupButtonActivity());
         groupTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitGroupButtonActivity());
 
+        groupTable.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal) -> {
+            try {
+                PairsFromGroupController controller = new PairsFromGroupController();
+                controller.init(root.getScene().getWindow(), newVal.getPairs());
+                controller.writePairDataToTab();
+                controller.showAndWait();
+            } catch(NullPointerException e) {
+                return;
+            }
+        });
+
         successorsPairList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Participant>) change -> changeCreatePairButtonActivity());
         successorsPairList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreatePairButtonActivity());
 
@@ -427,13 +438,6 @@ public class MainController {
                 this.pairList = new PairList(weights);
                 this.pairIdentNumber = this.pairList.getIdentNumber();
 
-                if (groupList != null) {
-                    groupList.clear();
-                    groupTable.getItems().clear();
-                    successorsGroupList.getItems().clear();
-                    groupIdentNumber = null;
-                    groupIdentNumbersList.getItems().clear();
-                }
 
                 writePairDataToTab();
                 writePairListIdentNumbersToTab();

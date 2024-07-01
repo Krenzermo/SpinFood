@@ -96,14 +96,14 @@ public class PairsFromGroupController extends Dialog<Object>{
         );
 
         partOneCol.setCellValueFactory(
-                cell -> cell.getValue().getParticipants().get(0).getName().asProperty()
+                cell -> cell.getValue().getParticipants().get(0).getName().asObservable()
         );
         part2Col.setCellValueFactory(
-                cell -> cell.getValue().getParticipants().get(1).getName().asProperty()
+                cell -> cell.getValue().getParticipants().get(1).getName().asObservable()
         );
 
         kitchenCol.setCellValueFactory(
-                cell -> cell.getValue().getKitchen().asProperty()
+                cell -> cell.getValue().getKitchen().asObservable()
         );
 
         courseCol.setCellValueFactory(
