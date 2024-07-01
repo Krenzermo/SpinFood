@@ -7,11 +7,14 @@ import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.FileChooser.ExtensionFilter;
 import model.event.Course;
 import model.event.collection.Group;
 import model.event.collection.Pair;
@@ -25,6 +28,7 @@ import model.person.Participant;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,10 +39,10 @@ import java.util.stream.Collectors;
 public class MainController {
     private InputData inputData = InputData.getInstance();
     private PairList pairList;
-    private GroupList groupList;
-    private PairingWeights pairingWeights;
-    private GroupWeights groupWeights;
+    private GroupList groupList; // Added groupList for group-related operations
     private IdentNumber pairIdentNumber;
+    private PairingWeights pairingWeights;
+    private GroupWeights groupWeights; // Added groupWeights for group-related operations
 
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
@@ -100,6 +104,8 @@ public class MainController {
     @FXML
     private TableColumn<Group, String> courseColGroup;
 
+    //private Stage primaryStage = (Stage) root.getScene().getWindow();
+
     @FXML
     public void initialize() {
         pairTable.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(pairTable));
@@ -126,7 +132,31 @@ public class MainController {
         kitchenColGroup.setReorderable(false);
         courseColGroup.setReorderable(false);
 
-        setupPairTableClickHandlers();
+        partOneColPair.setCellFactory(column -> new TableCell<Pair, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    setOnMouseClicked(event -> showUnsubscriberDialog(getTableRow().getItem().getParticipants().get(0)));
+                }
+            }
+        });
+
+        partTwoColPair.setCellFactory(column -> new TableCell<Pair, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    setOnMouseClicked(event -> showUnsubscriberDialog(getTableRow().getItem().getParticipants().get(1)));
+                }
+            }
+        });
     }
 
     private <E> void adjustColumnWidths(TableView<E> tableView) {
@@ -141,11 +171,17 @@ public class MainController {
         }
     }
 
+    /**
+     * Opens a file chooser for selecting the participant list file.
+     * Starts a monitoring thread if it's not already running.
+     *
+     * @param event the action event triggered by the menu item
+     */
     @FXML
     void openFileChooserPartList(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
-        FileChooser.ExtensionFilter txtFilter = new FileChooser.ExtensionFilter("Textdateien (*.txt)", "*.txt");
+        ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
+        ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
 
         fileChooser.getExtensionFilters().addAll(csvFilter, txtFilter);
         fileChooser.setTitle("Öffnen Sie die Teilnehmerliste");
@@ -157,11 +193,17 @@ public class MainController {
         }
     }
 
+    /**
+     * Opens a file chooser for selecting the party location file.
+     * Starts a monitoring thread if it's not already running.
+     *
+     * @param event the action event triggered by the menu item
+     */
     @FXML
     void openFileChooserPartLoc(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
-        FileChooser.ExtensionFilter csvFilter = new FileChooser.ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
-        FileChooser.ExtensionFilter txtFilter = new FileChooser.ExtensionFilter("Textdateien (*.txt)", "*.txt");
+        ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
+        ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
 
         fileChooser.getExtensionFilters().addAll(csvFilter, txtFilter);
         fileChooser.setTitle("Öffnen Sie die Partylocation");
@@ -173,11 +215,24 @@ public class MainController {
         }
     }
 
+    /**
+     * Executes the group algorithm.
+     * Placeholder for the actual implementation of group creation logic.
+     *
+     * @param event the action event triggered by the menu item
+     */
     @FXML
     void executeGroupAlgo(ActionEvent event) {
-        //TODO: implement
+        // TODO: implement
+        groupWeights = new GroupWeights(1.0, 1.0, 1.0, 1.0); // Initialize groupWeights with default values
     }
 
+    /**
+     * Executes the pair algorithm by opening a new window to set pairing parameters and starting a monitoring thread.
+     *
+     * @param event the action event triggered by the menu item
+     * @throws Exception if an error occurs while loading the FXML file
+     */
     @FXML
     void executePairAlgorithm(ActionEvent event) throws Exception {
         String relPath = "src/main/java/view/fxml/pairingWeights.fxml";
@@ -190,7 +245,6 @@ public class MainController {
 
         if (weights != null) {
             try {
-                this.pairingWeights = weights;
                 this.pairList = new PairList(inputData, weights);
                 this.pairIdentNumber = this.pairList.getIdentNumber();
             } catch (NullPointerException e) {
@@ -206,6 +260,10 @@ public class MainController {
         event.consume();
     }
 
+    /**
+     * Writes the pair data to the table in the UI.
+     * Clears existing items if necessary and sets up value factories for the table columns.
+     */
     private synchronized void writePairDataToTab() {
         Platform.runLater(() -> {
             if (!pairTable.getItems().isEmpty()) {
@@ -221,19 +279,35 @@ public class MainController {
         });
     }
 
+    /**
+     * Sets up the value factories for the table columns to display the pair data.
+     */
     private void setupValueFactories() {
-        partOneColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(0).getName().asProperty());
-        partTwoColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(1).getName().asProperty());
-        kitchenColPair.setCellValueFactory(cell -> cell.getValue().getKitchen().asProperty());
-        courseColPair.setCellValueFactory(cell -> {
-            Course course = cell.getValue().getCourse();
-            if (course == null) {
-                return new SimpleStringProperty("n.V.");
-            }
-            return course.asProperty();
-        });
+        partOneColPair.setCellValueFactory(
+                cell -> cell.getValue().getParticipants().get(0).getName().asProperty()
+        );
+        partTwoColPair.setCellValueFactory(
+                cell -> cell.getValue().getParticipants().get(1).getName().asProperty()
+        );
+
+        kitchenColPair.setCellValueFactory(
+                cell -> cell.getValue().getKitchen().asProperty()
+        );
+
+        courseColPair.setCellValueFactory(
+                cell -> {
+                    Course course = cell.getValue().getCourse();
+                    if (course == null) {
+                        return new SimpleStringProperty("n.V.");
+                    }
+                    return course.asProperty();
+                }
+        );
     }
 
+    /**
+     * Writes the identifier numbers of the pairs to the list view in the UI.
+     */
     private synchronized void writeIdentNumbersToTab() {
         Platform.runLater(() -> {
             if (!pairIdentNumbersList.getItems().isEmpty()) {
@@ -247,6 +321,9 @@ public class MainController {
         });
     }
 
+    /**
+     * Writes the successors to the list view in the UI.
+     */
     private synchronized void writeSuccessorToTab() {
         Platform.runLater(() -> {
             if (!successorListPair.getItems().isEmpty()) {
@@ -258,71 +335,42 @@ public class MainController {
                 data = FXCollections.observableArrayList(List.of("Keine Nachrücker vorhanden"));
             } else {
                 data = FXCollections.observableArrayList(
-                        pairList.getSuccessors().stream().map(Participant::toString).collect(Collectors.toList())
+                        pairList
+                                .getSuccessors()
+                                .stream()
+                                .map(Participant::toString)
+                                .collect(Collectors.toList())
                 );
             }
             successorListPair.setItems(data);
         });
     }
 
-    private void setupPairTableClickHandlers() {
-        partOneColPair.setCellFactory(column -> {
-            TableCell<Pair, String> cell = new TableCell<>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty ? null : item);
-                    setGraphic(null);
-                }
-            };
-
-            cell.setOnMouseClicked(event -> {
-                if (!cell.isEmpty()) {
-                    Pair pair = pairTable.getItems().get(cell.getIndex());
-                    Participant participant = pair.getParticipants().get(0);
-                    openUnsubscriberDialog(participant);
-                }
-            });
-            return cell;
-        });
-
-        partTwoColPair.setCellFactory(column -> {
-            TableCell<Pair, String> cell = new TableCell<>() {
-                @Override
-                protected void updateItem(String item, boolean empty) {
-                    super.updateItem(item, empty);
-                    setText(empty ? null : item);
-                    setGraphic(null);
-                }
-            };
-
-            cell.setOnMouseClicked(event -> {
-                if (!cell.isEmpty()) {
-                    Pair pair = pairTable.getItems().get(cell.getIndex());
-                    Participant participant = pair.getParticipants().get(1);
-                    openUnsubscriberDialog(participant);
-                }
-            });
-            return cell;
-        });
-    }
-
-    private void openUnsubscriberDialog(Participant participant) {
+    private void showUnsubscriberDialog(Participant participant) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/view/fxml/unsubscriber.fxml"));
+            String relPath = "src/main/java/view/fxml/Unsubscriber.fxml";
+            File file = new File(relPath);
+            String absPath = file.getAbsolutePath();
+            URL url = new URL("file:///" + absPath);
+            FXMLLoader loader = new FXMLLoader(url);
+
             DialogPane dialogPane = loader.load();
-
             UnsubscriberController controller = loader.getController();
-            controller.initData(participant, pairList, groupList, pairingWeights, groupWeights);
+            controller.initData(participant, pairList, groupList, pairingWeights, groupWeights, root.getScene().getWindow());
 
-            Dialog<Void> dialog = new Dialog<>();
-            dialog.setDialogPane(dialogPane);
-            dialog.initModality(Modality.APPLICATION_MODAL);
-            dialog.initOwner(root.getScene().getWindow());
-            dialog.setResizable(false);
-            dialog.showAndWait();
+            Stage dialogStage = new Stage();
+            dialogStage.setScene(new Scene(dialogPane));
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.showAndWait();
+
+            updateTables(); // Update tables after the dialog is closed to reflect changes
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    private void updateTables() {
+        writePairDataToTab();
+        writeIdentNumbersToTab();
     }
 }

@@ -2,22 +2,32 @@ package controller.FXMLControllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
+import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ButtonType;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.io.CancellationHandler;
 import model.event.list.GroupList;
 import model.event.list.PairList;
+import model.event.list.ParticipantCollectionList;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
 import model.person.Participant;
 
+import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class UnsubscriberController {
+public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
 
     @FXML
     private Label labelParticipant;
@@ -33,10 +43,10 @@ public class UnsubscriberController {
 
     @FXML
     private void initialize() {
-        // Any required initialization can be done here
+
     }
 
-    public void initData(Participant participant, PairList pairList, GroupList groupList, PairingWeights pairingWeights, GroupWeights groupWeights) {
+    public void initData(Participant participant, PairList pairList, GroupList groupList, PairingWeights pairingWeights, GroupWeights groupWeights, Window owner) {
         this.participant = participant;
         this.pairList = pairList;
         this.groupList = groupList;
@@ -45,6 +55,11 @@ public class UnsubscriberController {
 
         labelParticipant.setText("Teilnehmer: " + participant.getName());
         comboBoxSuccessor.getItems().addAll(getSuccessorList());
+
+        initOwner(owner);
+        initModality(Modality.APPLICATION_MODAL);
+        setResizable(false);
+        setTitle("Abmelden");
     }
 
     private List<Participant> getSuccessorList() {
@@ -74,30 +89,19 @@ public class UnsubscriberController {
     private void replaceParticipant(Participant oldParticipant, Participant newParticipant) {
         for (Pair pair : pairList) {
             if (pair.getParticipants().contains(oldParticipant)) {
-                if (pair.getParticipants().get(0).equals(oldParticipant)) {
-                    pair.getParticipants().set(0, newParticipant);
-                } else {
-                    pair.getParticipants().set(1, newParticipant);
-                }
-                break;
+                pair.replaceParticipant(oldParticipant, newParticipant);
             }
         }
 
         for (Group group : groupList) {
             for (Pair pair : group.getPairs()) {
                 if (pair.getParticipants().contains(oldParticipant)) {
-                    if (pair.getParticipants().get(0).equals(oldParticipant)) {
-                        pair.getParticipants().set(0, newParticipant);
-                    } else {
-                        pair.getParticipants().set(1, newParticipant);
-                    }
-                    break;
+                    pair.replaceParticipant(oldParticipant, newParticipant);
                 }
             }
         }
 
         pairList.getSuccessors().remove(newParticipant);
-        pairList.getSuccessors().add(oldParticipant);
     }
 
     private void closeWindow() {
