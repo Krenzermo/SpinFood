@@ -81,34 +81,21 @@ public class PairListComparisonController extends Dialog<PairList> {
     @FXML
     private void initialize() {
         // same as in MainController
-        tableList1.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(tableList1));
-        tableList1.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(tableList1));
+        tableList1.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> MainController.adjustColumnWidths(tableList1));
+        tableList1.widthProperty().addListener((observable, oldValue, newValue) -> MainController.adjustColumnWidths(tableList1));
         idColList1.setReorderable(false);
         per1ColList1.setReorderable(false);
         per2ColList1.setReorderable(false);
         kitchenColList1.setReorderable(false);
         courseColList1.setReorderable(false);
 
-        tableList2.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(tableList2));
-        tableList2.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(tableList2));
+        tableList2.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> MainController.adjustColumnWidths(tableList2));
+        tableList2.widthProperty().addListener((observable, oldValue, newValue) -> MainController.adjustColumnWidths(tableList2));
         idColList2.setReorderable(false);
         per1ColList2.setReorderable(false);
         per2ColList2.setReorderable(false);
         kitchenColList2.setReorderable(false);
         courseColList2.setReorderable(false);
-    }
-
-    // copy contained in MainController
-    private static <E> void adjustColumnWidths(TableView<E> tableView) {
-        long visibleColumns = tableView.getColumns().stream().filter(TableColumn::isVisible).count();
-        if (visibleColumns > 0) {
-            double newWidth = tableView.getWidth() / visibleColumns;
-            for (TableColumn<E, ?> column : tableView.getColumns()) {
-                if (column.isVisible()) {
-                    column.setPrefWidth(newWidth);
-                }
-            }
-        }
     }
 
     public void init(Window owner) {

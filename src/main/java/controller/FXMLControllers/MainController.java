@@ -138,10 +138,17 @@ public class MainController {
         pairThreeColGroup.setReorderable(false);
         kitchenColGroup.setReorderable(false);
         courseColGroup.setReorderable(false);
+
+        groupTable.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal) -> {
+            PairsFromGroupController controller = new PairsFromGroupController();
+            controller.init(root.getScene().getWindow(), newVal.getPairs());
+            controller.writePairDataToTab();
+            controller.showAndWait();
+        });
     }
 
     // copy contained in PairListComparisonController
-    private static <E> void adjustColumnWidths(TableView<E> tableView) {
+    public static <E> void adjustColumnWidths(TableView<E> tableView) {
         long visibleColumns = tableView.getColumns().stream().filter(TableColumn::isVisible).count();
         if (visibleColumns > 0) {
             double newWidth = tableView.getWidth() / visibleColumns;
@@ -219,10 +226,16 @@ public class MainController {
             try {
                 this.groupList = new GroupList(pairList, weights);
                 this.groupIdentNumber = this.groupList.getIdentNumber();
+                this.pairList = groupList.getPairList();
+                this.pairIdentNumber = pairList.getIdentNumber();
 
                 writeGroupDataToTab();
                 writeGroupListIdentNumbersToTab();
                 writeGroupListSuccessorsToTab();
+
+                writePairDataToTab();
+                writePairListIdentNumbersToTab();
+                writePairListSuccessorsToTab();
             } catch (NullPointerException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Dateifehler");
