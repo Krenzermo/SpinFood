@@ -58,6 +58,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		this.identNumber = getIdentNumber();
 		this.pairList = pairList;
 		this.identNumber = deriveIdentNumber();
+		pairList.removeAll(successorPairs);
 	}
 
 	public GroupIdentNumber deriveIdentNumber() {
