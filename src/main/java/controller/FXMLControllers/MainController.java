@@ -90,6 +90,9 @@ public class MainController {
     private TableColumn<Pair, String> foodTypeColPair;
 
     @FXML
+    private TableColumn<Pair, Boolean> signedUpTogetherColPair;
+
+    @FXML
     private TableView<Participant> successorsPairList;
 
     @FXML
@@ -161,6 +164,9 @@ public class MainController {
     @FXML
     private TableColumn<Pair, String> foodTypeColPairSuccessors;
 
+    @FXML
+    private TableColumn<Pair, Boolean> signedUpTogetherColPairSuccessors;
+
 
     @FXML
     private MenuItem comparePairList;
@@ -173,6 +179,18 @@ public class MainController {
 
     @FXML
     private Tab groupTab;
+
+    @FXML
+    private Button splitPairButton;
+
+    @FXML
+    private Button createPairButton;
+
+    @FXML
+    private Button splitGroupButton;
+
+    @FXML
+    private Button createGroupButton;
 
     //private Stage primaryStage = (Stage) root.getScene().getWindow();
 
@@ -189,6 +207,7 @@ public class MainController {
         kitchenColPair.setReorderable(false);
         courseColPair.setReorderable(false);
         foodTypeColPair.setReorderable(false);
+        signedUpTogetherColPair.setReorderable(false);
 
         groupTable.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
         groupTable.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(groupTable));
@@ -216,9 +235,12 @@ public class MainController {
         genderTwoColPairSuccessors.setReorderable(false);
         kitchenColPairSuccessors.setReorderable(false);
         foodTypeColPairSuccessors.setReorderable(false);
+        signedUpTogetherColPairSuccessors.setReorderable(false);
 
-        pairTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        groupTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pairTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        groupTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        successorsPairList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        successorsGroupList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
     }
 
     // copy contained in PairListComparisonController
@@ -415,6 +437,7 @@ public class MainController {
                 }
         );
         foodTypeColPair.setCellValueFactory(cell -> cell.getValue().getFoodType().asObservable());
+        signedUpTogetherColPair.setCellValueFactory(cell -> cell.getValue().getSignedUpTogetherAsObservable());
     }
 
     protected void setupGroupListValueFactories() {
@@ -443,6 +466,7 @@ public class MainController {
         genderTwoColPairSuccessors.setCellValueFactory(cell -> cell.getValue().getParticipants().get(1).getGender().asObservable());
         kitchenColPairSuccessors.setCellValueFactory(cell -> cell.getValue().getKitchen().asObservable());
         foodTypeColPairSuccessors.setCellValueFactory(cell -> cell.getValue().getFoodType().asObservable());
+        signedUpTogetherColPairSuccessors.setCellValueFactory(cell -> cell.getValue().getSignedUpTogetherAsObservable());
     }
 
     /**

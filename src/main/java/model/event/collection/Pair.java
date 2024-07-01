@@ -1,5 +1,6 @@
 package model.event.collection;
 
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.value.ObservableValue;
 import model.event.Location;
@@ -339,5 +340,9 @@ public class Pair implements ParticipantCollection {
 
     public ObservableValue<Integer> getIdAsObservable() {
         return new SimpleIntegerProperty(id).asObject();
+    }
+
+    public ObservableValue<Boolean> getSignedUpTogetherAsObservable() {
+        return new SimpleBooleanProperty(signedUpTogether);
     }
 }
