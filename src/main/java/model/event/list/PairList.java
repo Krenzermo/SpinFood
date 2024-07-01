@@ -25,7 +25,7 @@ import java.util.List;
 public class PairList extends ParticipantCollectionList<Pair> {
     private static final InputData inputData = InputData.getInstance();
     private final IdentNumber identNumber;
-    private static final List<Participant> successors = new ArrayList<>();
+    private final List<Participant> successors = new ArrayList<>();
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
@@ -33,13 +33,14 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights the weights used for pairing criteria
      */
     public PairList(PairingWeights pairingWeights) {
-        this(buildBestPairs(sortParticipants(inputData.getParticipantInputData()), pairingWeights));
+        setList(buildBestPairs(sortParticipants(inputData.getParticipantInputData()), pairingWeights));
+        addAll(inputData.getPairInputData());
+        this.identNumber = deriveIdentNumber();
         //this.printFoodNumbers();
     }
 
     public PairList(List<Pair> pairList) {
-        successors.clear();
-        setList(pairList);
+	    setList(pairList);
         addAll(inputData.getPairInputData());
         this.identNumber = deriveIdentNumber();
     }
@@ -51,7 +52,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights  the weights used for pairing criteria
      * @return a list of the best pairs of participants
      */
-    public static List<Pair> buildBestPairs(List<Participant> participantList, PairingWeights pairingWeights) {
+    public List<Pair> buildBestPairs(List<Participant> participantList, PairingWeights pairingWeights) {
         List<Pair> bestPairList = new ArrayList<>();
 
         while (participantList.size() >= 2) {

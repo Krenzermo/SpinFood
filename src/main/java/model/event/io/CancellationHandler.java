@@ -126,7 +126,9 @@ public class CancellationHandler {
         participantSuccessors.clear();
 
         if (tempParticipantSuccessors.size() >= 2) {
-            List<Pair> newPairs = PairList.buildBestPairs(tempParticipantSuccessors, pairingWeights);
+            PairList pairList = new PairList(pairingWeights);
+            pairList.clear();
+            List<Pair> newPairs = pairList.buildBestPairs(tempParticipantSuccessors, pairingWeights);
             pairSuccessors.addAll(newPairs);
         }
 

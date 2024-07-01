@@ -185,7 +185,6 @@
                                                             <TableColumn fx:id="genderOneColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht 1" />
                                                             <TableColumn fx:id="genderTwoColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht 2" />
                                                             <TableColumn fx:id="kitchenColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Küche" />
-                                                            <TableColumn fx:id="courseColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Kochgang" />
                                                             <TableColumn fx:id="foodTypeColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Essenspräferenz" />
                                                          </columns>
                                                          <columnResizePolicy>

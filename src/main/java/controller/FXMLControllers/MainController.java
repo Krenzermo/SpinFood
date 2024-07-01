@@ -159,9 +159,6 @@ public class MainController {
     private TableColumn<Pair, String> kitchenColPairSuccessors;
 
     @FXML
-    private TableColumn<Pair, String> courseColPairSuccessors;
-
-    @FXML
     private TableColumn<Pair, String> foodTypeColPairSuccessors;
 
 
@@ -218,7 +215,6 @@ public class MainController {
         genderOneColPairSuccessors.setReorderable(false);
         genderTwoColPairSuccessors.setReorderable(false);
         kitchenColPairSuccessors.setReorderable(false);
-        courseColPairSuccessors.setReorderable(false);
         foodTypeColPairSuccessors.setReorderable(false);
 
         pairTable.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
@@ -446,15 +442,6 @@ public class MainController {
         genderOneColPairSuccessors.setCellValueFactory(cell -> cell.getValue().getParticipants().get(0).getGender().asObservable());
         genderTwoColPairSuccessors.setCellValueFactory(cell -> cell.getValue().getParticipants().get(1).getGender().asObservable());
         kitchenColPairSuccessors.setCellValueFactory(cell -> cell.getValue().getKitchen().asObservable());
-        courseColPairSuccessors.setCellValueFactory(
-                cell -> {
-                    Course course = cell.getValue().getCourse();
-                    if (course == null) {
-                        return new SimpleStringProperty("n.V.");
-                    }
-                    return course.asProperty();
-                }
-        );
         foodTypeColPairSuccessors.setCellValueFactory(cell -> cell.getValue().getFoodType().asObservable());
     }
 
