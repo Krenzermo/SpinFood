@@ -18,6 +18,7 @@ import model.event.list.weight.PairingWeights;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.List;
 
 public class PairListComparisonController extends Dialog<PairList> {
     @FXML
@@ -90,10 +91,10 @@ public class PairListComparisonController extends Dialog<PairList> {
     private TableColumn<Pair, String> foodTypeColList2;
 
     @FXML
-    private TableColumn<Pair, String> signedUpTogetherColList1;
+    private TableColumn<Pair, Boolean> signedUpTogetherColList1;
 
     @FXML
-    private TableColumn<Pair, String> signedUpTogetherColList2;
+    private TableColumn<Pair, Boolean> signedUpTogetherColList2;
 
     @FXML
     private ListView<String> identNumberList1;
@@ -189,6 +190,10 @@ public class PairListComparisonController extends Dialog<PairList> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        if (pairList1 != null) {
+            writePairDataToTab(tableList1, pairList1, identNumberList1);
+        }
     }
 
     private PairList getPairList1() {
@@ -269,16 +274,19 @@ public class PairListComparisonController extends Dialog<PairList> {
      * Writes the pair data to the table in the UI.
      * Clears existing items if necessary and sets up value factories for the table columns.
      */
-    protected void writePairDataToTab(TableView<Pair> pairTable, PairList pairList, ListView<String> listView) {
+    private void writePairDataToTab(TableView<Pair> pairTable, PairList pairList, ListView<String> listView) {
             if (!pairTable.getItems().isEmpty()) {
                 pairTable.getItems().clear();
             } else {
                 setupValueFactories(
-                        (TableColumn<Pair, Integer>) pairTable.getColumns().get(0),
-                        (TableColumn<Pair, String>) pairTable.getColumns().get(1),
-                        (TableColumn<Pair, String>) pairTable.getColumns().get(2),
-                        (TableColumn<Pair, String>) pairTable.getColumns().get(3),
-                        (TableColumn<Pair, String>) pairTable.getColumns().get(4)
+		                (TableColumn<Pair, Integer>) pairTable.getColumns().get(0),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(1),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(2),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(3),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(4),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(5),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(6),
+		                (TableColumn<Pair, Boolean>) pairTable.getColumns().get(7)
                 );
             }
 
@@ -291,37 +299,24 @@ public class PairListComparisonController extends Dialog<PairList> {
     /**
      * Sets up the value factories for the table columns to display the pair data.
      */
-    protected void setupValueFactories(
+    private void setupValueFactories(
             TableColumn<Pair, Integer> idColPair,
             TableColumn<Pair, String> partOneColPair,
             TableColumn<Pair, String> partTwoColPair,
+            TableColumn<Pair, String> genderOneColPair,
+            TableColumn<Pair, String> genderTwoColPair,
             TableColumn<Pair, String> kitchenColPair,
-            TableColumn<Pair, String> courseColPair
+            TableColumn<Pair, String> foodTypeColPair,
+            TableColumn<Pair, Boolean> signedUpTogether
     ) {
-        idColPair.setCellValueFactory(
-                cell -> cell.getValue().getIdAsObservable()
-        );
-
-        partOneColPair.setCellValueFactory(
-                cell -> cell.getValue().getParticipants().get(0).getName().asObservable()
-        );
-        partTwoColPair.setCellValueFactory(
-                cell -> cell.getValue().getParticipants().get(1).getName().asObservable()
-        );
-
-        kitchenColPair.setCellValueFactory(
-                cell -> cell.getValue().getKitchen().asObservable()
-        );
-
-        courseColPair.setCellValueFactory(
-                cell -> {
-                    Course course = cell.getValue().getCourse();
-                    if (course == null) {
-                        return new SimpleStringProperty("n.V.");
-                    }
-                    return course.asProperty();
-                }
-        );
+        idColPair.setCellValueFactory(cell -> cell.getValue().getIdAsObservable());
+        partOneColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(0).getName().asObservable());
+        partTwoColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(1).getName().asObservable());
+        genderOneColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(0).getGender().asObservable());
+        genderTwoColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(1).getGender().asObservable());
+        kitchenColPair.setCellValueFactory(cell -> cell.getValue().getKitchen().asObservable());
+        foodTypeColPair.setCellValueFactory(cell -> cell.getValue().getFoodType().asObservable());
+        signedUpTogether.setCellValueFactory(cell -> cell.getValue().getSignedUpTogetherAsObservable());
     }
 
     /**
@@ -334,6 +329,32 @@ public class PairListComparisonController extends Dialog<PairList> {
 
             ObservableList<String> data = FXCollections.observableArrayList(pairIdentNumber.asList());
             pairIdentNumbersList.setItems(data);
+    }
+
+    /**
+     * Call this method before calling init()
+     *
+     * @param list The {@link PairList} to be set as pairList1
+     */
+    public void setInitialList1(PairList list) {
+        if (list == null) {
+            return;
+        }
+        pairList1 = list;
+        pairIdentNumber1 = pairList1.getIdentNumber();
+    }
+
+    /**
+     * Call this method before calling init()
+     *
+     * @param list The {@link List} of {@link Pair} instances to be set as pairList1
+     */
+    public void setInitialList1(List<Pair> list) {
+        if (list == null) {
+            return;
+        }
+        pairList1 = new PairList(list);
+        pairIdentNumber1 = pairList1.getIdentNumber();
     }
 }
 

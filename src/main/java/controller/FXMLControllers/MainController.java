@@ -29,6 +29,7 @@ import model.person.Participant;
 import view.MainFrame;
 
 import java.io.File;
+import java.util.Objects;
 
 /**
  * MainController class handles the primary logic for managing pairs and groups in the MainFrame of the application.
@@ -649,6 +650,9 @@ public class MainController {
     void comparePairList(ActionEvent event) {
         MainFrame.stage.hide();
         PairListComparisonController dialog = new PairListComparisonController();
+        if (!Objects.isNull(pairList) && !pairList.isEmpty()) {
+            dialog.setInitialList1(pairList);
+        }
         dialog.init(root.getScene().getWindow());
         Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
         stage.setMinWidth(910); // additional space to prevent clipping
