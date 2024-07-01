@@ -1,5 +1,8 @@
 package model.kitchen;
 
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+
 /**
  * A simple enum representing if a Participant has a Kitchen, has no kitchen, or has a kitchen
  * but only wants to use it if there's no other way.
@@ -30,5 +33,9 @@ public enum KitchenAvailability {
     @Override
     public String toString() {
         return "KitchenAvailability: " + this.name();
+    }
+
+    public ObservableValue<String> asObservable() {
+        return new SimpleStringProperty(this.name());
     }
 }

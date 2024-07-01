@@ -40,8 +40,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 	private final PairList pairList;
 	private IdentNumber identNumber;
-	private static final List<Participant> successors = new ArrayList<>();
-	private static final List<Pair> successorPairs = new ArrayList<>();
+	private List<Pair> successorPairs = new ArrayList<>();
 	//private final List<Kitchen> starterKitchens = new ArrayList<>();
 	//private final List<Kitchen> mainKitchens = new ArrayList<>();
 	//private final List<Kitchen> dessertKitchens = new ArrayList<>();
@@ -71,7 +70,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param pairList the list of pairs to be sorted
 	 * @return the sorted list of pairs
 	 */
-	private List<Pair> sortPairs(PairList pairList) {     //TODO hier direkt List<Pair> genommen
+	private static List<Pair> sortPairs(PairList pairList) {     //TODO hier direkt List<Pair> genommen
 		List<Pair> sortedPairList = new ArrayList<>();
 
 		for (Pair pair : pairList) {
@@ -109,7 +108,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param groupWeights the weights used for grouping criteria
 	 * @return the list of groups
 	 */
-	public static List<Group> buildBestGroups(List<Pair> pairList, GroupWeights groupWeights) {
+	public List<Group> buildBestGroups(List<Pair> pairList, GroupWeights groupWeights) {
 		List<Pair> sortedPairList = new ArrayList<>(pairList);
 		List<Group> bestGroupList = new ArrayList<>();
 
@@ -775,15 +774,6 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return this;
 	}
 
-	/**
-	 * Gets the list of successor participants.
-	 *
-	 * @return the list of successor participants
-	 */
-	public List<Participant> getSuccessors() {
-		return successors;
-	}
-
 	public List<Pair> getSuccessorPairs() {
 		return successorPairs;
 	}
@@ -820,5 +810,9 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		nullCheck(collection);
 		duplicateElementCheck(collection);
 		// no duplicateParticipantCheck as each Pair is contained in exactly three Groups
+	}
+
+	public List<Participant> getSuccessors() {
+		return pairList.getSuccessors();
 	}
 }

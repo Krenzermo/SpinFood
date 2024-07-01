@@ -4,6 +4,7 @@
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.control.TableColumn?>
@@ -47,15 +48,15 @@
       </AnchorPane>
       <AnchorPane VBox.vgrow="ALWAYS">
          <children>
-            <TabPane tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <TabPane fx:id="tabPane" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <tabs>
-                <Tab text="Paare">
+                <Tab fx:id="pairTab" text="Paare">
                   <content>
                     <AnchorPane minHeight="0.0" minWidth="0.0">
                            <children>
-                              <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <children>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" VBox.vgrow="ALWAYS">
+                              <SplitPane dividerPositions="0.5" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <items>
+                                  <AnchorPane>
                                        <children>
                                           <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <children>
@@ -66,8 +67,11 @@
                                                             <TableColumn fx:id="idColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="ID" />
                                                           <TableColumn fx:id="partOneColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Person 1" />
                                                           <TableColumn fx:id="partTwoColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Person 2" />
+                                                            <TableColumn fx:id="genderOneColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht 1" />
+                                                            <TableColumn fx:id="genderTwoColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht 2" />
                                                             <TableColumn fx:id="kitchenColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Küche" />
                                                             <TableColumn fx:id="courseColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Kochgang" />
+                                                            <TableColumn fx:id="foodTypeColPair" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Essenspräferenz" />
                                                         </columns>
                                                          <columnResizePolicy>
                                                             <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -92,32 +96,44 @@
                                           </HBox>
                                        </children>
                                     </AnchorPane>
-                                  <AnchorPane minHeight="-Infinity" prefHeight="200.0" VBox.vgrow="NEVER">
+                                  <AnchorPane>
                                        <children>
                                           <TitledPane animated="false" collapsible="false" text="Nachfolger" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                              <AnchorPane>
                                                    <children>
-                                                      <ListView fx:id="successorsPairList" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
+                                                      <TableView fx:id="successorsPairList" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
+                                                        <columns>
+                                                          <TableColumn fx:id="idParticipantSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="ID" />
+                                                          <TableColumn fx:id="nameParticipantSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Name" />
+                                                            <TableColumn fx:id="genderParticipantSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht" />
+                                                            <TableColumn fx:id="hasKitchenParticipantSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="hat Küche" />
+                                                            <TableColumn fx:id="kitchenParticipantSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Küche" />
+                                                            <TableColumn fx:id="foodTypeParticipantSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Essenspräferenz" />
+                                                        </columns>
+                                                         <columnResizePolicy>
+                                                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                         </columnResizePolicy>
+                                                      </TableView>
                                                    </children>
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
                                        </children>
                                     </AnchorPane>
-                                 </children>
-                              </VBox>
+                                </items>
+                              </SplitPane>
                            </children>
                         </AnchorPane>
                   </content>
                 </Tab>
-                <Tab text="Gruppen">
+                <Tab fx:id="groupTab" text="Gruppen">
                   <content>
-                    <AnchorPane minHeight="0.0" minWidth="0.0">
+                    <AnchorPane>
                            <children>
-                              <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                 <children>
-                                  <AnchorPane minHeight="0.0" minWidth="0.0" VBox.vgrow="ALWAYS">
+                              <SplitPane dividerPositions="0.5" orientation="VERTICAL" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                <items>
+                                  <AnchorPane>
                                        <children>
                                           <HBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                              <children>
@@ -155,21 +171,35 @@
                                           </HBox>
                                        </children>
                                     </AnchorPane>
-                                  <AnchorPane minHeight="-Infinity" prefHeight="200.0" VBox.vgrow="NEVER">
+                                  <AnchorPane>
                                        <children>
                                           <TitledPane animated="false" collapsible="false" text="Nachfolger Paare" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <content>
-                                              <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                              <AnchorPane>
                                                    <children>
-                                                      <ListView fx:id="successorsGroupList" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0" />
+                                                      <TableView fx:id="successorsGroupList" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="-10.0" AnchorPane.leftAnchor="-10.0" AnchorPane.rightAnchor="-10.0" AnchorPane.topAnchor="-10.0">
+                                                         <columns>
+                                                            <TableColumn fx:id="idColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="ID" />
+                                                            <TableColumn fx:id="partOneColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Person 1" />
+                                                            <TableColumn fx:id="partTwoColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Person 2" />
+                                                            <TableColumn fx:id="genderOneColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht 1" />
+                                                            <TableColumn fx:id="genderTwoColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht 2" />
+                                                            <TableColumn fx:id="kitchenColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Küche" />
+                                                            <TableColumn fx:id="courseColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Kochgang" />
+                                                            <TableColumn fx:id="foodTypeColPairSuccessors" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Essenspräferenz" />
+                                                         </columns>
+                                                         <columnResizePolicy>
+                                                            <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                         </columnResizePolicy>
+                                                      </TableView>
                                                    </children>
                                                 </AnchorPane>
                                             </content>
                                           </TitledPane>
                                        </children>
                                     </AnchorPane>
-                                 </children>
-                              </VBox>
+                                </items>
+                              </SplitPane>
                            </children>
                         </AnchorPane>
                   </content>

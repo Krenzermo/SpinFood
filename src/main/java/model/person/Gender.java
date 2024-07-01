@@ -1,5 +1,9 @@
 package model.person;
 
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
+
 /**
  * The gender of participant.
  *
@@ -14,5 +18,9 @@ public enum Gender {
     @Override
     public String toString() {
         return "Gender: " + this.name();
+    }
+
+    public ObservableValue<String> asObservable() {
+        return new SimpleStringProperty(this.name());
     }
 }

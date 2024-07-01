@@ -252,14 +252,14 @@ public class PairListComparisonController extends Dialog<PairList> {
         );
 
         partOneColPair.setCellValueFactory(
-                cell -> cell.getValue().getParticipants().get(0).getName().asProperty()
+                cell -> cell.getValue().getParticipants().get(0).getName().asObservable()
         );
         partTwoColPair.setCellValueFactory(
-                cell -> cell.getValue().getParticipants().get(1).getName().asProperty()
+                cell -> cell.getValue().getParticipants().get(1).getName().asObservable()
         );
 
         kitchenColPair.setCellValueFactory(
-                cell -> cell.getValue().getKitchen().asProperty()
+                cell -> cell.getValue().getKitchen().asObservable()
         );
 
         courseColPair.setCellValueFactory(

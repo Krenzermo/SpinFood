@@ -135,7 +135,7 @@ public class CancellationHandler {
             List<Pair> newPairs = new ArrayList<>(pairSuccessors);
             pairSuccessors.clear();
 
-            List<Group> newGroups = GroupList.buildBestGroups(newPairs, groupWeights);
+            List<Group> newGroups = new GroupList(new PairList(newPairs), groupWeights);
             groupList.addAll(newGroups);
         }
     }

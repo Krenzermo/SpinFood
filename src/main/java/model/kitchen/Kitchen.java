@@ -1,13 +1,9 @@
     package model.kitchen;
 
-    import javafx.beans.property.SimpleListProperty;
     import javafx.beans.property.SimpleStringProperty;
-    import javafx.collections.FXCollections;
-    import javafx.collections.ObservableList;
+    import javafx.beans.value.ObservableValue;
     import model.event.io.InputData;
     import model.event.Location;
-
-    import java.util.List;
 
     /**
      * A simple record, representing a Kitchen of a Participant.
@@ -36,8 +32,8 @@
             return location.asOutputString();
         }
 
-        public SimpleStringProperty asProperty() {
-            return new SimpleStringProperty(String.valueOf(location.longitude() + ", " + location.latitude()));
+        public ObservableValue<String> asObservable() {
+            return new SimpleStringProperty(location.longitude() + ", " + location.latitude());
         }
 
         public double compareTo(Kitchen o) {
