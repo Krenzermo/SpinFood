@@ -4,14 +4,9 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.scene.Node;
 import javafx.scene.control.*;
-import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
-import javafx.stage.Window;
-import org.w3c.dom.events.EventTarget;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -105,7 +100,7 @@ public class LanguageController {
 		if (component == null) {
 			throw new NullPointerException("component is null");
 		}
-		if (component instanceof Labeled) {
+		if (component instanceof Labeled) { // a lot of things are instances of Labeled
 			bindLabeled((Labeled) component, key);
 			return;
 		}
@@ -113,11 +108,7 @@ public class LanguageController {
 			bindTab((Tab) component, key);
 			return;
 		}
-		if (component instanceof Menu) {
-			bindMenu((Menu) component, key);
-			return;
-		}
-		if (component instanceof MenuItem) {
+		if (component instanceof MenuItem) { // Menu is instance of MenuItem
 			bindMenuItem((MenuItem) component, key);
 			return;
 		}
