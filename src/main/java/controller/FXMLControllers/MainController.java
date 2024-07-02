@@ -295,7 +295,7 @@ public class MainController {
     }
 
     // copy contained in PairListComparisonController
-    private static <E> void adjustColumnWidths(TableView<E> tableView) {
+    static <E> void adjustColumnWidths(TableView<E> tableView) {
         long visibleColumns = tableView.getColumns().stream().filter(TableColumn::isVisible).count();
         if (visibleColumns > 0) {
             double newWidth = (tableView.getWidth() -18) / visibleColumns; // 18px extra space for tableMenuButton
