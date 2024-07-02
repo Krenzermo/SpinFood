@@ -51,7 +51,7 @@ public class Main {
 		System.out.println("A: preference deviation > path length > age difference > gender diversity > number " +
 				"of elements:");
 		PairingWeights pairingWeightsA = new PairingWeights(5,0.5,10);
-		GroupWeights groupWeightsA = new GroupWeights(2.7,1.3,20,10);
+		GroupWeights groupWeightsA = new GroupWeights(2.7,1.3,200,10);
 		PairList pairListA = new PairList(inputData,pairingWeightsA);
 		GroupList groupListA = new GroupList(pairListA,groupWeightsA);
 		System.out.println(pairListA.getIdentNumber());
@@ -64,8 +64,8 @@ public class Main {
 		System.out.println("B number of elements > preference deviation > path length > gender diversity > " +
 				"age difference");
 
-		PairingWeights pairingWeightsB = new PairingWeights(0.5,2,10);
-		GroupWeights groupWeightsB = new GroupWeights(1,1.3,20,10);
+		PairingWeights pairingWeightsB = new PairingWeights(0.5,2,100);
+		GroupWeights groupWeightsB = new GroupWeights(1,1.3,200,10);
 		PairList pairListB = new PairList(inputData,pairingWeightsB);
 		GroupList groupListB = new GroupList(pairListB,groupWeightsB);
 		System.out.println(pairListB.getIdentNumber());
@@ -88,7 +88,8 @@ public class Main {
 		outputDataC.makePairOutputFile("SP24_Gruppe01_Brecher_Hinkelma_Krenzerm_Piacenza_C");
 		outputDataC.makeGroupOutputFile("SP24_Gruppe01_Brecher_Hinkelma_Krenzerm_Piacenza_C_groups");
 
-		/*
+
+/*
 		CancellationHandler cancellationHandler = new CancellationHandler(pairList,groupList);
 		List<Participant> canceledParticipants = new ArrayList<>();
 		canceledParticipants.add(pairList.getPairs().get(1).getParticipants().get(0));
@@ -96,6 +97,7 @@ public class Main {
 		canceledParticipants.add(pairList.getPairs().get(5).getParticipants().get(0));
 		canceledParticipants.add(pairList.getPairs().get(45).getParticipants().get(0));
 		canceledParticipants.add(pairList.getPairs().get(75).getParticipants().get(0));
+
 
 		System.out.println();
 		System.out.println(pairList.getPairs().get(1).getParticipants().get(0));
@@ -112,7 +114,7 @@ public class Main {
 		System.out.println(groupList.deriveIdentNumber());
 		System.out.println(groupList.getSuccessorPairs());
 
-		 */
+ */
 
 
 
