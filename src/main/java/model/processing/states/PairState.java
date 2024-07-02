@@ -1,6 +1,5 @@
-package model.cancellation.states;
+package model.processing.states;
 
-import model.event.list.GroupList;
 import model.event.list.PairList;
 
 public class PairState extends State{

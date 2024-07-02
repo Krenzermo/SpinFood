@@ -112,45 +112,17 @@ public class PairListComparisonController extends Dialog<PairList> {
     @FXML
     private void initialize() {
         // same as in MainController
-        addListenersToTable(tableList1);
-        makeTableNotReorderable(tableList1);
+        MainController.addListenersToTable(tableList1);
+        MainController.makeTableNotReorderable(tableList1);
         gender1ColList1.setVisible(false);
         gender2ColList1.setVisible(false);
         kitchenColList1.setVisible(false);
 
-        addListenersToTable(tableList2);
-        makeTableNotReorderable(tableList2);
+        MainController.addListenersToTable(tableList2);
+        MainController.makeTableNotReorderable(tableList2);
         gender1ColList2.setVisible(false);
         gender2ColList2.setVisible(false);
         kitchenColList2.setVisible(false);
-    }
-
-    // copy contained in MainController
-    private <E> void addListenersToTable(TableView<E> tableView) {
-        tableView.widthProperty().addListener((observableValue, oldValue, newValue) -> adjustColumnWidths(tableView));
-        for (TableColumn<E, ?> column : tableView.getColumns()) {
-            column.visibleProperty().addListener((observableValue, oldValue, newValue) -> adjustColumnWidths(tableView));
-        }
-    }
-
-    private <E> void makeTableNotReorderable(TableView<E> tableView) {
-        for (TableColumn<E, ?> column : tableView.getColumns()) {
-            column.setReorderable(false);
-        }
-    }
-
-    private static <E> void adjustColumnWidths(TableView<E> tableView) {
-        long visibleColumns = tableView.getColumns().stream().filter(TableColumn::isVisible).count();
-        if (visibleColumns > 0) {
-            double newWidth = (tableView.getWidth() -18) / visibleColumns; // 18px extra space for tableMenuButton
-            for (TableColumn<E, ?> column : tableView.getColumns()) {
-                if (column.isVisible()) {
-                    column.setPrefWidth(newWidth);
-                    //column.setMinWidth(newWidth);
-                    //column.setMaxWidth(newWidth);
-                }
-            }
-        }
     }
 
     public void init(Window owner) {

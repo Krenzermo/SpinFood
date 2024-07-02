@@ -281,21 +281,21 @@ public class MainController {
         successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
     }
 
-    private <E> void addListenersToTable(TableView<E> tableView) {
-        tableView.widthProperty().addListener((observableValue, oldValue, newValue) -> adjustColumnWidths(tableView));
+    protected static <E> void addListenersToTable(TableView<E> tableView) {
+        tableView.widthProperty().addListener((observableValue, oldValue, newValue) -> MainController.adjustColumnWidths(tableView));
         for (TableColumn<E, ?> column : tableView.getColumns()) {
-            column.visibleProperty().addListener((observableValue, oldValue, newValue) -> adjustColumnWidths(tableView));
+            column.visibleProperty().addListener((observableValue, oldValue, newValue) -> MainController.adjustColumnWidths(tableView));
         }
     }
 
-    private <E> void makeTableNotReorderable(TableView<E> tableView) {
+    protected static <E> void makeTableNotReorderable(TableView<E> tableView) {
         for (TableColumn<E, ?> column : tableView.getColumns()) {
              column.setReorderable(false);
         }
     }
 
     // copy contained in PairListComparisonController
-    static <E> void adjustColumnWidths(TableView<E> tableView) {
+    protected static <E> void adjustColumnWidths(TableView<E> tableView) {
         long visibleColumns = tableView.getColumns().stream().filter(TableColumn::isVisible).count();
         if (visibleColumns > 0) {
             double newWidth = (tableView.getWidth() -18) / visibleColumns; // 18px extra space for tableMenuButton
