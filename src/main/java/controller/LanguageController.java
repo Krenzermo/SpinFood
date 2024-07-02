@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+import javax.swing.event.ChangeListener;
 import java.text.MessageFormat;
 import java.util.List;
 import java.util.Locale;
@@ -94,6 +95,10 @@ public class LanguageController {
 
 	public StringBinding getStringBinding(final String key) {
 		return Bindings.createStringBinding(getTextInternal(key), getLanguageProperty());
+	}
+
+	public void attachChangeListener(javafx.beans.value.ChangeListener<? super Locale> listener) {
+		getLanguageProperty().addListener(listener);
 	}
 
 	public <E> void bindComponent(final E component, final String key) {
