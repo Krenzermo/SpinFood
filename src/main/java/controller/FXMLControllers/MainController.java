@@ -1,5 +1,6 @@
 package controller.FXMLControllers;
 
+import controller.LanguageController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -31,6 +32,7 @@ import view.MainFrame;
 
 import java.io.File;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -42,6 +44,7 @@ import java.util.stream.Collectors;
  */
 public class MainController {
     private final InputData inputData = InputData.getInstance();
+    private final LanguageController languageController = LanguageController.getInstance();
     private PairList pairList;
     private IdentNumber pairIdentNumber;
     private GroupList groupList;
@@ -230,6 +233,7 @@ public class MainController {
 
     @FXML
     public void initialize() {
+        bindAllComponents();
         // this does not work 100%, but I haven't found a suitable property to attach the listener to
         // this works, but you may have to resize the window after hiding/showing columns.
         addListenersToTable(pairTable);
@@ -279,6 +283,10 @@ public class MainController {
 
         successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeCreateGroupButtonActivity());
         successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
+    }
+
+    private void bindAllComponents() {
+        languageController.bindComponent(pairTab, "tab.pairTab");
     }
 
     protected static <E> void addListenersToTable(TableView<E> tableView) {
@@ -376,12 +384,16 @@ public class MainController {
 
     @FXML
     void changeLanguageToGerman(ActionEvent event) {
-        // TODO: this
+        if (!languageController.getLanguage().equals(Locale.GERMAN)) {
+            languageController.setLanguage(Locale.GERMAN);
+        }
     }
 
     @FXML
     void changeLanguageToEnglish(ActionEvent event) {
-        // TODO: this
+        if (!languageController.getLanguage().equals(Locale.ENGLISH)) {
+            languageController.setLanguage(Locale.ENGLISH);
+        }
     }
 
     @FXML
