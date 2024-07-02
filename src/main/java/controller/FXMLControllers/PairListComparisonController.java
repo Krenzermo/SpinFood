@@ -178,12 +178,12 @@ public class PairListComparisonController extends Dialog<PairList> {
 
     @FXML
     void openList1FileChooser(ActionEvent event) {
-        // TODO: this
+        // TODO: not necessary
     }
 
     @FXML
     void openList2FileChooser(ActionEvent event) {
-        // TODO: this
+        // TODO: not necessary
     }
 
     @FXML

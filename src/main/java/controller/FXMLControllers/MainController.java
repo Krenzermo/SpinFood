@@ -289,6 +289,7 @@ public class MainController {
         languageController.bindComponent(pairTab, "tab.pairTab");
     }
 
+
     protected static <E> void addListenersToTable(TableView<E> tableView) {
         tableView.widthProperty().addListener((observableValue, oldValue, newValue) -> MainController.adjustColumnWidths(tableView));
         for (TableColumn<E, ?> column : tableView.getColumns()) {
@@ -389,12 +390,15 @@ public class MainController {
         }
     }
 
+
     @FXML
     void changeLanguageToEnglish(ActionEvent event) {
         if (!languageController.getLanguage().equals(Locale.ENGLISH)) {
             languageController.setLanguage(Locale.ENGLISH);
         }
     }
+
+
 
     @FXML
     void savePairList(ActionEvent event) {
