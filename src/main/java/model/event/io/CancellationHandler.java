@@ -124,6 +124,7 @@ public class CancellationHandler {
      */
     private void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant, PairingWeights pairingWeights, GroupWeights groupWeights) {
         Participant remainingParticipant = findPartner(affectedPair, cancelledParticipant);
+        participantSuccessors.add(remainingParticipant);
 
         pairList.remove(affectedPair);
 
@@ -135,17 +136,6 @@ public class CancellationHandler {
                     }
                 }
                 groupList.remove(group);
-            }
-        }
-
-        if (remainingParticipant != null) {
-            Participant successor = findSuccessorForParticipant(remainingParticipant, pairingWeights);
-            if (successor != null) {
-                Pair newPair = new Pair(remainingParticipant, successor);
-                pairList.add(newPair);
-                affectedPairs.add(newPair);
-            } else {
-                participantSuccessors.add(remainingParticipant);
             }
         }
     }

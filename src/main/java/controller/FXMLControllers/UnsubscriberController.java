@@ -87,6 +87,8 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
     }
 
     private void replaceParticipant(Participant oldParticipant, Participant newParticipant) {
+        pairList.getSuccessors().remove(newParticipant);
+
         for (Pair pair : pairList) {
             if (pair.getParticipants().contains(oldParticipant)) {
                 pair.replaceParticipant(oldParticipant, newParticipant);
@@ -100,8 +102,41 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
                 }
             }
         }
+    }
 
-        pairList.getSuccessors().remove(newParticipant);
+    @FXML
+    private void handleLogOutAsPair(ActionEvent event) {
+        Pair affectedPair = findAffectedPair(participant);
+        if (affectedPair != null) {
+            Participant partner = findPartner(affectedPair, participant);
+
+            List<Participant> cancelledParticipants = new ArrayList<>();
+            cancelledParticipants.add(participant);
+            if (partner != null) {
+                cancelledParticipants.add(partner);
+            }
+
+            CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
+            cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
+
+            closeWindow();
+        }
+    }
+
+    private Pair findAffectedPair(Participant participant) {
+        for (Pair pair : pairList) {
+            if (pair.getParticipants().contains(participant)) {
+                return pair;
+            }
+        }
+        return null;
+    }
+
+    private Participant findPartner(Pair pair, Participant participant) {
+        return pair.getParticipants().stream()
+                .filter(p -> !p.equals(participant))
+                .findFirst()
+                .orElse(null);
     }
 
     private void closeWindow() {
