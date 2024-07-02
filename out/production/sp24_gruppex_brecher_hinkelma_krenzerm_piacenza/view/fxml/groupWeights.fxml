@@ -11,7 +11,7 @@
     <header>
       <AnchorPane>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Stellen Sie die Wichtigkeit der folgenden Parameter ein" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Text fx:id="headerText" strokeType="OUTSIDE" strokeWidth="0.0" text="Stellen Sie die Wichtigkeit der folgenden Parameter ein" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children></AnchorPane>
     </header>
     <content>
@@ -29,22 +29,22 @@
                                        <children>
                                           <AnchorPane VBox.vgrow="SOMETIMES">
                                              <children>
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Altersunterschied" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Text fx:id="textAgeDifferenceSlider" strokeType="OUTSIDE" strokeWidth="0.0" text="Altersunterschied" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                           <AnchorPane VBox.vgrow="SOMETIMES">
                                              <children>
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Geschlechterdiversität" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Text fx:id="textGenderDifferenceSlider" strokeType="OUTSIDE" strokeWidth="0.0" text="Geschlechterdiversität" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                           <AnchorPane VBox.vgrow="SOMETIMES">
                                              <children>
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Vorliebenabweichung" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Text fx:id="textFoodPreferenceSlider" strokeType="OUTSIDE" strokeWidth="0.0" text="Vorliebenabweichung" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                           <AnchorPane VBox.vgrow="SOMETIMES">
                                              <children>
-                                                <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Distanz" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                <Text fx:id="textDistanceSlider" strokeType="OUTSIDE" strokeWidth="0.0" text="Distanz" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                              </children>
                                           </AnchorPane>
                                        </children>
@@ -85,6 +85,7 @@
                   </AnchorPane>
                </children>
             </VBox>
-         </children></AnchorPane>
+         </children>
+      </AnchorPane>
     </content>
 </DialogPane>

@@ -1,5 +1,6 @@
 package controller.FXMLControllers;
 
+import controller.LanguageController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,8 @@ import java.net.URL;
 import java.util.List;
 
 public class PairListComparisonController extends Dialog<PairList> {
+    private final LanguageController languageController = LanguageController.getInstance();
+
     @FXML
     private TableColumn<Pair, String> courseColList1;
 
@@ -97,6 +100,12 @@ public class PairListComparisonController extends Dialog<PairList> {
     private TableColumn<Pair, Boolean> signedUpTogetherColList2;
 
     @FXML
+    private TitledPane identNumbersTableList1;
+
+    @FXML
+    private TitledPane identNumbersTableList2;
+
+    @FXML
     private ListView<String> identNumberList1;
 
     @FXML
@@ -111,7 +120,8 @@ public class PairListComparisonController extends Dialog<PairList> {
 
     @FXML
     private void initialize() {
-        // same as in MainController
+        bindAllComponents();
+
         MainController.addListenersToTable(tableList1);
         MainController.makeTableNotReorderable(tableList1);
         gender1ColList1.setVisible(false);
@@ -123,6 +133,10 @@ public class PairListComparisonController extends Dialog<PairList> {
         gender1ColList2.setVisible(false);
         gender2ColList2.setVisible(false);
         kitchenColList2.setVisible(false);
+    }
+
+    private void bindAllComponents() {
+        // TODO: this
     }
 
     public void init(Window owner) {

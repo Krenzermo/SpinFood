@@ -1,10 +1,12 @@
 package controller.FXMLControllers;
 
+import controller.LanguageController;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
@@ -16,8 +18,22 @@ import java.net.URL;
 import java.util.Objects;
 
 public class PairingWeightsController extends Dialog<PairingWeights> {
+    private final LanguageController languageController = LanguageController.getInstance();
+
     @FXML
     private DialogPane root;
+
+    @FXML
+    private Text headerText;
+
+    @FXML
+    private Text textAgeDifferenceSlider;
+
+    @FXML
+    private Text textGenderDifferenceSlider;
+
+    @FXML
+    private Text textFoodPreferenceSlider;
 
     @FXML
     private Slider ageDiffWeightSliderPair;
@@ -30,9 +46,21 @@ public class PairingWeightsController extends Dialog<PairingWeights> {
 
     @FXML
     private void initialize() {
+        bindAllComponents();
+
         ageDiffWeightSliderPair.setValue(1.0);
         genderDiffWeightSliderPair.setValue(1.0);
         foodPrefWeightSliderPair.setValue(1.0);
+    }
+
+    private void bindAllComponents() {
+        languageController.bindComponent(headerText, "dialog.pairingWeights.headerText");
+        languageController.bindComponent(textAgeDifferenceSlider, "text.ageDifference");
+        languageController.bindComponent(textGenderDifferenceSlider, "text.genderDifference");
+        languageController.bindComponent(textFoodPreferenceSlider, "text.foodPreference");
+        // The language of default Buttons gets set to the current default language when initialized.
+        // LanguageController always changes the default language to get around this.
+        // This also means that default Buttons can't change the language dynamically.
     }
 
     public void init(Window owner) {
@@ -59,7 +87,7 @@ public class PairingWeightsController extends Dialog<PairingWeights> {
             initOwner(owner);
             initModality(Modality.APPLICATION_MODAL);
             setResizable(false);
-            setTitle("Paar Parameter einstellen");
+            setTitle(languageController.getText("root.dialog.pairingWeights"));
             setDialogPane(pane);
         } catch (IOException e) {
             throw new RuntimeException(e);

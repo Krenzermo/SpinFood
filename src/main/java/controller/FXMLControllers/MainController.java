@@ -106,6 +106,12 @@ public class MainController {
     private TableColumn<Pair, Boolean> signedUpTogetherColPair;
 
     @FXML
+    private TitledPane identNumbersPairList;
+
+    @FXML
+    private TitledPane pairListSuccessors;
+
+    @FXML
     private TableView<Participant> successorsPairList;
 
     @FXML
@@ -155,6 +161,12 @@ public class MainController {
 
     @FXML
     private TableColumn<Group, Integer> cookIDColGroup;
+
+    @FXML
+    private TitledPane identNumbersGroupList;
+
+    @FXML
+    private TitledPane groupListSuccessors;
 
     @FXML
     private TableView<Pair> successorsGroupList;
@@ -234,8 +246,7 @@ public class MainController {
     @FXML
     public void initialize() {
         bindAllComponents();
-        // this does not work 100%, but I haven't found a suitable property to attach the listener to
-        // this works, but you may have to resize the window after hiding/showing columns.
+
         addListenersToTable(pairTable);
         makeTableNotReorderable(pairTable);
         genderOneColPair.setVisible(false);
@@ -287,6 +298,9 @@ public class MainController {
 
     private void bindAllComponents() {
         languageController.bindComponent(pairTab, "tab.pairTab");
+        languageController.bindComponent(pairTable, "table.default");
+
+        // TODO: this
     }
 
     protected static <E> void addListenersToTable(TableView<E> tableView) {

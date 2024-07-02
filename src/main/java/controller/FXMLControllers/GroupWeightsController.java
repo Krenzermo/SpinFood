@@ -1,8 +1,10 @@
 package controller.FXMLControllers;
 
+import controller.LanguageController;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.stage.Modality;
 import javafx.stage.Window;
 import model.event.list.weight.GroupWeights;
@@ -13,8 +15,25 @@ import java.net.URL;
 import java.util.Objects;
 
 public class GroupWeightsController extends Dialog<GroupWeights> {
+	private final LanguageController languageController = LanguageController.getInstance();
+
 	@FXML
 	private DialogPane root;
+
+	@FXML
+	private Text headerText;
+
+	@FXML
+	private Text textAgeDifferenceSlider;
+
+	@FXML
+	private Text textGenderDifferenceSlider;
+
+	@FXML
+	private Text textFoodPreferenceSlider;
+
+	@FXML
+	private Text textDistanceSlider;
 
 	@FXML
 	private Slider ageDiffWeightSliderGroup;
@@ -30,10 +49,16 @@ public class GroupWeightsController extends Dialog<GroupWeights> {
 
 	@FXML
 	private void initialize() {
+		bindAllComponents();
+
 		ageDiffWeightSliderGroup.setValue(1.0);
 		genderDiffWeightSliderGroup.setValue(1.0);
 		foodPrefWeightSliderGroup.setValue(1.0);
 		distanceWeightSliderGroup.setValue(1.0);
+	}
+
+	private void bindAllComponents() {
+		// TODO: this
 	}
 
 	public void init(Window owner) {

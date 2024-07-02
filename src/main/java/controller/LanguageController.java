@@ -4,7 +4,14 @@ import javafx.beans.binding.Bindings;
 import javafx.beans.binding.StringBinding;
 import javafx.beans.property.ObjectProperty;
 import javafx.beans.property.SimpleObjectProperty;
+import javafx.scene.Node;
 import javafx.scene.control.*;
+import javafx.scene.layout.Pane;
+import javafx.scene.layout.Region;
+import javafx.scene.text.Text;
+import javafx.stage.Stage;
+import javafx.stage.Window;
+import org.w3c.dom.events.EventTarget;
 
 import java.text.MessageFormat;
 import java.util.List;
@@ -45,7 +52,7 @@ public class LanguageController {
 			throw new IllegalArgumentException("Language not supported: " + language);
 		}
 		getLanguageProperty().set(language);
-		Locale.setDefault(language);
+		Locale.setDefault(language); // changes language of default Buttons (CLOSE, APPLY, ...)
 	}
 
 	public static List<Locale> getSupportedLanguages() {
@@ -57,21 +64,41 @@ public class LanguageController {
 	}
 
 	private ResourceBundle getResourceBundleForCurrentLanguage() {
-		if (getLanguage().equals(Locale.GERMAN)) {
+		return getResourceBundleForLanguage(getLanguage());
+	}
+
+	private ResourceBundle getResourceBundleForLanguage(Locale locale) {
+		if (locale.equals(Locale.GERMAN)) {
 			return german;
 		}
-		if (getLanguage().equals(Locale.ENGLISH)) {
+		if (locale.equals(Locale.ENGLISH)) {
 			return english;
 		}
 		throw new IllegalStateException("Language not supported: " + getLanguage());
 	}
 
-	private Callable<String> getText(final String key, final Object... args) {
+	/**
+	 * This method retrieves the text associated with the given key from the ResourceBundle.
+	 * Use this method to retrieve header and title texts.
+	 * (They cannot be changed during the runtime by establishing a StringBinding)
+	 *
+	 * @param key the key to retrieve the associated text from the ResourceBundle
+	 * @return the text associated with the given key in ResourceBundle
+	 */
+	public String getText(String key) {
+		return getResourceBundleForCurrentLanguage().getString(key);
+	}
+
+	public String getText(String key, Locale locale) {
+		return getResourceBundleForLanguage(locale).getString(key);
+	}
+
+	private Callable<String> getTextInternal(final String key, final Object... args) {
 		return () -> MessageFormat.format(getResourceBundleForCurrentLanguage().getString(key), args);
 	}
 
 	public StringBinding getStringBinding(final String key) {
-		return Bindings.createStringBinding(getText(key), getLanguageProperty());
+		return Bindings.createStringBinding(getTextInternal(key), getLanguageProperty());
 	}
 
 	public <E> void bindComponent(final E component, final String key) {
@@ -98,6 +125,30 @@ public class LanguageController {
 			bindTableColumn((TableColumnBase<?,?>) component, key);
 			return;
 		}
+		if (component instanceof TableView<?>) {
+			bindTableDefaultText((TableView<?>) component, key);
+			return;
+		}
+		if (component instanceof TextInputControl) {
+			bindTextField((TextInputControl) component, key);
+			return;
+		}
+		if (component instanceof Text) {
+			bindText((Text) component, key);
+			return;
+		}
+		if (component instanceof Dialog<?>) {
+			bindDialog((Dialog<?>) component, key);
+			return;
+		}
+		if (component instanceof DialogPane) {
+			bindDialogPaneHeaderText((DialogPane) component, key);
+			return;
+		}
+		if (component instanceof Stage) {
+			bindStage((Stage) component, key);
+			return;
+		}
 		throw new UnsupportedOperationException("Component not supported yet: " + component);
 	}
 
@@ -120,5 +171,31 @@ public class LanguageController {
 
 	private <E extends TableColumnBase<?, ?>> void bindTableColumn(final E tableColumn, final String key) {
 		tableColumn.textProperty().bind(getStringBinding(key));
+	}
+
+	private <E extends TableView<?>> void bindTableDefaultText(final E table, final String key) {
+		Label label = new Label();
+		label.textProperty().bind(getStringBinding(key));
+		table.setPlaceholder(label);
+	}
+
+	private <E extends TextInputControl> void bindTextField(final E textInputControl, final String key) {
+		textInputControl.textProperty().bind(getStringBinding(key));
+	}
+
+	private <E extends Text> void bindText(final E text, final String key) {
+		text.textProperty().bind(getStringBinding(key));
+	}
+
+	private <E extends Dialog<?>> void bindDialog(final E dialog, final String key) {
+		dialog.titleProperty().bind(getStringBinding(key));
+	}
+
+	private <E extends DialogPane> void bindDialogPaneHeaderText(final E dialogPane, final String key) {
+		dialogPane.headerTextProperty().bind(getStringBinding(key));
+	}
+
+	private <E extends Stage> void bindStage(final E stage, final String key) {
+		stage.titleProperty().bind(getStringBinding(key));
 	}
 }

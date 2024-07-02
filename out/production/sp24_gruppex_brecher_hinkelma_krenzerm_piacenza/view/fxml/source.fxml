@@ -113,7 +113,7 @@
                                                             </AnchorPane>
                                                             <AnchorPane minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="NEVER">
                                                                <children>
-                                                                  <TitledPane animated="false" collapsible="false" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                  <TitledPane fx:id="identNumbersPairList" animated="false" collapsible="false" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                     <content>
                                                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                            <children>
@@ -130,7 +130,7 @@
                                                 </AnchorPane>
                                               <AnchorPane>
                                                    <children>
-                                                      <TitledPane animated="false" collapsible="false" text="Nachfolger" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                      <TitledPane fx:id="pairListSuccessors" animated="false" collapsible="false" text="Nachfolger" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                         <content>
                                                           <AnchorPane>
                                                                <children>
@@ -207,7 +207,7 @@
                                                             </AnchorPane>
                                                             <AnchorPane minWidth="-Infinity" prefWidth="250.0" HBox.hgrow="NEVER">
                                                                <children>
-                                                                  <TitledPane animated="false" collapsible="false" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                  <TitledPane fx:id="identNumbersGroupList" animated="false" collapsible="false" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                                     <content>
                                                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                                                                            <children>
@@ -224,7 +224,7 @@
                                                 </AnchorPane>
                                               <AnchorPane>
                                                    <children>
-                                                      <TitledPane animated="false" collapsible="false" text="Nachfolger Paare" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                      <TitledPane fx:id="groupListSuccessors" animated="false" collapsible="false" text="Nachfolger Paare" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                         <content>
                                                           <AnchorPane>
                                                                <children>

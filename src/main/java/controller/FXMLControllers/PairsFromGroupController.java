@@ -1,5 +1,6 @@
 package controller.FXMLControllers;
 
+import controller.LanguageController;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -20,6 +21,7 @@ import java.io.IOException;
 import java.net.URL;
 
 public class PairsFromGroupController extends Dialog<Object>{
+    private final LanguageController languageController = LanguageController.getInstance();
 
     @FXML
     private DialogPane dialogPane;
@@ -46,6 +48,8 @@ public class PairsFromGroupController extends Dialog<Object>{
 
     @FXML
     private void initialize() {
+        bindAllComponents();
+
         pairTable.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> MainController.adjustColumnWidths(pairTable));
         pairTable.widthProperty().addListener((observable, oldValue, newValue) -> MainController.adjustColumnWidths(pairTable));
         idCol.setReorderable(false);
@@ -53,6 +57,10 @@ public class PairsFromGroupController extends Dialog<Object>{
         part2Col.setReorderable(false);
         kitchenCol.setReorderable(false);
         courseCol.setReorderable(false);
+    }
+
+    private void bindAllComponents() {
+        // TODO: this
     }
 
     public void init(Window owner, Pair[] pairs) {

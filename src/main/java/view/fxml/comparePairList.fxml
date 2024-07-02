@@ -64,7 +64,7 @@
                               </AnchorPane>
                               <AnchorPane minWidth="-Infinity" prefWidth="200.0" HBox.hgrow="NEVER">
                                  <children>
-                                    <TitledPane animated="false" collapsible="false" layoutX="-42.0" layoutY="14.0" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TitledPane fx:id="identNumbersTableList1" animated="false" collapsible="false" layoutX="-42.0" layoutY="14.0" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <content>
                                         <AnchorPane>
                                              <children>
@@ -104,7 +104,7 @@
                               </AnchorPane>
                               <AnchorPane minWidth="-Infinity" prefWidth="200.0" HBox.hgrow="NEVER">
                                  <children>
-                                    <TitledPane animated="false" collapsible="false" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TitledPane fx:id="identNumbersTableList2" animated="false" collapsible="false" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <content>
                                         <AnchorPane>
                                              <children>

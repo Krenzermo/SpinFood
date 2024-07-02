@@ -7,7 +7,10 @@
 <?import javafx.scene.layout.AnchorPane?>
 
 <DialogPane fx:id="dialogPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="158.0" prefWidth="753.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
-    <header>
+   <buttonTypes>
+      <ButtonType fx:constant="CLOSE" />
+   </buttonTypes>
+   <content>
       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="136.0" prefWidth="753.0">
          <children>
             <TableView fx:id="pairTable" prefHeight="117.0" prefWidth="752.0">
@@ -19,9 +22,7 @@
                   <TableColumn fx:id="courseCol" prefWidth="104.0" text="Kochgang" />
               </columns>
             </TableView>
-         </children></AnchorPane>
-    </header>
-   <buttonTypes>
-      <ButtonType fx:constant="CLOSE" />
-   </buttonTypes>
+         </children>
+      </AnchorPane>
+   </content>
 </DialogPane>
