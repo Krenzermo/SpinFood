@@ -25,11 +25,14 @@ import model.event.list.PairList;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
+import model.event.list.weight.Weights;
 import model.person.Participant;
 import view.MainFrame;
 
 import java.io.File;
+import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * MainController class handles the primary logic for managing pairs and groups in the MainFrame of the application.
@@ -43,6 +46,7 @@ public class MainController {
     private IdentNumber pairIdentNumber;
     private GroupList groupList;
     private IdentNumber groupIdentNumber;
+    private GroupWeights groupWeights;
 
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
@@ -226,6 +230,8 @@ public class MainController {
 
     @FXML
     public void initialize() {
+        // this does not work 100%, but I haven't found a suitable property to attach the listener to
+        // this works, but you may have to resize the window after hiding/showing columns.
         addListenersToTable(pairTable);
         makeTableNotReorderable(pairTable);
         genderOneColPair.setVisible(false);
@@ -257,6 +263,17 @@ public class MainController {
         groupTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Group>) change -> changeSplitGroupButtonActivity());
         groupTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitGroupButtonActivity());
 
+        groupTable.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal) -> {
+            try {
+                PairsFromGroupController controller = new PairsFromGroupController();
+                controller.init(root.getScene().getWindow(), newVal.getPairs());
+                controller.writePairDataToTab();
+                controller.showAndWait();
+            } catch(NullPointerException e) {
+                return;
+            }
+        });
+
         successorsPairList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Participant>) change -> changeCreatePairButtonActivity());
         successorsPairList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreatePairButtonActivity());
 
@@ -270,7 +287,7 @@ public class MainController {
             column.visibleProperty().addListener((observableValue, oldValue, newValue) -> adjustColumnWidths(tableView));
         }
     }
-    
+
     private <E> void makeTableNotReorderable(TableView<E> tableView) {
         for (TableColumn<E, ?> column : tableView.getColumns()) {
              column.setReorderable(false);
@@ -343,6 +360,12 @@ public class MainController {
             inputData.initParticipants(participantListPath);
         } catch (NullPointerException e) {
             participantListPath = null;
+        } catch (RuntimeException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Dateifehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Es wurde eine falsche oder fehlerhafte Datei für die Teilnehmerliste ausgewählt.");
+            alert.showAndWait();
         }
     }
 
@@ -400,6 +423,12 @@ public class MainController {
             inputData.initEventLocation(locationPath);
         } catch (NullPointerException e) {
             locationPath = null;
+        } catch (RuntimeException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Dateifehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Es wurde eine falsche oder fehlerhafte Datei für die After-Dinner-Location ausgewählt.");
+            alert.showAndWait();
         }
     }
 
@@ -418,15 +447,22 @@ public class MainController {
         dialog.init(root.getScene().getWindow());
 
         GroupWeights weights = dialog.showAndWait().orElse(null);
+        this.groupWeights = weights;
 
         if (weights != null) {
             try {
                 this.groupList = new GroupList(pairList, weights);
                 this.groupIdentNumber = this.groupList.getIdentNumber();
+                this.pairList = groupList.getPairList();
+                this.pairIdentNumber = pairList.getIdentNumber();
 
                 writeGroupDataToTab();
                 writeGroupListIdentNumbersToTab();
                 writeGroupListSuccessorsToTab();
+
+                //writePairDataToTab();
+                //writePairListIdentNumbersToTab();
+                //writePairListSuccessorsToTab();
 
                 tabPane.getSelectionModel().select(groupTab);
             } catch (NullPointerException e) {
@@ -465,6 +501,8 @@ public class MainController {
                 writePairDataToTab();
                 writePairListIdentNumbersToTab();
                 writePairListSuccessorsToTab();
+
+                replaceGroupData();
 
                 tabPane.getSelectionModel().select(pairTab);
             } catch (NullPointerException e) {
@@ -513,16 +551,9 @@ public class MainController {
                 setupPairListValueFactories();
             }
 
-            if (!Objects.isNull(groupList) && !groupList.isEmpty()) {
-                groupList.clear();
-                groupTable.getItems().clear();
-                successorsGroupList.getItems().clear();
-                groupIdentNumber = null;
-                groupIdentNumbersList.getItems().clear();
-            }
-
             ObservableList<Pair> data = FXCollections.observableArrayList(pairList.getPairs());
             pairTable.setItems(data);
+	        replaceGroupData();
         });
     }
 
@@ -669,6 +700,7 @@ public class MainController {
                 writePairListSuccessorsToTab();
 
                 tabPane.getSelectionModel().select(pairTab);
+	            replaceGroupData();
             }
         } catch (ClassCastException | NullPointerException e) {
             MainFrame.stage.show();
@@ -680,5 +712,16 @@ public class MainController {
     @FXML
     void compareGroupList(ActionEvent event) {
         // TODO: this
+    }
+
+    private void replaceGroupData() {
+        if (!groupTable.getItems().isEmpty()) {
+            this.groupList = new GroupList(pairList, groupWeights);
+            this.groupIdentNumber = groupList.getIdentNumber();
+
+            writeGroupDataToTab();
+            writeGroupListIdentNumbersToTab();
+            writeGroupListSuccessorsToTab();
+        }
     }
 }
