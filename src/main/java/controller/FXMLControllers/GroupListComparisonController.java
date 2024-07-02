@@ -158,9 +158,6 @@ public class GroupListComparisonController extends Dialog<GroupList>{
 
     @FXML
     void editWeightsList1(ActionEvent event) {
-        String relPath = "src/main/java/view/fxml/groupWeights.fxml";
-        File file = new File(relPath);
-        String absPath = file.getAbsolutePath();
         GroupWeightsController dialog = new GroupWeightsController();
         dialog.init(this.dialogPane.getScene().getWindow());
 
@@ -184,9 +181,6 @@ public class GroupListComparisonController extends Dialog<GroupList>{
 
     @FXML
     void editWeightsList2(ActionEvent event) {
-        String relPath = "src/main/java/view/fxml/groupWeights.fxml";
-        File file = new File(relPath);
-        String absPath = file.getAbsolutePath();
         GroupWeightsController dialog = new GroupWeightsController();
         dialog.init(this.dialogPane.getScene().getWindow());
 
