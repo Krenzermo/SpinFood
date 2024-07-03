@@ -23,19 +23,23 @@ import java.util.List;
  * @author Davide Piacenza
  */
 public class PairList extends ParticipantCollectionList<Pair> {
+    private static final InputData inputData = InputData.getInstance();
     private final IdentNumber identNumber;
     private static final List<Participant> successors = new ArrayList<>();
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
      *
-     * @param inputData      the input data containing participant and pair information
      * @param pairingWeights the weights used for pairing criteria
      */
-    public PairList(InputData inputData, PairingWeights pairingWeights) {
+    public PairList(PairingWeights pairingWeights) {
+        this(buildBestPairs(sortParticipants(inputData.getParticipantInputData()), pairingWeights));
+        //this.printFoodNumbers();
+    }
+
+    public PairList(List<Pair> pairList) {
         successors.clear();
-        List<Participant> sortedParticipantList = sortParticipants(inputData.getParticipantInputData());
-        setList(buildBestPairs(sortedParticipantList, pairingWeights));
+        setList(pairList);
         addAll(inputData.getPairInputData());
         this.identNumber = deriveIdentNumber();
     }
@@ -109,18 +113,16 @@ public class PairList extends ParticipantCollectionList<Pair> {
 
     //TODO fix gleiche küche unmöglich
     private static double compareKitchen(Participant participant1, Participant testedParticipant) {
-        switch (participant1.isHasKitchen()) {
-            case YES:
-                return (testedParticipant.isHasKitchen() == KitchenAvailability.YES &&
-                        participant1.getKitchen().equals(testedParticipant.getKitchen())) ? Double.NEGATIVE_INFINITY : 0;
-            case NO:
-                if (testedParticipant.isHasKitchen() == KitchenAvailability.YES) return 0;
-                return (testedParticipant.isHasKitchen() == KitchenAvailability.MAYBE) ? -50 : Double.NEGATIVE_INFINITY;
-            case MAYBE:
-                return (testedParticipant.isHasKitchen() == KitchenAvailability.YES) ? 0 : -50;
-            default:
-                return 0;
-        }
+	    return switch (participant1.isHasKitchen()) {
+		    case YES -> (testedParticipant.isHasKitchen() == KitchenAvailability.YES &&
+				    participant1.getKitchen().equals(testedParticipant.getKitchen())) ? Double.NEGATIVE_INFINITY : 0;
+		    case NO -> {
+			    if (testedParticipant.isHasKitchen() == KitchenAvailability.YES) yield 0;
+			    yield (testedParticipant.isHasKitchen() == KitchenAvailability.MAYBE) ? -50 : Double.NEGATIVE_INFINITY;
+		    }
+		    case MAYBE -> (testedParticipant.isHasKitchen() == KitchenAvailability.YES) ? 0 : -50;
+		    default -> 0;
+	    };
     }
 
     /**
@@ -312,19 +314,35 @@ public class PairList extends ParticipantCollectionList<Pair> {
         return sb.toString();
     }
 
-    @Override
-    public boolean add(Pair pair) {
-        if (pair == null || contains(pair)) {
-            return false;
+    /**
+     * @return the composition by foodtype of the PairList for debug purposes
+     */
+    public void printFoodNumbers(){
+        int meatParticipants = 0;
+        int noneParticipants = 0;
+        int veggieParticipants = 0;
+        int veganParticipants = 0;
+        for (Pair pair : this){
+            if (pair.getFoodType() == FoodType.MEAT){
+                meatParticipants++;
+            }
+            if (pair.getFoodType() == FoodType.NONE){
+                noneParticipants++;
+            }
+            if (pair.getFoodType() == FoodType.VEGGIE){
+                veggieParticipants++;
+            }
+            if (pair.getFoodType() == FoodType.VEGAN){
+                veganParticipants++;
+            }
         }
-        return super.add(pair);
-    }
+        System.out.println("Meat: " + meatParticipants);
+        System.out.println("None: " + noneParticipants);
+        System.out.println("Veggie: " + veggieParticipants);
+        System.out.println("Vegan: " + veganParticipants);
+        System.out.println("Meat: " + meatParticipants);
+        System.out.println("AllMeat: " + (meatParticipants + noneParticipants) + "divided by 9: " + ((meatParticipants + noneParticipants) / 9.0));
+        System.out.println("AllVeggie: " + (veganParticipants + veggieParticipants));
 
-    @Override
-    public boolean remove(Object o) {
-        if (!(o instanceof Pair)) {
-            return false;
-        }
-        return super.remove(o);
     }
 }

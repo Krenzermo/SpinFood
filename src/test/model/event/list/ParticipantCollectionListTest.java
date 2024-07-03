@@ -22,7 +22,7 @@ class ParticipantCollectionListTest {
 	void setUp() {
 		inputData = InputData.getInstanceDebug();
 		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
-		pCL = new PairList(inputData, pairingWeights);
+		pCL = new PairList(pairingWeights);
 	}
 
 	@Test

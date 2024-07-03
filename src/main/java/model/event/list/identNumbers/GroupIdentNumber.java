@@ -24,7 +24,7 @@ public class GroupIdentNumber extends IdentNumber {
 
     public GroupIdentNumber(GroupList participantCollection) {
         super(participantCollection);
-        this.numSuccessors = GroupList.getSuccessorPairs().size();
+        this.numSuccessors = participantCollection.getSuccessorPairs().size();
         this.groupList = participantCollection;
         genderDiversity = calcGenderDiversity(participantCollection);
         ageDifference = calcAgeDifference(participantCollection);
@@ -163,7 +163,7 @@ public class GroupIdentNumber extends IdentNumber {
                 ", Geschlechterdiversität: " + genderDiversity +
                 ", Altersunterschied: " + ageDifference +
                 ", Vorliebenabweichung: " + preferenceDeviation +
-                ", Durchschnittliche Pfadlänge: " + averagePathLength +
+                ", \nDurchschnittliche Pfadlänge: " + averagePathLength +
                 ", Gesamte Pfadlänge: " + totalPathLength +
                 ", Standardabweichung der Pfadlängen: " + pathLengthStdDev;
     }

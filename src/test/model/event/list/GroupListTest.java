@@ -23,7 +23,7 @@ class GroupListTest {
 	void setUp() {
 		InputData inputData = InputData.getInstanceDebug();
 		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
-		pairs = new PairList(inputData, pairingWeights);
+		pairs = new PairList(pairingWeights);
 	}
 
 	@Test

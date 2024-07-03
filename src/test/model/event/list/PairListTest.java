@@ -15,7 +15,7 @@ class PairListTest {
 	void pairListTest() {
 		InputData inputData = InputData.getInstanceDebug();
 		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
-		PairList pairList = new PairList(inputData, pairingWeights);
+		PairList pairList = new PairList(pairingWeights);
 
 		Assertions.assertTrue(allPairsLegal(pairList));
 	}
@@ -27,8 +27,8 @@ class PairListTest {
 		PairingWeights pairingWeights = new PairingWeights(1, 3, 5);
 		PairingWeights pairingWeights1 = new PairingWeights(1, 1, 1);
 
-		PairList pairList1 = new PairList(inputData, pairingWeights);
-		PairList pairList2 = new PairList(inputData, pairingWeights1);
+		PairList pairList1 = new PairList(pairingWeights);
+		PairList pairList2 = new PairList(pairingWeights1);
 
 		Assertions.assertTrue(allPairsLegal(pairList1) && allPairsLegal(pairList2));
 
