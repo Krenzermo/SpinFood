@@ -2,12 +2,9 @@ package controller.FXMLControllers;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
-import javafx.scene.control.ButtonType;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.Window;
 import model.event.collection.Group;
@@ -20,12 +17,8 @@ import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
 import model.person.Participant;
 
-import java.io.File;
-import java.io.IOException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
 
@@ -57,7 +50,6 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
         comboBoxSuccessor.getItems().addAll(getSuccessorList());
 
         initOwner(owner);
-        initModality(Modality.APPLICATION_MODAL);
         setResizable(false);
         setTitle("Abmelden");
     }
@@ -68,22 +60,61 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
 
     @FXML
     private void handleLogOut(ActionEvent event) {
-        List<Participant> cancelledParticipants = new ArrayList<>();
-        cancelledParticipants.add(participant);
-
-        CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-        cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
-
         closeWindow();
+        new Thread(() -> {
+            List<Participant> cancelledParticipants = new ArrayList<>();
+            cancelledParticipants.add(participant);
+
+            CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
+            cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
+        }).start();
     }
 
     @FXML
     private void handleSubstitute(ActionEvent event) {
         Participant successor = comboBoxSuccessor.getValue();
         if (successor != null) {
-            replaceParticipant(participant, successor);
             closeWindow();
+            new Thread(() -> {
+                replaceParticipant(participant, successor);
+            }).start();
         }
+    }
+
+    @FXML
+    private void handleLogOutAsPair(ActionEvent event) {
+        Pair affectedPair = findAffectedPair(participant);
+        if (affectedPair != null) {
+            Participant partner = findPartner(affectedPair, participant);
+
+            closeWindow();
+            new Thread(() -> {
+                List<Participant> cancelledParticipants = new ArrayList<>();
+                cancelledParticipants.add(participant);
+                if (partner != null) {
+                    cancelledParticipants.add(partner);
+                }
+
+                CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
+                cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
+            }).start();
+        }
+    }
+
+    private Pair findAffectedPair(Participant participant) {
+        for (Pair pair : pairList) {
+            if (pair.getParticipants().contains(participant)) {
+                return pair;
+            }
+        }
+        return null;
+    }
+
+    private Participant findPartner(Pair pair, Participant participant) {
+        return pair.getParticipants().stream()
+                .filter(p -> !p.equals(participant))
+                .findFirst()
+                .orElse(null);
     }
 
     private void replaceParticipant(Participant oldParticipant, Participant newParticipant) {
@@ -102,41 +133,6 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
                 }
             }
         }
-    }
-
-    @FXML
-    private void handleLogOutAsPair(ActionEvent event) {
-        Pair affectedPair = findAffectedPair(participant);
-        if (affectedPair != null) {
-            Participant partner = findPartner(affectedPair, participant);
-
-            List<Participant> cancelledParticipants = new ArrayList<>();
-            cancelledParticipants.add(participant);
-            if (partner != null) {
-                cancelledParticipants.add(partner);
-            }
-
-            CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-            cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
-
-            closeWindow();
-        }
-    }
-
-    private Pair findAffectedPair(Participant participant) {
-        for (Pair pair : pairList) {
-            if (pair.getParticipants().contains(participant)) {
-                return pair;
-            }
-        }
-        return null;
-    }
-
-    private Participant findPartner(Pair pair, Participant participant) {
-        return pair.getParticipants().stream()
-                .filter(p -> !p.equals(participant))
-                .findFirst()
-                .orElse(null);
     }
 
     private void closeWindow() {
