@@ -12,6 +12,7 @@ import model.person.Participant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /** This class holds a Group (3 {@link Pair}) in compliance with the defined rules
@@ -171,5 +172,35 @@ public class Group implements ParticipantCollection{
 
 	public ObservableValue<Integer> getCookPairIdAsObservable() {
 		return new SimpleIntegerProperty(pairs[cookIndex].getId()).asObject();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(pairs[0], pairs[1], pairs[2]);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof Group group)) {
+			return false;
+		}
+
+		List<Pair> list = Arrays.stream(group.getPairs()).sequential().toList();
+
+		if (list.size() != 3) {
+			throw new RuntimeException("fuck this"); // TODO: delete
+		}
+
+		for (Pair pair : list) {
+			if (!pair.equals(pairs[0]) && !pair.equals(pairs[1]) && !pair.equals(pairs[2])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "{Pair1: " + pairs[0] + ", Pair2: " + pairs[1] + ", Pair3: " + pairs[2] + "}";
 	}
 }

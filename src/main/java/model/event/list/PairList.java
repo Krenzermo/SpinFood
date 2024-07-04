@@ -35,15 +35,22 @@ public class PairList extends ParticipantCollectionList<Pair> {
      */
     public PairList(PairingWeights pairingWeights) {
         setList(buildBestPairs(sortParticipants(inputData.getParticipantInputData()), pairingWeights));
-        addAll(inputData.getPairInputData());
+        for (Pair pair : inputData.getPairInputData()) {
+            if (!contains(pair)) {
+                add(pair);
+            }
+        }
         this.identNumber = deriveIdentNumber();
         successors.addAll(inputData.getParticipantSuccessorList());
-        //this.printFoodNumbers();
     }
 
     public PairList(List<Pair> pairList) {
 	    setList(pairList);
-        addAll(inputData.getPairInputData());
+        for (Pair pair : inputData.getPairInputData()) {
+            if (!contains(pair)) {
+                add(pair);
+            }
+        }
         this.identNumber = deriveIdentNumber();
         successors.addAll(inputData.getParticipantSuccessorList());
     }

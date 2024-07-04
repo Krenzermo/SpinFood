@@ -43,8 +43,8 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	private static final InputData inputData = InputData.getInstance();
 	private final PairList pairList;
 	private IdentNumber identNumber;
-	private List<Pair> successorPairs = new ArrayList<>();
-	private Weights weights;
+	private final List<Pair> successorPairs = new ArrayList<>();
+	private final Weights weights;
 	//private final List<Kitchen> starterKitchens = new ArrayList<>();
 	//private final List<Kitchen> mainKitchens = new ArrayList<>();
 	//private final List<Kitchen> dessertKitchens = new ArrayList<>();
@@ -63,7 +63,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		this.identNumber = getIdentNumber();
 		this.pairList = pairList;
 		this.identNumber = deriveIdentNumber();
-		successorPairs.addAll(inputData.getPairSuccessorList());
+		//successorPairs.addAll(inputData.getPairSuccessorList());
 	}
 
 	public GroupList(List<Pair> pairs, GroupWeights weights) {

@@ -33,9 +33,7 @@ import view.MainFrame;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.List;
-import java.util.Locale;
-import java.util.Objects;
+import java.util.*;
 
 /**
  * MainController class handles the primary logic for managing pairs and groups in the MainFrame of the application.
@@ -622,7 +620,7 @@ public class MainController {
         List<Participant> participants = successorsPairList.getSelectionModel().getSelectedItems();
         // assert participants.size() == 2;
         if (participants.size() != 2) { // this should never happen
-            throw new IllegalStateException("More than 2 successor participants were selected. Total: " + participants.size());
+            throw new IllegalStateException("More or less than 2 successor participants were selected. Total: " + participants.size());
         }
 
         pairList.add(new Pair(participants.get(0), participants.get(1), pairList.getPairIdCounterAndIncrement()));
@@ -632,16 +630,43 @@ public class MainController {
 
     @FXML
     public void splitGroup(ActionEvent event) {
-        // TODO: this
-        // this needs to split the entire group cluster.
-        // maybe do this in a separate window and save the groups in some in-between storage?
+        Group group = groupTable.getSelectionModel().getSelectedItem();
+        HashSet<Group> groupCluster = new HashSet<>();
+        Arrays.stream(group.getPairs())
+                .sequential()
+                .flatMap(pair -> pair.getGroups().stream())
+                .distinct()
+                .flatMap(group1 -> Arrays.stream(group1.getPairs()).sequential())
+                .distinct()
+                .flatMap(pair -> pair.getGroups().stream())
+                .distinct()
+                .forEach(groupCluster::add);
+
+        HashSet<Pair> pairs = new HashSet<>(groupCluster.stream().flatMap(group1 -> Arrays.stream(group1.getPairs()).sequential().distinct()).toList());
+
+        removeGroupCluster(groupCluster.stream().toList());
+
+        groupList.getSuccessorPairs().addAll(pairs);
+
+        updateGroupTable();
     }
 
     @FXML
     public void createGroup(ActionEvent event) {
-        // TODO: this
-        // this needs to create an entire group cluster.
-        // maybe do this in a separate window and save the groups in some in-between storage?
+        List<Pair> pairs = successorsGroupList.getSelectionModel().getSelectedItems();
+        // assert pairs.size() == 9;
+        if (pairs.size() != 9) {
+            throw new IllegalStateException("More or less than 9 successor pairs were selected. Total: " + pairs.size());
+        }
+
+        pairs.forEach(Pair::clearGroups);
+        List<Group> list = new GroupList(pairs, groupWeights);
+        System.out.println();
+        list.forEach(System.out::println);
+
+        groupList.addAll(list);
+
+        updateGroupTable();
     }
 
     private void removePair(Pair pair) {
@@ -650,9 +675,23 @@ public class MainController {
         if (!Objects.isNull(groupList)) {
             for (Group group : pair.getGroups()) {
                 groupList.remove(group);
+
                 for (Pair PairTemp : group.getPairs()) {
                     PairTemp.clearGroups();
                 }
+            }
+        }
+    }
+
+    private void removeGroupCluster(List<Group> groups) {
+        if (groups.size() != 9) {
+            throw new IllegalStateException("More or less than 9 successor groups were selected. Total: " + groups.size());
+        }
+        for (Group group : groups) {
+            groupList.remove(group);
+
+            for (Pair pair : group.getPairs()) {
+                pair.clearGroups();
             }
         }
     }
