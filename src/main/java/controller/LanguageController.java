@@ -157,10 +157,6 @@ public class LanguageController {
 		tab.textProperty().bind(getStringBinding(key));
 	}
 
-	private <E extends Menu> void bindMenu(final E menu, final String key) {
-		menu.textProperty().bind(getStringBinding(key));
-	}
-
 	private <E extends MenuItem> void bindMenuItem(final E menuItem, final String key) {
 		menuItem.textProperty().bind(getStringBinding(key));
 	}
