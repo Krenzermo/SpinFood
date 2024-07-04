@@ -303,6 +303,7 @@ public class MainController {
         // TODO: this
     }
 
+
     protected static <E> void addListenersToTable(TableView<E> tableView) {
         tableView.widthProperty().addListener((observableValue, oldValue, newValue) -> MainController.adjustColumnWidths(tableView));
         for (TableColumn<E, ?> column : tableView.getColumns()) {
@@ -403,12 +404,15 @@ public class MainController {
         }
     }
 
+
     @FXML
     void changeLanguageToEnglish(ActionEvent event) {
         if (!languageController.getLanguage().equals(Locale.ENGLISH)) {
             languageController.setLanguage(Locale.ENGLISH);
         }
     }
+
+
 
     @FXML
     void savePairList(ActionEvent event) {
@@ -486,9 +490,9 @@ public class MainController {
                 writeGroupListIdentNumbersToTab();
                 writeGroupListSuccessorsToTab();
 
-                //writePairDataToTab();
-                //writePairListIdentNumbersToTab();
-                //writePairListSuccessorsToTab();
+                writePairDataToTab();
+                writePairListIdentNumbersToTab();
+                writePairListSuccessorsToTab();
 
                 tabPane.getSelectionModel().select(groupTab);
             } catch (NullPointerException e) {
@@ -737,7 +741,39 @@ public class MainController {
 
     @FXML
     void compareGroupList(ActionEvent event) {
-        // TODO: this
+        MainFrame.stage.hide();
+        GroupListComparisonController dialog = new GroupListComparisonController();
+
+        dialog.init(root.getScene().getWindow(), pairList);
+        Stage stage = (Stage) dialog.getDialogPane().getScene().getWindow();
+        stage.setMinWidth(910); // additional space to prevent clipping
+        stage.setMinHeight(635); // extra space for buttons
+        stage.setResizable(true);
+        stage.sizeToScene();
+        try {
+            GroupList temp = dialog.showAndWait().orElse(groupList);
+            if (temp != groupList) {
+                groupList = temp;
+                this.groupIdentNumber = groupList.getIdentNumber();
+                this.groupWeights = (GroupWeights) groupList.getWeights();
+                writeGroupDataToTab();
+                writeGroupListIdentNumbersToTab();
+                writeGroupListSuccessorsToTab();
+
+                pairList = groupList.getPairList();
+                pairIdentNumber = pairList.getIdentNumber();
+
+                writePairDataToTab();
+                writePairListIdentNumbersToTab();
+                writePairListSuccessorsToTab();
+
+                tabPane.getSelectionModel().select(groupTab);
+            }
+        } catch (ClassCastException | NullPointerException e) {
+            MainFrame.stage.show();
+            return;
+        }
+        MainFrame.stage.show();
     }
 
     private void replaceGroupData() {

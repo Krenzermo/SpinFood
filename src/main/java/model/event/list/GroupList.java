@@ -6,6 +6,7 @@ import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.list.identNumbers.GroupIdentNumber;
 import model.event.list.identNumbers.IdentNumber;
+import model.event.list.weight.Weights;
 import model.kitchen.Kitchen;
 import model.person.FoodType;
 import model.person.Participant;
@@ -41,6 +42,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	private final PairList pairList;
 	private IdentNumber identNumber;
 	private List<Pair> successorPairs = new ArrayList<>();
+	private Weights weights;
 	//private final List<Kitchen> starterKitchens = new ArrayList<>();
 	//private final List<Kitchen> mainKitchens = new ArrayList<>();
 	//private final List<Kitchen> dessertKitchens = new ArrayList<>();
@@ -52,6 +54,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param groupWeights the weights used for grouping criteria
 	 */
 	public GroupList(PairList pairList, GroupWeights groupWeights) {
+		this.weights = groupWeights;
 		Group.COUNTER = 0;
 		List<Pair> sortedPairsList = sortPairs(pairList);
 		setList(buildBestGroups(sortedPairsList, groupWeights));
@@ -820,5 +823,9 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 	public List<Participant> getSuccessors() {
 		return pairList.getSuccessors();
+	}
+
+	public Weights getWeights() {
+		return weights;
 	}
 }
