@@ -66,7 +66,7 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
             cancelledParticipants.add(participant);
 
             CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-            cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
+            cancellationHandler.handleCancellation(cancelledParticipants, groupWeights);
 
             Platform.runLater(this::updateTables);
         }).start();
@@ -99,7 +99,7 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
                 }
 
                 CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-                cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
+                cancellationHandler.handleCancellation(cancelledParticipants, groupWeights);
 
                 Platform.runLater(this::updateTables);
             }).start();

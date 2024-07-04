@@ -5,11 +5,9 @@ import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.PairList;
 import model.event.list.weight.GroupWeights;
-import model.event.list.weight.PairingWeights;
 import model.person.Participant;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -38,10 +36,9 @@ public class CancellationHandler {
      * Handles the cancellation of participants and updates the relevant pairs and groups.
      *
      * @param cancelledParticipants the list of cancelled participants
-     * @param pairingWeights the weights used for pairing participants
      * @param groupWeights the weights used for forming groups
      */
-    public void handleCancellation(List<Participant> cancelledParticipants, PairingWeights pairingWeights, GroupWeights groupWeights) {
+    public void handleCancellation(List<Participant> cancelledParticipants, GroupWeights groupWeights) {
         for (Participant cancelledParticipant : cancelledParticipants) {
             Pair affectedPair = findAffectedPair(cancelledParticipant);
             if (affectedPair != null) {
@@ -50,14 +47,14 @@ public class CancellationHandler {
                     cancelledParticipants.remove(partner);
                     handleFullPairCancellation(affectedPair);
                 } else {
-                    handlePartialPairCancellation(affectedPair, cancelledParticipant, pairingWeights, groupWeights);
+                    handlePartialPairCancellation(affectedPair, cancelledParticipant, groupWeights);
                 }
             } else {
                 handleSingleCancellation(cancelledParticipant);
             }
         }
 
-        updateGroups(pairingWeights, groupWeights);
+        updateGroups(groupWeights);
     }
 
     /**
@@ -103,10 +100,9 @@ public class CancellationHandler {
      *
      * @param affectedPair the pair that includes the cancelled participant
      * @param cancelledParticipant the participant that is being cancelled
-     * @param pairingWeights the weights used for pairing participants
      * @param groupWeights the weights used for forming groups
      */
-    private void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant, PairingWeights pairingWeights, GroupWeights groupWeights) {
+    private void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant, GroupWeights groupWeights) {
         Participant remainingParticipant = findPartner(affectedPair, cancelledParticipant);
         participantSuccessors.add(remainingParticipant);
 
@@ -122,29 +118,26 @@ public class CancellationHandler {
         participantSuccessors.remove(cancelledParticipant);
     }
 
-
     /**
      * Updates the groups by forming new pairs and groups from the successor lists.
      *
-     * @param pairingWeights the weights used for pairing participants
      * @param groupWeights the weights used for forming groups
      */
-    /**
-     * Updates the groups by forming new pairs and groups from the successor lists.
-     *
-     * @param pairingWeights the weights used for pairing participants
-     * @param groupWeights the weights used for forming groups
-     */
-    public void updateGroups(PairingWeights pairingWeights, GroupWeights groupWeights) {
-
+    public void updateGroups(GroupWeights groupWeights) {
         List<Pair> newPairs = new ArrayList<>();
         if (participantSuccessors.size() >= 2) {
             // First form new pairs from participant successors
             List<Participant> tempParticipantSuccessors = new ArrayList<>(participantSuccessors);
-            participantSuccessors.clear();
-            PairList tempPairList = new PairList(pairingWeights);
+            PairList tempPairList = new PairList(pairList.getPairingWeights());
             tempPairList.clear();
-            newPairs = tempPairList.buildBestPairs(tempParticipantSuccessors, pairingWeights);
+            newPairs = tempPairList.buildBestPairs(tempParticipantSuccessors, pairList.getPairingWeights());
+        }
+
+        // Remove participants in newPairs from participantSuccessors
+        for (Pair pair : newPairs) {
+            for (Participant participant : pair.getParticipants()) {
+                participantSuccessors.remove(participant);
+            }
         }
 
         // Add all new pairs to the existing pair list
@@ -154,6 +147,5 @@ public class CancellationHandler {
         GroupList newGroupList = new GroupList(pairList, groupWeights);
 
         groupList = newGroupList;
-
     }
 }
