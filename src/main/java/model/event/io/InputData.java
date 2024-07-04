@@ -40,6 +40,8 @@ public class InputData {
 
     private static InputData inputData; // Singleton
 
+    private int idCounter = 0;
+
     /**
      * constructor for InputData
      */
@@ -190,7 +192,7 @@ public class InputData {
         Participant participant1 = new Participant(data.id, data.name, data.foodType, data.age, data.gender, data.hasKitchen, data.kitchenStory, data.kitchenLongitude, data.kitchenLatitude);
         Participant participant2 = new Participant(data.idTwo, data.nameTwo, data.foodType, data.ageTwo, data.genderTwo, data.hasKitchen, data.kitchenStory, data.kitchenLongitude, data.kitchenLatitude);
 
-        Pair pair = new Pair(participant1, participant2, true);
+        Pair pair = new Pair(participant1, participant2, true, idCounter++);
         participant1.setPair(pair);
         participant2.setPair(pair);
 

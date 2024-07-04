@@ -96,7 +96,7 @@ public class CancellationHandler {
         if (remainingParticipant != null) {
             Participant successor = findSuccessorForParticipant(remainingParticipant, pairingWeights);
             if (successor != null) {
-                Pair newPair = new Pair(remainingParticipant, successor);
+                Pair newPair = new Pair(remainingParticipant, successor, 1);
                 pairList.add(newPair);
                 affectedPairs.add(newPair);
             } else {
