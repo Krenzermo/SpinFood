@@ -26,6 +26,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
     private static final InputData inputData = InputData.getInstance();
     private final IdentNumber identNumber;
     private final List<Participant> successors = new ArrayList<>();
+    private int pairIdCounter = 0;
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
@@ -76,7 +77,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
             }
 
             Participant participant2 = participantList.remove(bestPartnerPosition);
-            bestPairList.add(new Pair(participant1, participant2, false)); // TODO: Determine kitchen ownership if necessary
+            bestPairList.add(new Pair(participant1, participant2, false, pairIdCounter++)); // TODO: Determine kitchen ownership if necessary
         }
 
         successors.addAll(participantList);
