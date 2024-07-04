@@ -3,13 +3,18 @@ package controller.FXMLControllers;
 import controller.LanguageController;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
+import javafx.stage.Modality;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
@@ -17,6 +22,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 
+import javafx.stage.FileChooser.ExtensionFilter;
 import model.event.Course;
 import model.event.collection.Group;
 import model.event.collection.Pair;
@@ -31,6 +37,8 @@ import model.person.Participant;
 import view.MainFrame;
 
 import java.io.File;
+import java.io.IOException;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
@@ -39,17 +47,16 @@ import java.util.stream.Collectors;
 /**
  * MainController class handles the primary logic for managing pairs and groups in the MainFrame of the application.
  * It manages the loading of participant lists, party locations, and executing algorithms to create pairs and groups.
- *
- * @author Daniel Hinkelmann
  */
 public class MainController {
     private final InputData inputData = InputData.getInstance();
     private final LanguageController languageController = LanguageController.getInstance();
     private PairList pairList;
+    private GroupList groupList; // Added groupList for group-related operations
     private IdentNumber pairIdentNumber;
-    private GroupList groupList;
-    private IdentNumber groupIdentNumber;
-    private GroupWeights groupWeights;
+	private IdentNumber groupIdentNumber;
+    private PairingWeights pairingWeights;
+    private GroupWeights groupWeights; // Added groupWeights for group-related operations
 
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
@@ -249,51 +256,76 @@ public class MainController {
 
         addListenersToTable(pairTable);
         makeTableNotReorderable(pairTable);
-        genderOneColPair.setVisible(false);
-        genderTwoColPair.setVisible(false);
-        kitchenColPair.setVisible(false);
+	    genderOneColPair.setVisible(false);
+	    genderTwoColPair.setVisible(false);
+	    kitchenColPair.setVisible(false);
 
-        addListenersToTable(groupTable);
-        makeTableNotReorderable(groupTable);
-        kitchenColGroup.setVisible(false);
+	    addListenersToTable(groupTable);
+	    makeTableNotReorderable(groupTable);
+	    kitchenColGroup.setVisible(false);
 
-        addListenersToTable(successorsPairList);
-        makeTableNotReorderable(successorsPairList);
-        kitchenParticipantSuccessors.setVisible(false);
+	    addListenersToTable(successorsPairList);
+	    makeTableNotReorderable(successorsPairList);
+	    kitchenParticipantSuccessors.setVisible(false);
 
-        addListenersToTable(successorsGroupList);
-        makeTableNotReorderable(successorsGroupList);
-        genderOneColPairSuccessors.setVisible(false);
-        genderTwoColPairSuccessors.setVisible(false);
-        kitchenColPairSuccessors.setVisible(false);
+	    addListenersToTable(successorsGroupList);
+	    makeTableNotReorderable(successorsGroupList);
+	    genderOneColPairSuccessors.setVisible(false);
+	    genderTwoColPairSuccessors.setVisible(false);
+	    kitchenColPairSuccessors.setVisible(false);
 
-        pairTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        groupTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-        successorsPairList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        successorsGroupList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+	    pairTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+	    groupTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+	    successorsPairList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+	    successorsGroupList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-        pairTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeSplitPairButtonActivity());
-        pairTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitPairButtonActivity());
+	    pairTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeSplitPairButtonActivity());
+	    pairTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitPairButtonActivity());
 
-        groupTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Group>) change -> changeSplitGroupButtonActivity());
-        groupTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitGroupButtonActivity());
+	    groupTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Group>) change -> changeSplitGroupButtonActivity());
+	    groupTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitGroupButtonActivity());
 
-        groupTable.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal) -> {
-            try {
-                PairsFromGroupController controller = new PairsFromGroupController();
-                controller.init(root.getScene().getWindow(), newVal.getPairs());
-                controller.writePairDataToTab();
-                controller.showAndWait();
-            } catch(NullPointerException e) {
-                return;
-            }
-        });
+	    successorsPairList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Participant>) change -> changeCreatePairButtonActivity());
+	    successorsPairList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreatePairButtonActivity());
 
-        successorsPairList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Participant>) change -> changeCreatePairButtonActivity());
-        successorsPairList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreatePairButtonActivity());
+	    successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeCreateGroupButtonActivity());
+	    successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
 
-        successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeCreateGroupButtonActivity());
-        successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
+	    groupTable.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal) -> {
+		    try {
+			    PairsFromGroupController controller = new PairsFromGroupController();
+			    controller.init(root.getScene().getWindow(), newVal.getPairs());
+			    controller.writePairDataToTab();
+			    controller.showAndWait();
+		    } catch (NullPointerException e) {
+			    return;
+		    }
+	    });
+	    partOneColPair.setCellFactory(column -> new TableCell<Pair, String>() {
+		    @Override
+		    protected void updateItem(String item, boolean empty) {
+			    super.updateItem(item, empty);
+			    if (item == null || empty) {
+				    setText(null);
+			    } else {
+				    setText(item);
+				    setOnMouseClicked(event -> showUnsubscriberDialog(getTableRow().getItem().getParticipants().get(0)));
+			    }
+		    }
+	    });
+
+	    partTwoColPair.setCellFactory(column -> new TableCell<Pair, String>() {
+		    @Override
+		    protected void updateItem(String item, boolean empty) {
+			    super.updateItem(item, empty);
+			    if (item == null || empty) {
+				    setText(null);
+			    } else {
+				    setText(item);
+				    setOnMouseClicked(event -> showUnsubscriberDialog(getTableRow().getItem().getParticipants().get(1)));
+			    }
+		    }
+	    });
     }
 
     private void bindAllComponents() {
@@ -357,7 +389,7 @@ public class MainController {
     }
 
     private void changeCreateGroupButtonActivity() {
-        if (successorsGroupList.getSelectionModel().getSelectedItems().size() == 3 && successorsGroupList.isFocused()) {
+        if (successorsGroupList.getSelectionModel().getSelectedItems().size() == 9 && successorsGroupList.isFocused()) {
             createGroupButton.setDisable(false);
         } else {
             createGroupButton.setDisable(true);
@@ -785,5 +817,34 @@ public class MainController {
             writeGroupListIdentNumbersToTab();
             writeGroupListSuccessorsToTab();
         }
+    }
+
+    private void showUnsubscriberDialog(Participant participant) {
+        try {
+            String relPath = "src/main/java/view/fxml/Unsubscriber.fxml";
+            File file = new File(relPath);
+            String absPath = file.getAbsolutePath();
+            URL url = new URL("file:///" + absPath);
+            FXMLLoader loader = new FXMLLoader(url);
+
+            DialogPane dialogPane = loader.load();
+            UnsubscriberController controller = loader.getController();
+            controller.initData(participant, pairList, groupList, pairingWeights, groupWeights, root.getScene().getWindow());
+
+            Stage dialogStage = new Stage();
+            dialogStage.setScene(new Scene(dialogPane));
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.showAndWait();
+
+            updateTables(); // Update tables after the dialog is closed to reflect changes
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    private void updateTables() {
+        writePairDataToTab();
+        writePairListIdentNumbersToTab();
+        writePairListSuccessorsToTab();
     }
 }

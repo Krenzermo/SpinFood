@@ -64,8 +64,8 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	}
 
 	public GroupList(List<Pair> pairs, GroupWeights weights) {
-		pairList = null;
-		setList(buildBestGroups(pairs, weights));
+		this(new PairList(pairs), weights);
+
 	}
 
 	private GroupIdentNumber deriveIdentNumber() {

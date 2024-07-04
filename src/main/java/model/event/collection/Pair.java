@@ -19,9 +19,9 @@ import java.util.Objects;
 
 /** This class represents one Pair of {@link Participant} that complies with the defined rules.
  *
- * @author Finn Brecher
- * @author Davide Piacenza
- * @author Daniel Hinkelmann
+ * @autor Finn Brecher
+ * @autor Davide Piacenza
+ * @autor Daniel Hinkelmann
  */
 public class Pair implements ParticipantCollection {
 
@@ -77,8 +77,6 @@ public class Pair implements ParticipantCollection {
         int value = list.stream().mapToInt(FoodType::getValue).max().getAsInt();
         return FoodType.herbiFromValue(value);
     }
-
-
 
     private boolean hasOnlyCarni(List<FoodType> list) {
         return !(list.contains(FoodType.VEGGIE) || list.contains(FoodType.VEGAN));
@@ -211,6 +209,40 @@ public class Pair implements ParticipantCollection {
         }
 
         return participants[1].getKitchen();
+    }
+
+    /**
+     * Replaces a participant in the pair with a new participant.
+     *
+     * @param oldParticipant the participant to be replaced
+     * @param newParticipant the new participant to be added to the pair
+     * @throws IllegalArgumentException if the old participant is not in the pair
+     * @throws IllegalArgumentException if the new participant is already in the pair
+     * @throws NullPointerException if the new participant is null
+     */
+    public void replaceParticipant(Participant oldParticipant, Participant newParticipant) {
+        if (newParticipant == null) {
+            throw new NullPointerException("New participant must not be null");
+        }
+        if (!contains(oldParticipant)) {
+            throw new IllegalArgumentException("Old participant is not part of this pair");
+        }
+        if (contains(newParticipant)) {
+            throw new IllegalArgumentException("New participant is already part of this pair");
+        }
+
+        if (participants[0].equals(oldParticipant)) {
+            participants[0] = newParticipant;
+        } else {
+            participants[1] = newParticipant;
+        }
+
+        // EXTRA kein update der anderen Parameter --> hat Tutor bestätigt
+        // Methode wird eh nur in der händischen Eingabe der GUI verwendet
+    }
+
+    private boolean contains(Participant participant) {
+        return participants[0].equals(participant) || participants[1].equals(participant);
     }
 
     /**
