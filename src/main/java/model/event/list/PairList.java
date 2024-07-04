@@ -26,7 +26,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
     private static final InputData inputData = InputData.getInstance();
     private final IdentNumber identNumber;
     private final List<Participant> successors = new ArrayList<>();
-    private int pairIdCounter = inputData.getPairInputData().size();
+    private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
@@ -37,6 +37,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
         setList(buildBestPairs(sortParticipants(inputData.getParticipantInputData()), pairingWeights));
         addAll(inputData.getPairInputData());
         this.identNumber = deriveIdentNumber();
+        successors.addAll(inputData.getParticipantSuccessorList());
         //this.printFoodNumbers();
     }
 
@@ -44,6 +45,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
 	    setList(pairList);
         addAll(inputData.getPairInputData());
         this.identNumber = deriveIdentNumber();
+        successors.addAll(inputData.getParticipantSuccessorList());
     }
 
     /**
@@ -345,6 +347,9 @@ public class PairList extends ParticipantCollectionList<Pair> {
         System.out.println("Meat: " + meatParticipants);
         System.out.println("AllMeat: " + (meatParticipants + noneParticipants) + "divided by 9: " + ((meatParticipants + noneParticipants) / 9.0));
         System.out.println("AllVeggie: " + (veganParticipants + veggieParticipants));
+    }
 
+    public int getPairIdCounterAndIncrement(){
+        return pairIdCounter++;
     }
 }

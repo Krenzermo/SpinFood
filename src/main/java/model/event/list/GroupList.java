@@ -1,6 +1,7 @@
 package model.event.list;
 
 import model.event.Course;
+import model.event.io.InputData;
 import model.event.list.weight.GroupWeights;
 import model.event.collection.Group;
 import model.event.collection.Pair;
@@ -39,6 +40,7 @@ import java.util.List;
  */
 public class GroupList extends ParticipantCollectionList<Group> {
 
+	private static final InputData inputData = InputData.getInstance();
 	private final PairList pairList;
 	private IdentNumber identNumber;
 	private List<Pair> successorPairs = new ArrayList<>();
@@ -61,15 +63,14 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		this.identNumber = getIdentNumber();
 		this.pairList = pairList;
 		this.identNumber = deriveIdentNumber();
+		successorPairs.addAll(inputData.getPairSuccessorList());
 	}
 
 	public GroupList(List<Pair> pairs, GroupWeights weights) {
 		this(new PairList(pairs), weights);
-
 	}
 
 	private GroupIdentNumber deriveIdentNumber() {
-
 		return new GroupIdentNumber(this);
 	}
 

@@ -11,18 +11,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 
-
-import javafx.stage.FileChooser.ExtensionFilter;
 import model.event.Course;
 import model.event.collection.Group;
 import model.event.collection.Pair;
@@ -32,7 +27,6 @@ import model.event.list.PairList;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
-import model.event.list.weight.Weights;
 import model.person.Participant;
 import view.MainFrame;
 
@@ -42,7 +36,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * MainController class handles the primary logic for managing pairs and groups in the MainFrame of the application.
@@ -291,6 +284,45 @@ public class MainController {
 	    successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeCreateGroupButtonActivity());
 	    successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
 
+
+        /*
+        // Sadly, this does not work :(
+
+        idColGroup.setCellValueFactory(cell -> new TableCell<Pair, Integer>() {
+            protected void updateItem(Integer item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty || item == null) {
+                    setText(null);
+                } else {
+                    cell.getValue().getCookPairIdAsObservable();
+                    setOnMouseClicked(event -> {
+                        try {
+                            PairsFromGroupController controller = new PairsFromGroupController();
+                            controller.init(root.getScene().getWindow(), groupList.getPairList().toArray(new Pair[0]));
+                            controller.writePairDataToTab();
+                            controller.showAndWait();
+                        } catch (NullPointerException e) {
+                            return;
+                        }
+                    });
+                }
+            }
+        }.itemProperty());
+
+
+        idColGroup.addEventHandler(ActionEvent.ANY, (event) -> {
+            try {
+                PairsFromGroupController controller = new PairsFromGroupController();
+                controller.init(root.getScene().getWindow(), groupList.getPairList().toArray(new Pair[0]));
+                controller.writePairDataToTab();
+                controller.showAndWait();
+            } catch (NullPointerException e) {
+                return;
+            }
+        });
+
+ */
+
 	    groupTable.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal) -> {
 		    try {
 			    PairsFromGroupController controller = new PairsFromGroupController();
@@ -301,7 +333,8 @@ public class MainController {
 			    return;
 		    }
 	    });
-	    partOneColPair.setCellFactory(column -> new TableCell<Pair, String>() {
+
+	    partOneColPair.setCellFactory(column -> new TableCell<>() {
 		    @Override
 		    protected void updateItem(String item, boolean empty) {
 			    super.updateItem(item, empty);
@@ -314,7 +347,7 @@ public class MainController {
 		    }
 	    });
 
-	    partTwoColPair.setCellFactory(column -> new TableCell<Pair, String>() {
+	    partTwoColPair.setCellFactory(column -> new TableCell<>() {
 		    @Override
 		    protected void updateItem(String item, boolean empty) {
 			    super.updateItem(item, empty);
@@ -365,7 +398,7 @@ public class MainController {
     }
 
     private void changeSplitPairButtonActivity() {
-        if (pairTable.getSelectionModel().getSelectedItems().size() == 1 && pairTable.isFocused()) {
+        if (pairTable.getSelectionModel().getSelectedItems().size() == 1 && (pairTable.isFocused() || splitPairButton.isFocused())) {
             splitPairButton.setDisable(false);
         } else {
             splitPairButton.setDisable(true);
@@ -373,7 +406,7 @@ public class MainController {
     }
 
     private void changeSplitGroupButtonActivity() {
-        if (groupTable.getSelectionModel().getSelectedItems().size() == 1 && groupTable.isFocused()) {
+        if (groupTable.getSelectionModel().getSelectedItems().size() == 1 && (groupTable.isFocused() || splitGroupButton.isFocused())) {
             splitGroupButton.setDisable(false);
         } else {
             splitGroupButton.setDisable(true);
@@ -381,7 +414,7 @@ public class MainController {
     }
 
     private void changeCreatePairButtonActivity() {
-        if (successorsPairList.getSelectionModel().getSelectedItems().size() == 2 && successorsPairList.isFocused()) {
+        if (successorsPairList.getSelectionModel().getSelectedItems().size() == 2 && (successorsPairList.isFocused() || createPairButton.isFocused())) {
             createPairButton.setDisable(false);
         } else {
             createPairButton.setDisable(true);
@@ -389,7 +422,7 @@ public class MainController {
     }
 
     private void changeCreateGroupButtonActivity() {
-        if (successorsGroupList.getSelectionModel().getSelectedItems().size() == 9 && successorsGroupList.isFocused()) {
+        if (successorsGroupList.getSelectionModel().getSelectedItems().size() == 9 && (successorsGroupList.isFocused() || createGroupButton.isFocused())) {
             createGroupButton.setDisable(false);
         } else {
             createGroupButton.setDisable(true);
@@ -518,13 +551,9 @@ public class MainController {
                 this.pairList = groupList.getPairList();
                 this.pairIdentNumber = pairList.getIdentNumber();
 
-                writeGroupDataToTab();
-                writeGroupListIdentNumbersToTab();
-                writeGroupListSuccessorsToTab();
+                updateGroupTable();
 
-                writePairDataToTab();
-                writePairListIdentNumbersToTab();
-                writePairListSuccessorsToTab();
+                updatePairTable();
 
                 tabPane.getSelectionModel().select(groupTab);
             } catch (NullPointerException e) {
@@ -559,10 +588,7 @@ public class MainController {
             try {
                 this.pairList = new PairList(weights);
                 this.pairIdentNumber = this.pairList.getIdentNumber();
-
-                writePairDataToTab();
-                writePairListIdentNumbersToTab();
-                writePairListSuccessorsToTab();
+                updatePairTable();
 
                 replaceGroupData();
 
@@ -579,27 +605,57 @@ public class MainController {
         event.consume();
     }
 
-    public void splitPair(ActionEvent event) {
-        // TODO: this
-
+    @FXML
+    void splitPair(ActionEvent event) {
+        Pair pair = pairTable.getSelectionModel().getSelectedItem();
+        removePair(pair);
+        pairList.getSuccessors().add(pair.getParticipants().get(0));
+        pairList.getSuccessors().add(pair.getParticipants().get(1));
+        updatePairTable();
+        if (!Objects.isNull(groupList)) {
+            updateGroupTable();
+        }
     }
 
-    public void createPair(ActionEvent event) {
-        // TODO: this
+    @FXML
+    void createPair(ActionEvent event) {
+        List<Participant> participants = successorsPairList.getSelectionModel().getSelectedItems();
+        // assert participants.size() == 2;
+        if (participants.size() != 2) { // this should never happen
+            throw new IllegalStateException("More than 2 successor participants were selected. Total: " + participants.size());
+        }
+
+        pairList.add(new Pair(participants.get(0), participants.get(1), pairList.getPairIdCounterAndIncrement()));
+        pairList.getSuccessors().removeAll(participants);
+        updatePairTable();
     }
 
+    @FXML
     public void splitGroup(ActionEvent event) {
         // TODO: this
         // this needs to split the entire group cluster.
         // maybe do this in a separate window and save the groups in some in-between storage?
     }
 
+    @FXML
     public void createGroup(ActionEvent event) {
         // TODO: this
         // this needs to create an entire group cluster.
         // maybe do this in a separate window and save the groups in some in-between storage?
     }
 
+    private void removePair(Pair pair) {
+        pairList.remove(pair);
+
+        if (!Objects.isNull(groupList)) {
+            for (Group group : pair.getGroups()) {
+                groupList.remove(group);
+                for (Pair PairTemp : group.getPairs()) {
+                    PairTemp.clearGroups();
+                }
+            }
+        }
+    }
 
     /**
      * Writes the pair data to the table in the UI.
@@ -615,8 +671,18 @@ public class MainController {
 
             ObservableList<Pair> data = FXCollections.observableArrayList(pairList.getPairs());
             pairTable.setItems(data);
+
 	        replaceGroupData();
         });
+    }
+
+    private void replaceGroupData() {
+        if (!groupTable.getItems().isEmpty()) {
+            this.groupList = new GroupList(pairList, groupWeights);
+            this.groupIdentNumber = groupList.getIdentNumber();
+
+            updateGroupTable();
+        }
     }
 
     protected synchronized void writeGroupDataToTab() {
@@ -757,9 +823,7 @@ public class MainController {
             if (temp != pairList) {
                 pairList = temp;
                 this.pairIdentNumber = pairList.getIdentNumber();
-                writePairDataToTab();
-                writePairListIdentNumbersToTab();
-                writePairListSuccessorsToTab();
+                updatePairTable();
 
                 tabPane.getSelectionModel().select(pairTab);
 	            replaceGroupData();
@@ -788,16 +852,12 @@ public class MainController {
                 groupList = temp;
                 this.groupIdentNumber = groupList.getIdentNumber();
                 this.groupWeights = (GroupWeights) groupList.getWeights();
-                writeGroupDataToTab();
-                writeGroupListIdentNumbersToTab();
-                writeGroupListSuccessorsToTab();
+                updateGroupTable();
 
                 pairList = groupList.getPairList();
                 pairIdentNumber = pairList.getIdentNumber();
 
-                writePairDataToTab();
-                writePairListIdentNumbersToTab();
-                writePairListSuccessorsToTab();
+                updatePairTable();
 
                 tabPane.getSelectionModel().select(groupTab);
             }
@@ -806,17 +866,6 @@ public class MainController {
             return;
         }
         MainFrame.stage.show();
-    }
-
-    private void replaceGroupData() {
-        if (!groupTable.getItems().isEmpty()) {
-            this.groupList = new GroupList(pairList, groupWeights);
-            this.groupIdentNumber = groupList.getIdentNumber();
-
-            writeGroupDataToTab();
-            writeGroupListIdentNumbersToTab();
-            writeGroupListSuccessorsToTab();
-        }
     }
 
     private void showUnsubscriberDialog(Participant participant) {
@@ -836,15 +885,21 @@ public class MainController {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.showAndWait();
 
-            updateTables(); // Update tables after the dialog is closed to reflect changes
+            updatePairTable(); // Update tables after the dialog is closed to reflect changes
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
-    private void updateTables() {
+    private void updatePairTable() {
         writePairDataToTab();
         writePairListIdentNumbersToTab();
         writePairListSuccessorsToTab();
+    }
+
+    private void updateGroupTable() {
+        writeGroupDataToTab();
+        writeGroupListIdentNumbersToTab();
+        writeGroupListSuccessorsToTab();
     }
 }
