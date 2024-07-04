@@ -21,7 +21,6 @@ import javafx.stage.Stage;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
-
 import javafx.stage.FileChooser.ExtensionFilter;
 import model.event.Course;
 import model.event.collection.Group;
@@ -54,7 +53,7 @@ public class MainController {
     private PairList pairList;
     private GroupList groupList; // Added groupList for group-related operations
     private IdentNumber pairIdentNumber;
-	private IdentNumber groupIdentNumber;
+    private IdentNumber groupIdentNumber;
     private PairingWeights pairingWeights;
     private GroupWeights groupWeights; // Added groupWeights for group-related operations
 
@@ -248,84 +247,82 @@ public class MainController {
     @FXML
     private MenuItem savePairSuccessorsMenuItem;
 
-    //private Stage primaryStage = (Stage) root.getScene().getWindow();
-
     @FXML
     public void initialize() {
         bindAllComponents();
 
         addListenersToTable(pairTable);
         makeTableNotReorderable(pairTable);
-	    genderOneColPair.setVisible(false);
-	    genderTwoColPair.setVisible(false);
-	    kitchenColPair.setVisible(false);
+        genderOneColPair.setVisible(false);
+        genderTwoColPair.setVisible(false);
+        kitchenColPair.setVisible(false);
 
-	    addListenersToTable(groupTable);
-	    makeTableNotReorderable(groupTable);
-	    kitchenColGroup.setVisible(false);
+        addListenersToTable(groupTable);
+        makeTableNotReorderable(groupTable);
+        kitchenColGroup.setVisible(false);
 
-	    addListenersToTable(successorsPairList);
-	    makeTableNotReorderable(successorsPairList);
-	    kitchenParticipantSuccessors.setVisible(false);
+        addListenersToTable(successorsPairList);
+        makeTableNotReorderable(successorsPairList);
+        kitchenParticipantSuccessors.setVisible(false);
 
-	    addListenersToTable(successorsGroupList);
-	    makeTableNotReorderable(successorsGroupList);
-	    genderOneColPairSuccessors.setVisible(false);
-	    genderTwoColPairSuccessors.setVisible(false);
-	    kitchenColPairSuccessors.setVisible(false);
+        addListenersToTable(successorsGroupList);
+        makeTableNotReorderable(successorsGroupList);
+        genderOneColPairSuccessors.setVisible(false);
+        genderTwoColPairSuccessors.setVisible(false);
+        kitchenColPairSuccessors.setVisible(false);
 
-	    pairTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-	    groupTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
-	    successorsPairList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-	    successorsGroupList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        pairTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        groupTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+        successorsPairList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        successorsGroupList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 
-	    pairTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeSplitPairButtonActivity());
-	    pairTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitPairButtonActivity());
+        pairTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeSplitPairButtonActivity());
+        pairTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitPairButtonActivity());
 
-	    groupTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Group>) change -> changeSplitGroupButtonActivity());
-	    groupTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitGroupButtonActivity());
+        groupTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Group>) change -> changeSplitGroupButtonActivity());
+        groupTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitGroupButtonActivity());
 
-	    successorsPairList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Participant>) change -> changeCreatePairButtonActivity());
-	    successorsPairList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreatePairButtonActivity());
+        successorsPairList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Participant>) change -> changeCreatePairButtonActivity());
+        successorsPairList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreatePairButtonActivity());
 
-	    successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeCreateGroupButtonActivity());
-	    successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
+        successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeCreateGroupButtonActivity());
+        successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
 
-	    groupTable.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal) -> {
-		    try {
-			    PairsFromGroupController controller = new PairsFromGroupController();
-			    controller.init(root.getScene().getWindow(), newVal.getPairs());
-			    controller.writePairDataToTab();
-			    controller.showAndWait();
-		    } catch (NullPointerException e) {
-			    return;
-		    }
-	    });
-	    partOneColPair.setCellFactory(column -> new TableCell<Pair, String>() {
-		    @Override
-		    protected void updateItem(String item, boolean empty) {
-			    super.updateItem(item, empty);
-			    if (item == null || empty) {
-				    setText(null);
-			    } else {
-				    setText(item);
-				    setOnMouseClicked(event -> showUnsubscriberDialog(getTableRow().getItem().getParticipants().get(0)));
-			    }
-		    }
-	    });
+        groupTable.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal) -> {
+            try {
+                PairsFromGroupController controller = new PairsFromGroupController();
+                controller.init(root.getScene().getWindow(), newVal.getPairs());
+                controller.writePairDataToTab();
+                controller.showAndWait();
+            } catch (NullPointerException e) {
+                return;
+            }
+        });
+        partOneColPair.setCellFactory(column -> new TableCell<Pair, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    setOnMouseClicked(event -> showUnsubscriberDialog(getTableRow().getItem().getParticipants().get(0)));
+                }
+            }
+        });
 
-	    partTwoColPair.setCellFactory(column -> new TableCell<Pair, String>() {
-		    @Override
-		    protected void updateItem(String item, boolean empty) {
-			    super.updateItem(item, empty);
-			    if (item == null || empty) {
-				    setText(null);
-			    } else {
-				    setText(item);
-				    setOnMouseClicked(event -> showUnsubscriberDialog(getTableRow().getItem().getParticipants().get(1)));
-			    }
-		    }
-	    });
+        partTwoColPair.setCellFactory(column -> new TableCell<Pair, String>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (item == null || empty) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    setOnMouseClicked(event -> showUnsubscriberDialog(getTableRow().getItem().getParticipants().get(1)));
+                }
+            }
+        });
     }
 
     private void bindAllComponents() {
@@ -334,7 +331,6 @@ public class MainController {
 
         // TODO: this
     }
-
 
     protected static <E> void addListenersToTable(TableView<E> tableView) {
         tableView.widthProperty().addListener((observableValue, oldValue, newValue) -> MainController.adjustColumnWidths(tableView));
@@ -345,7 +341,7 @@ public class MainController {
 
     protected static <E> void makeTableNotReorderable(TableView<E> tableView) {
         for (TableColumn<E, ?> column : tableView.getColumns()) {
-             column.setReorderable(false);
+            column.setReorderable(false);
         }
     }
 
@@ -353,12 +349,10 @@ public class MainController {
     protected static <E> void adjustColumnWidths(TableView<E> tableView) {
         long visibleColumns = tableView.getColumns().stream().filter(TableColumn::isVisible).count();
         if (visibleColumns > 0) {
-            double newWidth = (tableView.getWidth() -18) / visibleColumns; // 18px extra space for tableMenuButton
+            double newWidth = (tableView.getWidth() - 18) / visibleColumns; // 18px extra space for tableMenuButton
             for (TableColumn<E, ?> column : tableView.getColumns()) {
                 if (column.isVisible()) {
                     column.setPrefWidth(newWidth);
-                    //column.setMinWidth(newWidth);
-                    //column.setMaxWidth(newWidth);
                 }
             }
         }
@@ -436,15 +430,12 @@ public class MainController {
         }
     }
 
-
     @FXML
     void changeLanguageToEnglish(ActionEvent event) {
         if (!languageController.getLanguage().equals(Locale.ENGLISH)) {
             languageController.setLanguage(Locale.ENGLISH);
         }
     }
-
-
 
     @FXML
     void savePairList(ActionEvent event) {
@@ -600,7 +591,6 @@ public class MainController {
         // maybe do this in a separate window and save the groups in some in-between storage?
     }
 
-
     /**
      * Writes the pair data to the table in the UI.
      * Clears existing items if necessary and sets up value factories for the table columns.
@@ -615,7 +605,7 @@ public class MainController {
 
             ObservableList<Pair> data = FXCollections.observableArrayList(pairList.getPairs());
             pairTable.setItems(data);
-	        replaceGroupData();
+            replaceGroupData();
         });
     }
 
@@ -762,7 +752,7 @@ public class MainController {
                 writePairListSuccessorsToTab();
 
                 tabPane.getSelectionModel().select(pairTab);
-	            replaceGroupData();
+                replaceGroupData();
             }
         } catch (ClassCastException | NullPointerException e) {
             MainFrame.stage.show();
@@ -830,6 +820,7 @@ public class MainController {
             DialogPane dialogPane = loader.load();
             UnsubscriberController controller = loader.getController();
             controller.initData(participant, pairList, groupList, pairingWeights, groupWeights, root.getScene().getWindow());
+            controller.getOwner().setUserData(this);
 
             Stage dialogStage = new Stage();
             dialogStage.setScene(new Scene(dialogPane));
@@ -842,9 +833,12 @@ public class MainController {
         }
     }
 
-    private void updateTables() {
+    public void updateTables() {
         writePairDataToTab();
         writePairListIdentNumbersToTab();
         writePairListSuccessorsToTab();
+        writeGroupDataToTab();
+        writeGroupListIdentNumbersToTab();
+        writeGroupListSuccessorsToTab();
     }
 }

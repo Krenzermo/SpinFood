@@ -63,11 +63,6 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		this.identNumber = deriveIdentNumber();
 	}
 
-	public GroupList(List<Pair> pairs, GroupWeights weights) {
-		this(new PairList(pairs), weights);
-
-	}
-
 	private GroupIdentNumber deriveIdentNumber() {
 
 		return new GroupIdentNumber(this);
