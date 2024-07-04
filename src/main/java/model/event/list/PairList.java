@@ -44,6 +44,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
         successors.addAll(inputData.getParticipantSuccessorList());
     }
 
+
     public PairList(List<Pair> pairList) {
 	    setList(pairList);
         for (Pair pair : inputData.getPairInputData()) {

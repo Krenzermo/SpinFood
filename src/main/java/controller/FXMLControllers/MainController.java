@@ -659,12 +659,13 @@ public class MainController {
             throw new IllegalStateException("More or less than 9 successor pairs were selected. Total: " + pairs.size());
         }
 
-        pairs.forEach(Pair::clearGroups);
-        List<Group> list = new GroupList(pairs, groupWeights);
-        System.out.println();
-        list.forEach(System.out::println);
+        //pairs.forEach(Pair::clearGroups);
+        // TODO: fix this
+        List<Group> list = GroupList.getGroups(groupList, pairs, groupWeights); // this is a hack and not a permanent solution
 
         groupList.addAll(list);
+
+        groupList.getSuccessorPairs().removeAll(pairs);
 
         updateGroupTable();
     }
