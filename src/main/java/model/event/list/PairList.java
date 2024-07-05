@@ -27,6 +27,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
     private final IdentNumber identNumber;
     private final List<Participant> successors = new ArrayList<>();
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
+    PairingWeights pairingWeights123;
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
@@ -42,6 +43,8 @@ public class PairList extends ParticipantCollectionList<Pair> {
         }
         this.identNumber = deriveIdentNumber();
         successors.addAll(inputData.getParticipantSuccessorList());
+        this.pairingWeights123 = pairingWeights;
+        //this.printFoodNumbers();
     }
 
 
@@ -359,5 +362,9 @@ public class PairList extends ParticipantCollectionList<Pair> {
 
     public int getPairIdCounterAndIncrement(){
         return pairIdCounter++;
+    }
+
+    public PairingWeights getPairingWeights() {
+        return pairingWeights123;
     }
 }

@@ -1,5 +1,6 @@
 package controller.FXMLControllers;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.ComboBox;
@@ -7,7 +8,6 @@ import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
 import javafx.stage.Stage;
 import javafx.stage.Window;
-import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.processing.CancellationHandler;
 import model.event.list.GroupList;
@@ -66,7 +66,9 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
             cancelledParticipants.add(participant);
 
             CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-            cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
+            cancellationHandler.handleCancellation(cancelledParticipants, groupWeights);
+
+            Platform.runLater(this::updateTables);
         }).start();
     }
 
@@ -77,6 +79,7 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
             closeWindow();
             new Thread(() -> {
                 replaceParticipant(participant, successor);
+                Platform.runLater(this::updateTables);
             }).start();
         }
     }
@@ -96,7 +99,9 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
                 }
 
                 CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-                cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
+                cancellationHandler.handleCancellation(cancelledParticipants, groupWeights);
+
+                Platform.runLater(this::updateTables);
             }).start();
         }
     }
@@ -125,18 +130,15 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
                 pair.replaceParticipant(oldParticipant, newParticipant);
             }
         }
-
-        for (Group group : groupList) {
-            for (Pair pair : group.getPairs()) {
-                if (pair.getParticipants().contains(oldParticipant)) {
-                    pair.replaceParticipant(oldParticipant, newParticipant);
-                }
-            }
-        }
     }
 
     private void closeWindow() {
         Stage stage = (Stage) labelParticipant.getScene().getWindow();
         stage.close();
+    }
+
+    private void updateTables() {
+        MainController mainController = (MainController) getOwner().getUserData();
+        mainController.updateTables();
     }
 }
