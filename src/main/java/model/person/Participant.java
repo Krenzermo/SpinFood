@@ -43,7 +43,6 @@ public class Participant {
         this.hasKitchen = hasKitchen;
         this.kitchen = new Kitchen(new Location(kitchenLongitude, kitchenLatitude), kitchenStory);
         this.pair = null;
-        this.groups = null;
     }
 
     public Participant(String id, Name name, FoodType foodType, byte age, Gender gender) {
@@ -55,6 +54,7 @@ public class Participant {
         this.gender = gender;
         this.hasKitchen = KitchenAvailability.NO;
         this.kitchen = null;
+        this.pair = null;
     }
 
     /**
@@ -173,5 +173,9 @@ public class Participant {
     public void setNoKitchen() {
         this.hasKitchen = KitchenAvailability.NO;
         this.kitchen = null;
+    }
+
+    public void clearPair() {
+        this.pair = null;
     }
 }

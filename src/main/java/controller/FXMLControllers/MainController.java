@@ -772,6 +772,8 @@ public class MainController {
     @FXML
     void splitPairSuccessor(ActionEvent event) {
         Pair pair = successorsGroupList.getSelectionModel().getSelectedItem();
+        pair.getParticipants().get(0).clearPair();
+        pair.getParticipants().get(1).clearPair();
         groupList.getSuccessorPairs().remove(pair);
         pairList.remove(pair);
         pairList.getSuccessors().add(pair.getParticipants().get(0));
@@ -782,6 +784,9 @@ public class MainController {
 
     private static void removePair(Pair pair, PairList pairList, GroupList groupList) {
         pairList.remove(pair);
+        pair.getParticipants().get(0).clearPair();
+        pair.getParticipants().get(1).clearPair();
+
 
         if (!Objects.isNull(groupList)) {
             for (Group group : pair.getGroups()) {
@@ -1082,8 +1087,20 @@ public class MainController {
 
     @FXML
     void doPairSuccessorsMethod(ActionEvent actionEvent) {
+        int successors = pairList.getSuccessors().size();
+
         CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
         cancellationHandler.pairSuccessorParticipants();
+
+        if (successors == pairList.getSuccessors().size()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Fehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Die Teilnehmer können nicht konfliktfrei gepaart und hinzugefügt werden.");
+            alert.showAndWait();
+            return;
+        }
+
         updateTables();
     }
 }

@@ -78,6 +78,7 @@ public class CancellationHandler {
      */
     private void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant) {
         Participant remainingParticipant = affectedPair.getOtherParticipant(cancelledParticipant);
+        remainingParticipant.clearPair();
         participantSuccessors.add(remainingParticipant);
         pairList.remove(affectedPair);
     }
