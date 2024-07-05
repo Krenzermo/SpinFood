@@ -92,10 +92,7 @@ public class CancellationHandler {
         participantSuccessors.remove(cancelledParticipant);
     }
 
-    /**
-     * Updates the groups by forming new pairs and groups from the successor lists.
-     */
-    public void updateGroups(Pair affectedPair) {
+    public void pairSuccessorParticipants() {
         List<Pair> newPairs = new ArrayList<>();
 
         // First form new pairs from participant successors
@@ -111,6 +108,13 @@ public class CancellationHandler {
 
         // Add all new pairs to the existing pair list
         pairList.addAll(newPairs);
+    }
+
+    /**
+     * Updates the groups by forming new pairs and groups from the successor lists.
+     */
+    public void updateGroups(Pair affectedPair) {
+        pairSuccessorParticipants();
 
         // this is redundant as MainController.replaceGroupData() creates a new GroupList anyway
         if (!Objects.isNull(affectedPair.getGroups().get(0))) {

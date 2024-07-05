@@ -18,7 +18,9 @@ import javafx.stage.Modality;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
-
+import model.person.Name;
+import model.person.Gender;
+import model.person.FoodType;
 import model.event.Course;
 import model.event.collection.Group;
 import model.event.collection.Pair;
@@ -29,6 +31,7 @@ import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
 import model.person.Participant;
+import model.processing.CancellationHandler;
 import view.MainFrame;
 
 import java.io.File;
@@ -217,6 +220,9 @@ public class MainController {
     private Button createPairButton;
 
     @FXML
+    private Button doPairSuccessorsButton;
+
+    @FXML
     private Button splitGroupButton;
 
     @FXML
@@ -272,19 +278,20 @@ public class MainController {
         pairTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         groupTable.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
         successorsPairList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
-        successorsGroupList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
+        successorsGroupList.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
         pairTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeSplitPairButtonActivity());
         pairTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitPairButtonActivity());
 
-        groupTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Group>) change -> changeSplitGroupButtonActivity());
-        groupTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitGroupButtonActivity());
-
         successorsPairList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Participant>) change -> changeCreatePairButtonActivity());
         successorsPairList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreatePairButtonActivity());
 
-        successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeCreateGroupButtonActivity());
-        successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
+        successorsPairList.itemsProperty().addListener((observableValue, oldValue, newValue) -> changeDoPairSuccessorsButtonActivity());
+
+        groupTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Group>) change -> changeSplitGroupButtonActivity());
+        groupTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitGroupButtonActivity());
+
+        successorsGroupList.itemsProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
 
         successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeSplitSuccessorPairButtonActivity());
         successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitSuccessorPairButtonActivity());
@@ -412,6 +419,14 @@ public class MainController {
         }
     }
 
+    private void changeDoPairSuccessorsButtonActivity() {
+        if (!Objects.isNull(pairList) && pairList.getSuccessors().size() >= 2) {
+            doPairSuccessorsButton.setDisable(false);
+        } else {
+            doPairSuccessorsButton.setDisable(true);
+        }
+    }
+
     private void changeSplitGroupButtonActivity() {
         if (groupTable.getSelectionModel().getSelectedItems().size() == 1 && (groupTable.isFocused() || splitGroupButton.isFocused())) {
             splitGroupButton.setDisable(false);
@@ -429,7 +444,7 @@ public class MainController {
     }
 
     private void changeCreateGroupButtonActivity() {
-        if (successorsGroupList.getSelectionModel().getSelectedItems().size() == 9 && (successorsGroupList.isFocused() || createGroupButton.isFocused())) {
+        if (!Objects.isNull(groupList) && groupList.getSuccessorPairs().size() >= 9) {
             createGroupButton.setDisable(false);
         } else {
             createGroupButton.setDisable(true);
@@ -474,7 +489,51 @@ public class MainController {
 
     @FXML
     void openFileChooserCancellationsList(ActionEvent event) {
-        // TODO: this
+        FileChooser fileChooser = new FileChooser();
+        ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(csvFilter);
+        fileChooser.setTitle("Öffnen Sie die Stornierungsliste");
+        File file = fileChooser.showOpenDialog(root.getScene().getWindow());
+
+        if (file != null) {
+            List<Participant> cancelledParticipants = new ArrayList<>();
+            int lineCount = -1;
+
+            try (Scanner scanner = new Scanner(file)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    lineCount++;
+                    String[] parts = line.split(",");
+
+                    String id = parts[0];
+                    Name name = new Name(parts[1], "");
+
+                    for (Pair pair : pairList) {
+                        if (pair.getParticipants().get(0).getId().equals(id) && pair.getParticipants().get(0).getName().equals(name)) {
+                            cancelledParticipants.add(pair.getParticipants().get(0));
+                        }
+                        if (pair.getParticipants().get(1).getId().equals(id) && pair.getParticipants().get(1).getName().equals(name)) {
+                            cancelledParticipants.add(pair.getParticipants().get(1));
+                        }
+                    }
+                }
+
+                if (lineCount != cancelledParticipants.size()) {
+                    throw new Exception("Anzahl der Zeilen in der CSV-Datei stimmt nicht mit der Anzahl der verarbeiteten Abmeldungen überein." + lineCount + cancelledParticipants.toString());
+                }
+
+                CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
+                cancellationHandler.handleCancellation(cancelledParticipants);
+                updateTables(); // Update tables to reflect changes
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Verarbeitungsfehler");
+                alert.setHeaderText("Ein Fehler ist aufgetreten!");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
+            }
+        }
     }
 
     @FXML
@@ -662,41 +721,31 @@ public class MainController {
         removeGroupCluster(groupCluster, groupList);
         groupList.getSuccessorPairs().addAll(pairs);
 
-        replaceGroupData();
+        // replaceGroupData(); // this would make the button do absolutely nothing
         updateTables();
     }
 
     @FXML
     public void createGroup(ActionEvent event) {
-        List<Pair> pairs = successorsGroupList.getSelectionModel().getSelectedItems();
-        // assert pairs.size() == 9;
-        if (pairs.size() != 9) {
+        List<Pair> pairs = groupList.getSuccessorPairs().stream()
+                .filter(pair ->
+		                pair.getParticipants().stream()
+		                        .noneMatch(groupList.getParticipants()::contains))
+                .toList();
+
+        // assert pairs.size() >= 9;
+        if (pairs.size() < 9) {
             throw new IllegalStateException("More or less than 9 successor pairs were selected. Total: " + pairs.size());
         }
 
-        try {
-            pairList.addAll(pairs);
-        } catch (IllegalArgumentException e) {
+        if (pairs.stream().flatMap(pair -> pair.getParticipants().stream()).anyMatch(groupList.getParticipants()::contains)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Fehler");
             alert.setHeaderText("Ein Fehler ist aufgetreten!");
-            alert.setContentText("Die Paare können nicht konfliktfrei hinzugefügt werden: \n" + e.getMessage());
+            alert.setContentText("Die Paare können nicht konfliktfrei hinzugefügt werden.");
             alert.showAndWait();
             return;
         }
-        /*
-        // TODO: fix this
-        List<Group> list = GroupList.getGroups(groupList, pairs, groupWeights); // this is a hack and not a permanent solution
-
-        if (list.isEmpty()) {
-            System.out.println("hello");
-        } else {
-            groupList.addAll(list);
-            groupList.getSuccessorPairs().removeAll(pairs);
-        }
-
-         */
-        //pairList.addAll(pairs); // requires all successor pairs to not already be in pairList
 
         replaceGroupData();
         updateTables();
@@ -1013,4 +1062,13 @@ public class MainController {
             updateGroupTable();
         }
     }
+
+    @FXML
+    public void doPairSuccessorsMethod(ActionEvent actionEvent) {
+        CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
+        cancellationHandler.pairSuccessorParticipants();
+        updateTables();
+    }
+
+
 }

@@ -53,6 +53,8 @@ public class UnsubscriberController extends Dialog<PairList> {
         labelParticipant.setText("Teilnehmer: " + participant.getName());
         comboBoxSuccessor.getItems().addAll(getSuccessorList());
 
+		// this does nothing as it is not possible to retrieve the data the way this is initialized
+	    // See i.e., dialog window pairingWeightsController
         setResultConverter(buttonType -> {
             if (!buttonType.equals(ButtonType.CANCEL)) {
                 return getPairList();
