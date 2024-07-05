@@ -1,5 +1,6 @@
 package controller.FXMLControllers;
 
+import controller.LanguageController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -19,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UnsubscriberController extends Dialog<PairList> {
-
+    private static final LanguageController languageController = LanguageController.getInstance();
 
     @FXML
     private Label labelParticipant;
@@ -42,7 +43,11 @@ public class UnsubscriberController extends Dialog<PairList> {
 
     @FXML
     private void initialize() {
+        bindAllComponents();
+    }
 
+    private void bindAllComponents() {
+        // TODO: this
     }
 
     public void initData(Participant participant, PairList pairList, GroupList groupList, Window owner) {

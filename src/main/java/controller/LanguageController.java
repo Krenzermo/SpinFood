@@ -70,7 +70,7 @@ public class LanguageController {
 		if (locale.equals(Locale.ENGLISH)) {
 			return english;
 		}
-		throw new IllegalStateException("Language not supported: " + getLanguage());
+		throw new IllegalArgumentException("Language not supported: " + getLanguage());
 	}
 
 	/**
