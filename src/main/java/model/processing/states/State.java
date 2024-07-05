@@ -1,7 +1,36 @@
 package model.processing.states;
 
-public abstract class State {
+import model.event.list.GroupList;
+import model.event.list.PairList;
 
-    protected State prev;
+public class State {
 
+    private State prev;
+    private PairList pairList;
+    private GroupList groupList;
+
+    public State(PairList pairList, GroupList groupList) {
+        prev = this;
+        this.pairList = pairList;
+        this.groupList = groupList;
+    }
+
+    public State updateState(PairList pairList, GroupList groupList) {
+        prev = this;
+        this.pairList = pairList;
+        this.groupList = groupList;
+        return this;
+    }
+
+    public State revertState() {
+        return prev;
+    }
+
+    public PairList getPairList() {
+        return pairList;
+    }
+
+    public GroupList getGroupList() {
+        return groupList;
+    }
 }

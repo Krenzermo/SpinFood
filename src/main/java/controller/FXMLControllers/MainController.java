@@ -28,6 +28,7 @@ import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
 import model.person.Participant;
+import model.processing.states.State;
 import view.MainFrame;
 
 import java.io.File;
@@ -40,6 +41,7 @@ import java.util.*;
  * It manages the loading of participant lists, party locations, and executing algorithms to create pairs and groups.
  */
 public class MainController {
+    private State state;
     private final InputData inputData = InputData.getInstance();
     private final LanguageController languageController = LanguageController.getInstance();
     private PairList pairList;
@@ -238,6 +240,9 @@ public class MainController {
 
     @FXML
     private MenuItem savePairSuccessorsMenuItem;
+
+    @FXML
+    private Button undo;
 
     //private Stage primaryStage = (Stage) root.getScene().getWindow();
 
@@ -613,6 +618,8 @@ public class MainController {
         if (!Objects.isNull(groupList)) {
             updateGroupTable();
         }
+
+        undo.setDisable(false);
     }
 
     @FXML
@@ -626,6 +633,9 @@ public class MainController {
         pairList.add(new Pair(participants.get(0), participants.get(1), pairList.getPairIdCounterAndIncrement()));
         pairList.getSuccessors().removeAll(participants);
         updatePairTable();
+
+        undo.setDisable(false);
+        state.updateState();
     }
 
     @FXML
@@ -941,5 +951,19 @@ public class MainController {
         writeGroupDataToTab();
         writeGroupListIdentNumbersToTab();
         writeGroupListSuccessorsToTab();
+    }
+
+    @FXML
+    void goBackState(ActionEvent event) {
+        this.state = state.revertState();
+
+        pairList = state.getPairList();
+        pairIdentNumber = pairList.getIdentNumber();
+
+        groupList = state.getGroupList();
+        groupIdentNumber = groupList.getIdentNumber();
+
+        updatePairTable();
+        updateGroupTable();
     }
 }
