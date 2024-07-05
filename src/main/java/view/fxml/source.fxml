@@ -79,6 +79,7 @@
                                             <buttons>
                                                 <Button fx:id="splitPairButton" disable="true" mnemonicParsing="false" onAction="#splitPair" text="Paar trennen" />
                                               <Button fx:id="createPairButton" disable="true" mnemonicParsing="false" onAction="#createPair" text="Paar erstellen" />
+                                                <Button fx:id="doPairSuccessors" disable="false" mnemonicParsing="false" onAction="#doPairSuccessorsMethod" text="Nachfolger Paaren" />
                                             </buttons>
                                           </ButtonBar>
                                        </children>

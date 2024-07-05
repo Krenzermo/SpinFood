@@ -17,7 +17,9 @@ import javafx.stage.Modality;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
-
+import model.person.Name;
+import model.person.Gender;
+import model.person.FoodType;
 import model.event.Course;
 import model.event.collection.Group;
 import model.event.collection.Pair;
@@ -28,6 +30,7 @@ import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
 import model.person.Participant;
+import model.processing.CancellationHandler;
 import view.MainFrame;
 
 import java.io.File;
@@ -414,7 +417,51 @@ public class MainController {
 
     @FXML
     void openFileChooserCancellationsList(ActionEvent event) {
-        // TODO: this
+        FileChooser fileChooser = new FileChooser();
+        ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
+        fileChooser.getExtensionFilters().add(csvFilter);
+        fileChooser.setTitle("Öffnen Sie die Stornierungsliste");
+        File file = fileChooser.showOpenDialog(root.getScene().getWindow());
+
+        if (file != null) {
+            List<Participant> cancelledParticipants = new ArrayList<>();
+            int lineCount = -1;
+
+            try (Scanner scanner = new Scanner(file)) {
+                while (scanner.hasNextLine()) {
+                    String line = scanner.nextLine();
+                    lineCount++;
+                    String[] parts = line.split(",");
+
+                    String id = parts[0];
+                    Name name = new Name(parts[1], "");
+
+                    for (Pair pair : pairList) {
+                        if (pair.getParticipants().get(0).getId().equals(id) && pair.getParticipants().get(0).getName().equals(name)) {
+                            cancelledParticipants.add(pair.getParticipants().get(0));
+                        }
+                        if (pair.getParticipants().get(1).getId().equals(id) && pair.getParticipants().get(1).getName().equals(name)) {
+                            cancelledParticipants.add(pair.getParticipants().get(1));
+                        }
+                    }
+                }
+
+                if (lineCount != cancelledParticipants.size()) {
+                    throw new Exception("Anzahl der Zeilen in der CSV-Datei stimmt nicht mit der Anzahl der verarbeiteten Abmeldungen überein." + lineCount + cancelledParticipants.toString());
+                }
+
+                CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
+                cancellationHandler.handleCancellation(cancelledParticipants, groupWeights);
+                updateTables(); // Update tables to reflect changes
+
+            } catch (Exception e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Verarbeitungsfehler");
+                alert.setHeaderText("Ein Fehler ist aufgetreten!");
+                alert.setContentText(e.getMessage());
+                alert.showAndWait();
+            }
+        }
     }
 
     @FXML
@@ -906,4 +953,12 @@ public class MainController {
             updateGroupTable();
         }
     }
+
+    public void doPairSuccessorsMethod(ActionEvent actionEvent) {
+        CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
+        cancellationHandler.updateGroups(groupWeights);
+        updateTables();
+    }
+
+
 }

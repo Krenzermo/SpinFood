@@ -62,11 +62,9 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
     private void handleLogOut(ActionEvent event) {
         closeWindow();
         new Thread(() -> {
-            List<Participant> cancelledParticipants = new ArrayList<>();
-            cancelledParticipants.add(participant);
-
+            Pair affectedPair = findAffectedPair(participant);
             CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-            cancellationHandler.handleCancellation(cancelledParticipants, groupWeights);
+            cancellationHandler.handlePartialPairCancellation(affectedPair, participant);
 
             Platform.runLater(this::updateTables);
         }).start();
@@ -92,14 +90,9 @@ public class UnsubscriberController extends Dialog<ParticipantCollectionList> {
 
             closeWindow();
             new Thread(() -> {
-                List<Participant> cancelledParticipants = new ArrayList<>();
-                cancelledParticipants.add(participant);
-                if (partner != null) {
-                    cancelledParticipants.add(partner);
-                }
 
                 CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-                cancellationHandler.handleCancellation(cancelledParticipants, groupWeights);
+                cancellationHandler.handleFullPairCancellation(affectedPair);
 
                 Platform.runLater(this::updateTables);
             }).start();

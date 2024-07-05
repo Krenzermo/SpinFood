@@ -48,7 +48,7 @@ public class CancellationHandler {
                     cancelledParticipants.remove(partner);
                     handleFullPairCancellation(affectedPair);
                 } else {
-                    handlePartialPairCancellation(affectedPair, cancelledParticipant, groupWeights);
+                    handlePartialPairCancellation(affectedPair, cancelledParticipant);
                 }
             } else {
                 handleSingleCancellation(cancelledParticipant);
@@ -94,7 +94,7 @@ public class CancellationHandler {
      *
      * @param affectedPair the pair that is being cancelled
      */
-    private void handleFullPairCancellation(Pair affectedPair) {
+    public void handleFullPairCancellation(Pair affectedPair) {
         pairList.remove(affectedPair);
     }
 
@@ -103,9 +103,8 @@ public class CancellationHandler {
      *
      * @param affectedPair the pair that includes the cancelled participant
      * @param cancelledParticipant the participant that is being cancelled
-     * @param groupWeights the weights used for forming groups
      */
-    private void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant, GroupWeights groupWeights) {
+    public void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant) {
         Participant remainingParticipant = findPartner(affectedPair, cancelledParticipant);
         participantSuccessors.add(remainingParticipant);
 
