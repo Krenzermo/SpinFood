@@ -51,11 +51,21 @@ public class Pair implements ParticipantCollection {
         this.signedUpTogether = signedUpTogether;
         this.kitchen = autoAssignKitchen();
         this.foodType = autoAssignFoodType();
+        participant1.setPair(this);
+        participant2.setPair(this);
     }
 
+    /**
+     * Creates a shallow Copy of the specified {@link Pair}.
+     * That copy does not contain the {@link Group} information of the original {@link Pair}
+     *
+     * @param pair the specified {@link Pair}
+     */
     public Pair(Pair pair) {
-        this.participants[0] = pair.participants[0];
-        this.participants[1] = pair.participants[1];
+        this.participants[0] = new Participant(pair.participants[0]);
+        this.participants[1] = new Participant(pair.participants[1]);
+        participants[0].setPair(this);
+        participants[1].setPair(this);
         this.kitchen = pair.kitchen;
         this.foodType = pair.foodType;
         this.signedUpTogether = pair.signedUpTogether;
@@ -107,7 +117,7 @@ public class Pair implements ParticipantCollection {
 
     @Override
     public int getAgeDifference() {
-        return participants[0].getAge().getAgeDifference(participants[1].getAge());
+        return participants[0].getAgeRange().getAgeDifference(participants[1].getAgeRange());
     }
 
     @Override
@@ -352,7 +362,7 @@ public class Pair implements ParticipantCollection {
         return foodType;
     }
     public double getAverageAgeRange() {
-        return (participants[0].getAge().value + participants[1].getAge().value)/ 2.0;
+        return (participants[0].getAgeRange().value + participants[1].getAgeRange().value)/ 2.0;
     }
 
     public void setStarterNumber(int starterNumber) {
@@ -385,5 +395,18 @@ public class Pair implements ParticipantCollection {
 
     public ObservableValue<Boolean> getSignedUpTogetherAsObservable() {
         return new SimpleBooleanProperty(signedUpTogether);
+    }
+
+    /**
+     * Gets the partner of the specified {@link Participant} in this {@link Pair} and returns {@code null} otherwise
+     *
+     * @param participant the specified {@link Participant}
+     * @return the other {@link Participant} in {@code this} or {@code null}
+     */
+    public Participant getOtherParticipant(Participant participant) {
+        if (!contains(participant)) {
+            return null;
+        }
+        return participants[0].equals(participant) ? participants[1] : participants[0];
     }
 }

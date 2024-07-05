@@ -25,6 +25,7 @@ public class Participant {
     private final String id;
     private final Name name;
     private final FoodType foodType;
+    private final byte age;
     private final AgeRange ageRange;
     private final Gender gender;
     private KitchenAvailability hasKitchen;
@@ -36,6 +37,7 @@ public class Participant {
         this.id = id;
         this.name = name;
         this.foodType = foodType;
+        this.age = age;
         this.ageRange = AgeRange.getAgeRange(age);
         this.gender = gender;
         this.hasKitchen = hasKitchen;
@@ -48,10 +50,21 @@ public class Participant {
         this.id = id;
         this.name = name;
         this.foodType = foodType;
+        this.age = age;
         this.ageRange = AgeRange.getAgeRange(age);
         this.gender = gender;
         this.hasKitchen = KitchenAvailability.NO;
         this.kitchen = null;
+    }
+
+    /**
+     * Creates a shallow Copy of the specified {@link Participant}.
+     * That copy does not contain the {@link Pair} or the {@link Group} information of the original {@link Participant}
+     *
+     * @param participant the specified {@link Participant}
+     */
+    public Participant(Participant participant) {
+        this(participant.getId(), participant.getName(), participant.getFoodType(), participant.getAge(), participant.getGender());
     }
 
     @Override
@@ -83,7 +96,11 @@ public class Participant {
         return this.kitchen.compareTo(o.kitchen);
     }
 
-    public AgeRange getAge() {
+    public byte getAge() {
+        return age;
+    }
+
+    public AgeRange getAgeRange() {
         return ageRange;
     }
 
@@ -101,10 +118,6 @@ public class Participant {
 
     public FoodType getFoodType() {
         return foodType;
-    }
-
-    public AgeRange getAgeRange() {
-        return ageRange;
     }
 
     public Gender getGender() {

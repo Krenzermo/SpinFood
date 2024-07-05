@@ -173,6 +173,7 @@
                                        <children>
                                           <ButtonBar nodeOrientation="RIGHT_TO_LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <buttons>
+                                                <Button fx:id="splitPairSuccessorButton" disable="true" mnemonicParsing="false" onAction="#splitPairSuccessor" text="Paar trennen" />
                                               <Button fx:id="splitGroupButton" disable="true" mnemonicParsing="false" onAction="#splitGroup" text="Gruppe trennen" />
                                                 <Button fx:id="createGroupButton" disable="true" mnemonicParsing="false" onAction="#createGroup" text="Gruppe erstellen" />
                                             </buttons>

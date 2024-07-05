@@ -27,7 +27,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
     private final IdentNumber identNumber;
     private final List<Participant> successors = new ArrayList<>();
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
-    PairingWeights pairingWeights123;
+    private final PairingWeights pairingWeights123;
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
@@ -41,6 +41,11 @@ public class PairList extends ParticipantCollectionList<Pair> {
                 add(pair);
             }
         }
+        for (Pair pair : inputData.getPairSuccessorList()) {
+            if (!contains(pair)) {
+                add(pair);
+            }
+        }
         this.identNumber = deriveIdentNumber();
         successors.addAll(inputData.getParticipantSuccessorList());
         this.pairingWeights123 = pairingWeights;
@@ -48,6 +53,12 @@ public class PairList extends ParticipantCollectionList<Pair> {
     }
 
 
+    /**
+     * Creates a PairList Object without running the Pairing Algorithm.
+     * Note that this can cause Problems if the PairList isn't just used temporarily.
+     *
+     * @param pairList the specified pairList
+     */
     public PairList(List<Pair> pairList) {
 	    setList(pairList);
         for (Pair pair : inputData.getPairInputData()) {
@@ -55,8 +66,14 @@ public class PairList extends ParticipantCollectionList<Pair> {
                 add(pair);
             }
         }
+        for (Pair pair : inputData.getPairSuccessorList()) {
+            if (!contains(pair)) {
+                add(pair);
+            }
+        }
         this.identNumber = deriveIdentNumber();
         successors.addAll(inputData.getParticipantSuccessorList());
+        this.pairingWeights123 = null;
     }
 
     /**
@@ -190,7 +207,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @return the score based on the age comparison
      */
     private static double compareAge(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
-        double ageDifference = participant1.getAge().getAgeDifference(testedParticipant.getAge());
+        double ageDifference = participant1.getAgeRange().getAgeDifference(testedParticipant.getAgeRange());
         return pairingWeights.getAgeDifferenceWeight() * (1 - 0.1 * ageDifference);
     }
 

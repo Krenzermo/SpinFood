@@ -11,6 +11,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
@@ -222,6 +223,9 @@ public class MainController {
     private Button createGroupButton;
 
     @FXML
+    private Button splitPairSuccessorButton;
+
+    @FXML
     private MenuItem changeLanguageGerman;
 
     @FXML
@@ -282,6 +286,9 @@ public class MainController {
         successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeCreateGroupButtonActivity());
         successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
 
+        successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeSplitSuccessorPairButtonActivity());
+        successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitSuccessorPairButtonActivity());
+
         groupTable.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal) -> {
             try {
                 PairsFromGroupController controller = new PairsFromGroupController();
@@ -292,20 +299,21 @@ public class MainController {
                 return;
             }
         });
-        partOneColPair.setCellFactory(column -> new TableCell<Pair, String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (item == null || empty) {
-                    setText(null);
-                } else {
-                    setText(item);
-                    setOnMouseClicked(event -> showUnsubscriberDialog(getTableRow().getItem().getParticipants().get(0)));
-                }
-            }
+
+        partOneColPair.setCellFactory(cell -> new TableCell<>() {
+	        @Override
+	        protected void updateItem(String item, boolean empty) {
+		        super.updateItem(item, empty);
+		        if (item == null || empty) {
+			        setText(null);
+		        } else {
+			        setText(item);
+			        setOnMouseClicked(event -> showUnsubscriberDialog(getTableRow().getItem().getParticipants().get(0)));
+		        }
+	        }
         });
 
-        partTwoColPair.setCellFactory(column -> new TableCell<>() {
+        partTwoColPair.setCellFactory(cell -> new TableCell<>() {
 	        @Override
 	        protected void updateItem(String item, boolean empty) {
 		        super.updateItem(item, empty);
@@ -317,6 +325,35 @@ public class MainController {
 		        }
 	        }
         });
+
+
+        successorsPairList.setRowFactory(tableView -> {
+            TableRow<Participant> row = new TableRow<>();
+
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty() && event.getButton() == javafx.scene.input.MouseButton.PRIMARY && event.getClickCount() == 1) {
+                    Participant participant = row.getItem(); // successorsPairList.getSelectionModel().getSelectedItem()
+                    TableColumn<Participant, ?> column = (TableColumn<Participant, ?>) getClickedColumn(event, tableView);
+
+                    if (column == nameParticipantSuccessors) {
+                        showUnsubscriberDialog(participant);
+                    }
+                    // successorsPairList.getSelectionModel().select(participant);
+                }
+            });
+
+            return row;
+        });
+
+        /*
+        successorsPairList.onMouseClickedProperty().addListener((observable, oldValue, newValue) -> {
+            System.out.println("here");
+            if (successorsPairList.getSelectionModel().getSelectedItems() != null) {
+                showUnsubscriberDialog(successorsPairList.getSelectionModel().getSelectedItem());
+            }
+        });
+
+         */
     }
 
     private void bindAllComponents() {
@@ -352,6 +389,21 @@ public class MainController {
         }
     }
 
+    private TableColumn<?, ?> getClickedColumn(MouseEvent event, TableView<?> tableView) {
+        TableColumn<?, ?> column = null;
+        double x = event.getX();
+
+        for (TableColumn<?, ?> col : tableView.getColumns()) {
+            x -= col.getWidth();
+            if (x <= 0) {
+                column = col;
+                break;
+            }
+        }
+
+        return column;
+    }
+
     private void changeSplitPairButtonActivity() {
         if (pairTable.getSelectionModel().getSelectedItems().size() == 1 && (pairTable.isFocused() || splitPairButton.isFocused())) {
             splitPairButton.setDisable(false);
@@ -381,6 +433,14 @@ public class MainController {
             createGroupButton.setDisable(false);
         } else {
             createGroupButton.setDisable(true);
+        }
+    }
+
+    private void changeSplitSuccessorPairButtonActivity() {
+        if (successorsGroupList.getSelectionModel().getSelectedItems().size() == 1 && (successorsGroupList.isFocused() || splitPairSuccessorButton.isFocused())) {
+            splitPairSuccessorButton.setDisable(false);
+        } else {
+            splitPairSuccessorButton.setDisable(true);
         }
     }
 
@@ -503,9 +563,7 @@ public class MainController {
                 this.pairList = groupList.getPairList();
                 this.pairIdentNumber = pairList.getIdentNumber();
 
-                updateGroupTable();
-
-                updatePairTable();
+                updateTables();
 
                 tabPane.getSelectionModel().select(groupTab);
             } catch (NullPointerException e) {
@@ -540,9 +598,9 @@ public class MainController {
             try {
                 this.pairList = new PairList(weights);
                 this.pairIdentNumber = this.pairList.getIdentNumber();
-                updatePairTable();
 
                 replaceGroupData();
+                updateTables();
 
                 tabPane.getSelectionModel().select(pairTab);
             } catch (NullPointerException e) {
@@ -560,49 +618,52 @@ public class MainController {
     @FXML
     void splitPair(ActionEvent event) {
         Pair pair = pairTable.getSelectionModel().getSelectedItem();
-        removePair(pair);
+        removePair(pair, pairList, groupList);
         pairList.getSuccessors().add(pair.getParticipants().get(0));
         pairList.getSuccessors().add(pair.getParticipants().get(1));
-        updatePairTable();
-        if (!Objects.isNull(groupList)) {
-            updateGroupTable();
-        }
+
+        replaceGroupData();
+        updateTables();
     }
 
     @FXML
     void createPair(ActionEvent event) {
-        List<Participant> participants = successorsPairList.getSelectionModel().getSelectedItems();
-        // assert participants.size() == 2;
-        if (participants.size() != 2) { // this should never happen
-            throw new IllegalStateException("More or less than 2 successor participants were selected. Total: " + participants.size());
-        }
+        try {
+            List<Participant> participants = successorsPairList.getSelectionModel().getSelectedItems();
+            // assert participants.size() == 2;
+            if (participants.size() != 2) { // this should never happen
+                throw new IllegalStateException("More or less than 2 successor participants were selected. Total: " + participants.size());
+            }
 
-        pairList.add(new Pair(participants.get(0), participants.get(1), pairList.getPairIdCounterAndIncrement()));
-        pairList.getSuccessors().removeAll(participants);
-        updatePairTable();
+            Pair pair = new Pair(participants.get(0), participants.get(1), pairList.getPairIdCounterAndIncrement());
+            pairList.add(pair);
+            groupList.getSuccessorPairs().add(pair);
+            pairList.getSuccessors().removeAll(participants);
+
+            replaceGroupData();
+            updateTables();
+        } catch (NullPointerException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Fehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Es wurden noch keine Gruppenliste erstellt.");
+            alert.showAndWait();
+            return;
+        }
     }
 
     @FXML
     public void splitGroup(ActionEvent event) {
         Group group = groupTable.getSelectionModel().getSelectedItem();
-        HashSet<Group> groupCluster = new HashSet<>();
-        Arrays.stream(group.getPairs())
-                .sequential()
-                .flatMap(pair -> pair.getGroups().stream())
-                .distinct()
-                .flatMap(group1 -> Arrays.stream(group1.getPairs()).sequential())
-                .distinct()
-                .flatMap(pair -> pair.getGroups().stream())
-                .distinct()
-                .forEach(groupCluster::add);
 
+        List<Group> groupCluster = getGroupCluster(group);
         HashSet<Pair> pairs = new HashSet<>(groupCluster.stream().flatMap(group1 -> Arrays.stream(group1.getPairs()).sequential().distinct()).toList());
 
-        removeGroupCluster(groupCluster.stream().toList());
-
+        removeGroupCluster(groupCluster, groupList);
         groupList.getSuccessorPairs().addAll(pairs);
 
-        updateGroupTable();
+        replaceGroupData();
+        updateTables();
     }
 
     @FXML
@@ -613,18 +674,46 @@ public class MainController {
             throw new IllegalStateException("More or less than 9 successor pairs were selected. Total: " + pairs.size());
         }
 
-        //pairs.forEach(Pair::clearGroups);
+        try {
+            pairList.addAll(pairs);
+        } catch (IllegalArgumentException e) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Fehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Die Paare können nicht konfliktfrei hinzugefügt werden: \n" + e.getMessage());
+            alert.showAndWait();
+            return;
+        }
+        /*
         // TODO: fix this
         List<Group> list = GroupList.getGroups(groupList, pairs, groupWeights); // this is a hack and not a permanent solution
 
-        groupList.addAll(list);
+        if (list.isEmpty()) {
+            System.out.println("hello");
+        } else {
+            groupList.addAll(list);
+            groupList.getSuccessorPairs().removeAll(pairs);
+        }
 
-        groupList.getSuccessorPairs().removeAll(pairs);
+         */
+        //pairList.addAll(pairs); // requires all successor pairs to not already be in pairList
 
-        updateGroupTable();
+        replaceGroupData();
+        updateTables();
     }
 
-    private void removePair(Pair pair) {
+    @FXML
+    void splitPairSuccessor(ActionEvent event) {
+        Pair pair = successorsGroupList.getSelectionModel().getSelectedItem();
+        groupList.getSuccessorPairs().remove(pair);
+        pairList.remove(pair);
+        pairList.getSuccessors().add(pair.getParticipants().get(0));
+        pairList.getSuccessors().add(pair.getParticipants().get(1));
+
+        updateTables();
+    }
+
+    private static void removePair(Pair pair, PairList pairList, GroupList groupList) {
         pairList.remove(pair);
 
         if (!Objects.isNull(groupList)) {
@@ -638,7 +727,7 @@ public class MainController {
         }
     }
 
-    private void removeGroupCluster(List<Group> groups) {
+    public static void removeGroupCluster(List<Group> groups, GroupList groupList) {
         if (groups.size() != 9) {
             throw new IllegalStateException("More or less than 9 successor groups were selected. Total: " + groups.size());
         }
@@ -649,6 +738,21 @@ public class MainController {
                 pair.clearGroups();
             }
         }
+    }
+
+    public static List<Group> getGroupCluster(Group group) {
+        HashSet<Group> groupCluster = new HashSet<>();
+        Arrays.stream(group.getPairs())
+                .sequential()
+                .flatMap(pair -> pair.getGroups().stream())
+                .distinct()
+                .flatMap(group1 -> Arrays.stream(group1.getPairs()).sequential())
+                .distinct()
+                .flatMap(pair -> pair.getGroups().stream())
+                .distinct()
+                .forEach(groupCluster::add);
+
+        return groupCluster.stream().toList();
     }
 
     /**
@@ -665,18 +769,7 @@ public class MainController {
 
             ObservableList<Pair> data = FXCollections.observableArrayList(pairList.getPairs());
             pairTable.setItems(data);
-
-	        replaceGroupData();
         });
-    }
-
-    private void replaceGroupData() {
-        if (!groupTable.getItems().isEmpty()) {
-            this.groupList = new GroupList(pairList, groupWeights);
-            this.groupIdentNumber = groupList.getIdentNumber();
-
-            updateGroupTable();
-        }
     }
 
     protected synchronized void writeGroupDataToTab() {
@@ -754,6 +847,8 @@ public class MainController {
                 pairIdentNumbersList.getItems().clear();
             }
 
+            pairIdentNumber = pairList.getIdentNumber();
+
             ObservableList<String> data = FXCollections.observableArrayList(pairIdentNumber.asList());
             pairIdentNumbersList.setItems(data);
         });
@@ -764,6 +859,8 @@ public class MainController {
             if (!groupIdentNumbersList.getItems().isEmpty()) {
                 groupIdentNumbersList.getItems().clear();
             }
+
+            groupIdentNumber = groupList.getIdentNumber();
 
             ObservableList<String> data = FXCollections.observableArrayList(groupIdentNumber.asList());
             groupIdentNumbersList.setItems(data);
@@ -817,10 +914,11 @@ public class MainController {
             if (temp != pairList) {
                 pairList = temp;
                 this.pairIdentNumber = pairList.getIdentNumber();
-                updatePairTable();
 
                 tabPane.getSelectionModel().select(pairTab);
+
                 replaceGroupData();
+                updateTables();
             }
         } catch (ClassCastException | NullPointerException e) {
             MainFrame.stage.show();
@@ -846,12 +944,11 @@ public class MainController {
                 groupList = temp;
                 this.groupIdentNumber = groupList.getIdentNumber();
                 this.groupWeights = (GroupWeights) groupList.getWeights();
-                updateGroupTable();
 
                 pairList = groupList.getPairList();
                 pairIdentNumber = pairList.getIdentNumber();
 
-                updatePairTable();
+                updateTables();
 
                 tabPane.getSelectionModel().select(groupTab);
             }
@@ -872,7 +969,7 @@ public class MainController {
 
             DialogPane dialogPane = loader.load();
             UnsubscriberController controller = loader.getController();
-            controller.initData(participant, pairList, groupList, pairingWeights, groupWeights, root.getScene().getWindow());
+            controller.initData(participant, pairList, groupList, root.getScene().getWindow());
             controller.getOwner().setUserData(this);
 
             Stage dialogStage = new Stage();
@@ -880,9 +977,19 @@ public class MainController {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.showAndWait();
 
+            replaceGroupData();
 			updateTables(); // Update tables after the dialog is closed to reflect changes
 		} catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    private void replaceGroupData() {
+        if (!Objects.isNull(groupList) && !groupTable.getItems().isEmpty()) {
+            List<Pair> successors = groupList.getSuccessorPairs();
+            this.groupList = new GroupList(pairList, groupWeights);
+            //groupList.getSuccessorPairs().addAll(successors);
+            this.groupIdentNumber = groupList.getIdentNumber();
         }
     }
 
