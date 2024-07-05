@@ -1,6 +1,7 @@
 package model.person;
 
 import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 
 import java.util.Objects;
 
@@ -41,7 +42,7 @@ public record Name(String firstName, String lastName) {
         return firstName + lastName;
     }
 
-    public SimpleStringProperty asProperty() {
+    public ObservableValue<String> asObservable() {
         return new SimpleStringProperty(firstName + " " + lastName);
     }
 }

@@ -1,6 +1,12 @@
 package model.event.collection;
 
+<<<<<<< HEAD
 import javafx.beans.property.SimpleStringProperty;
+=======
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableValue;
+>>>>>>> Davide
 import model.event.Location;
 import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
@@ -11,7 +17,6 @@ import model.person.Participant;
 import model.event.Course;
 import model.event.io.InputData;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -24,7 +29,7 @@ import java.util.Objects;
  */
 public class Pair implements ParticipantCollection {
 
-    private int id;
+    private final int id;
     private final Participant[] participants = new Participant[2];
     private Kitchen kitchen;
     private boolean kitchenOf;
@@ -36,20 +41,29 @@ public class Pair implements ParticipantCollection {
     private int dessertNumber;
     public final boolean signedUpTogether;
 
-    private static int COUNTER = 0;
+    //private static int COUNTER = 0;
     private static final InputData inputData = InputData.getInstance();
 
-    public Pair(Participant participant1, Participant participant2) {
-        this(participant1, participant2, false);
+    public Pair(Participant participant1, Participant participant2, int idCounter) {
+        this(participant1, participant2, false, idCounter);
     }
 
-    public Pair(Participant participant1, Participant participant2, boolean signedUpTogether) {
-        id = COUNTER++;
+    public Pair(Participant participant1, Participant participant2, boolean signedUpTogether, int idCounter) {
+        id = idCounter;
         participants[0] = participant1;
         participants[1] = participant2;
         this.signedUpTogether = signedUpTogether;
         this.kitchen = autoAssignKitchen();
         this.foodType = autoAssignFoodType();
+    }
+
+    public Pair(Pair pair) {
+        this.participants[0] = pair.participants[0];
+        this.participants[1] = pair.participants[1];
+        this.kitchen = pair.kitchen;
+        this.foodType = pair.foodType;
+        this.signedUpTogether = pair.signedUpTogether;
+        this.id = pair.id;
     }
 
     private FoodType autoAssignFoodType() {
@@ -103,6 +117,10 @@ public class Pair implements ParticipantCollection {
     @Override
     public Course getCourse() {
         return course;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public List<Group> getGroups() {
@@ -365,7 +383,16 @@ public class Pair implements ParticipantCollection {
         this.dessertNumber = dessertNumber;
     }
 
+<<<<<<< HEAD
     public SimpleStringProperty getIdAsProperty() {
         return new SimpleStringProperty(String.valueOf(id));
+=======
+    public ObservableValue<Integer> getIdAsObservable() {
+        return new SimpleIntegerProperty(id).asObject();
+    }
+
+    public ObservableValue<Boolean> getSignedUpTogetherAsObservable() {
+        return new SimpleBooleanProperty(signedUpTogether);
+>>>>>>> Davide
     }
 }

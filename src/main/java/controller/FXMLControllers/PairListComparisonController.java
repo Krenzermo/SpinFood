@@ -1,5 +1,9 @@
 package controller.FXMLControllers;
 
+<<<<<<< HEAD
+=======
+import controller.LanguageController;
+>>>>>>> Davide
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -18,8 +22,16 @@ import model.event.list.weight.PairingWeights;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+<<<<<<< HEAD
 
 public class PairListComparisonController extends Dialog<PairList> {
+=======
+import java.util.List;
+
+public class PairListComparisonController extends Dialog<PairList> {
+    private final LanguageController languageController = LanguageController.getInstance();
+
+>>>>>>> Davide
     @FXML
     private TableColumn<Pair, String> courseColList1;
 
@@ -30,6 +42,7 @@ public class PairListComparisonController extends Dialog<PairList> {
     private DialogPane dialog;
 
     @FXML
+<<<<<<< HEAD
     private MenuItem editWeightsList1;
 
     @FXML
@@ -52,6 +65,30 @@ public class PairListComparisonController extends Dialog<PairList> {
 
     @FXML
     private TableColumn<Pair, String> kitchenColList2;
+=======
+    private MenuItem openList1MenuItem;
+
+    @FXML
+    private MenuItem openList2MenuItem;
+
+    @FXML
+    private MenuItem editWeightsList1MenuItem;
+
+    @FXML
+    private MenuItem editWeightsList2MenuItem;
+
+    @FXML
+    private TableView<Pair> tableList1;
+
+    @FXML
+    private TableView<Pair> tableList2;
+
+    @FXML
+    private TableColumn<Pair, Integer> idColList1;
+
+    @FXML
+    private TableColumn<Pair, Integer> idColList2;
+>>>>>>> Davide
 
     @FXML
     private TableColumn<Pair, String> per1ColList1;
@@ -66,10 +103,53 @@ public class PairListComparisonController extends Dialog<PairList> {
     private TableColumn<Pair, String> per2ColList2;
 
     @FXML
+<<<<<<< HEAD
     private TableView<Pair> tableList1;
 
     @FXML
     private TableView<Pair> tableList2;
+=======
+    private TableColumn<Pair, String> gender1ColList1;
+
+    @FXML
+    private TableColumn<Pair, String> gender1ColList2;
+
+    @FXML
+    private TableColumn<Pair, String> gender2ColList1;
+
+    @FXML
+    private TableColumn<Pair, String> gender2ColList2;
+
+    @FXML
+    private TableColumn<Pair, String> kitchenColList1;
+
+    @FXML
+    private TableColumn<Pair, String> kitchenColList2;
+
+    @FXML
+    private TableColumn<Pair, String> foodTypeColList1;
+
+    @FXML
+    private TableColumn<Pair, String> foodTypeColList2;
+
+    @FXML
+    private TableColumn<Pair, Boolean> signedUpTogetherColList1;
+
+    @FXML
+    private TableColumn<Pair, Boolean> signedUpTogetherColList2;
+
+    @FXML
+    private TitledPane identNumbersTableList1;
+
+    @FXML
+    private TitledPane identNumbersTableList2;
+
+    @FXML
+    private ListView<String> identNumberList1;
+
+    @FXML
+    private ListView<String> identNumbersList2;
+>>>>>>> Davide
 
     private PairList pairList1;
     private IdentNumber pairIdentNumber1;
@@ -80,6 +160,7 @@ public class PairListComparisonController extends Dialog<PairList> {
 
     @FXML
     private void initialize() {
+<<<<<<< HEAD
         // same as in MainController
         tableList1.columnResizePolicyProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(tableList1));
         tableList1.widthProperty().addListener((observable, oldValue, newValue) -> adjustColumnWidths(tableList1));
@@ -109,6 +190,25 @@ public class PairListComparisonController extends Dialog<PairList> {
                 }
             }
         }
+=======
+        bindAllComponents();
+
+        MainController.addListenersToTable(tableList1);
+        MainController.makeTableNotReorderable(tableList1);
+        gender1ColList1.setVisible(false);
+        gender2ColList1.setVisible(false);
+        kitchenColList1.setVisible(false);
+
+        MainController.addListenersToTable(tableList2);
+        MainController.makeTableNotReorderable(tableList2);
+        gender1ColList2.setVisible(false);
+        gender2ColList2.setVisible(false);
+        kitchenColList2.setVisible(false);
+    }
+
+    private void bindAllComponents() {
+        // TODO: this
+>>>>>>> Davide
     }
 
     public void init(Window owner) {
@@ -148,6 +248,13 @@ public class PairListComparisonController extends Dialog<PairList> {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+<<<<<<< HEAD
+=======
+
+        if (pairList1 != null) {
+            writePairDataToTab(tableList1, pairList1, identNumberList1);
+        }
+>>>>>>> Davide
     }
 
     private PairList getPairList1() {
@@ -159,6 +266,19 @@ public class PairListComparisonController extends Dialog<PairList> {
     }
 
     @FXML
+<<<<<<< HEAD
+=======
+    void openList1FileChooser(ActionEvent event) {
+        // TODO: not necessary
+    }
+
+    @FXML
+    void openList2FileChooser(ActionEvent event) {
+        // TODO: not necessary
+    }
+
+    @FXML
+>>>>>>> Davide
     void editWeightsList1(ActionEvent event) {
         String relPath = "src/main/java/view/fxml/pairingWeights.fxml";
         File file = new File(relPath);
@@ -218,16 +338,31 @@ public class PairListComparisonController extends Dialog<PairList> {
      * Writes the pair data to the table in the UI.
      * Clears existing items if necessary and sets up value factories for the table columns.
      */
+<<<<<<< HEAD
     protected void writePairDataToTab(TableView<Pair> pairTable, PairList pairList, ListView<String> listView) {
+=======
+    private void writePairDataToTab(TableView<Pair> pairTable, PairList pairList, ListView<String> listView) {
+>>>>>>> Davide
             if (!pairTable.getItems().isEmpty()) {
                 pairTable.getItems().clear();
             } else {
                 setupValueFactories(
+<<<<<<< HEAD
                         (TableColumn<Pair, String>) pairTable.getColumns().get(0),
                         (TableColumn<Pair, String>) pairTable.getColumns().get(1),
                         (TableColumn<Pair, String>) pairTable.getColumns().get(2),
                         (TableColumn<Pair, String>) pairTable.getColumns().get(3),
                         (TableColumn<Pair, String>) pairTable.getColumns().get(4)
+=======
+		                (TableColumn<Pair, Integer>) pairTable.getColumns().get(0),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(1),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(2),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(3),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(4),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(5),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(6),
+		                (TableColumn<Pair, Boolean>) pairTable.getColumns().get(7)
+>>>>>>> Davide
                 );
             }
 
@@ -240,6 +375,7 @@ public class PairListComparisonController extends Dialog<PairList> {
     /**
      * Sets up the value factories for the table columns to display the pair data.
      */
+<<<<<<< HEAD
     protected void setupValueFactories(
             TableColumn<Pair, String> idColPair,
             TableColumn<Pair, String> partOneColPair,
@@ -271,6 +407,26 @@ public class PairListComparisonController extends Dialog<PairList> {
                     return course.asProperty();
                 }
         );
+=======
+    private void setupValueFactories(
+            TableColumn<Pair, Integer> idColPair,
+            TableColumn<Pair, String> partOneColPair,
+            TableColumn<Pair, String> partTwoColPair,
+            TableColumn<Pair, String> genderOneColPair,
+            TableColumn<Pair, String> genderTwoColPair,
+            TableColumn<Pair, String> kitchenColPair,
+            TableColumn<Pair, String> foodTypeColPair,
+            TableColumn<Pair, Boolean> signedUpTogether
+    ) {
+        idColPair.setCellValueFactory(cell -> cell.getValue().getIdAsObservable());
+        partOneColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(0).getName().asObservable());
+        partTwoColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(1).getName().asObservable());
+        genderOneColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(0).getGender().asObservable());
+        genderTwoColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(1).getGender().asObservable());
+        kitchenColPair.setCellValueFactory(cell -> cell.getValue().getKitchen().asObservable());
+        foodTypeColPair.setCellValueFactory(cell -> cell.getValue().getFoodType().asObservable());
+        signedUpTogether.setCellValueFactory(cell -> cell.getValue().getSignedUpTogetherAsObservable());
+>>>>>>> Davide
     }
 
     /**
@@ -284,5 +440,34 @@ public class PairListComparisonController extends Dialog<PairList> {
             ObservableList<String> data = FXCollections.observableArrayList(pairIdentNumber.asList());
             pairIdentNumbersList.setItems(data);
     }
+<<<<<<< HEAD
+=======
+
+    /**
+     * Call this method before calling init()
+     *
+     * @param list The {@link PairList} to be set as pairList1
+     */
+    public void setInitialList1(PairList list) {
+        if (list == null) {
+            return;
+        }
+        pairList1 = list;
+        pairIdentNumber1 = pairList1.getIdentNumber();
+    }
+
+    /**
+     * Call this method before calling init()
+     *
+     * @param list The {@link List} of {@link Pair} instances to be set as pairList1
+     */
+    public void setInitialList1(List<Pair> list) {
+        if (list == null) {
+            return;
+        }
+        pairList1 = new PairList(list);
+        pairIdentNumber1 = pairList1.getIdentNumber();
+    }
+>>>>>>> Davide
 }
 

@@ -1,5 +1,6 @@
 package model.event.io;
 
+import model.processing.CancellationHandler;
 import model.event.Course;
 import model.event.Location;
 import model.event.collection.Group;

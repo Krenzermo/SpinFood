@@ -40,7 +40,11 @@ public class Main {
 		System.out.println("A: preference deviation > path length > age difference > gender diversity > number " +
 				"of elements:");
 		PairingWeights pairingWeightsA = new PairingWeights(5,1,10);
+<<<<<<< HEAD
 		GroupWeights groupWeightsA = new GroupWeights(3,1,10,5);
+=======
+		GroupWeights groupWeightsA = new GroupWeights(2,1,20,10);
+>>>>>>> Davide
 		PairList pairListA = new PairList(pairingWeightsA);
 		GroupList groupListA = new GroupList(pairListA,groupWeightsA);
 		System.out.println(pairListA.getIdentNumber());
@@ -54,7 +58,11 @@ public class Main {
 				"age difference");
 
 		PairingWeights pairingWeightsB = new PairingWeights(5,1,10);
+<<<<<<< HEAD
 		GroupWeights groupWeightsB = new GroupWeights(3,1,10,5);
+=======
+		GroupWeights groupWeightsB = new GroupWeights(1,1,20,10);
+>>>>>>> Davide
 		PairList pairListB = new PairList(pairingWeightsB);
 		GroupList groupListB = new GroupList(pairListB,groupWeightsB);
 		System.out.println(pairListB.getIdentNumber());
@@ -67,8 +75,13 @@ public class Main {
 		System.out.println("C gender diversity > age difference > preference deviation > path length > number " +
 				"of elements");
 
+<<<<<<< HEAD
 		PairingWeights pairingWeightsC = new PairingWeights(5,10,1);
 		GroupWeights groupWeightsC = new GroupWeights(5,10,3,1);
+=======
+		PairingWeights pairingWeightsC = new PairingWeights(5,3,1);
+		GroupWeights groupWeightsC = new GroupWeights(5,10,3,0.1);
+>>>>>>> Davide
 		PairList pairListC = new PairList(pairingWeightsC);
 		GroupList groupListC = new GroupList(pairListC,groupWeightsC);
 		System.out.println(pairListC.getIdentNumber());

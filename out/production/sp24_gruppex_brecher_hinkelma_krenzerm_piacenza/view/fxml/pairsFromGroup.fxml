@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.ButtonType?>
+<?import javafx.scene.control.DialogPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<DialogPane fx:id="dialogPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="158.0" prefWidth="753.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <buttonTypes>
+      <ButtonType fx:constant="CLOSE" />
+   </buttonTypes>
+   <content>
+      <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="136.0" prefWidth="753.0">
+         <children>
+            <TableView fx:id="pairTable" prefHeight="117.0" prefWidth="752.0">
+              <columns>
+                <TableColumn fx:id="idCol" prefWidth="48.0" text="ID" />
+                <TableColumn fx:id="partOneCol" prefWidth="130.0" text="Person 1" />
+                  <TableColumn fx:id="part2Col" prefWidth="130.0" text="Person 2" />
+                  <TableColumn fx:id="kitchenCol" prefWidth="345.0" text="Küche" />
+                  <TableColumn fx:id="courseCol" prefWidth="104.0" text="Kochgang" />
+              </columns>
+            </TableView>
+         </children>
+      </AnchorPane>
+   </content>
+</DialogPane>

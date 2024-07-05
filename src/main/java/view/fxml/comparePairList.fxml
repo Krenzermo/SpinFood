@@ -18,10 +18,23 @@
          <children>
             <MenuBar AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <menus>
+<<<<<<< HEAD
                 <Menu mnemonicParsing="false" text="Bearbeiten">
                   <items>
                     <MenuItem fx:id="editWeightsList1" mnemonicParsing="false" onAction="#editWeightsList1" text="Parameter für Liste 1 ändern" />
                         <MenuItem fx:id="editWeightsList2" mnemonicParsing="false" onAction="#editWeightsList2" text="Parameter für Liste 2 ändern" />
+=======
+                  <Menu mnemonicParsing="false" text="Öffnen">
+                    <items>
+                      <MenuItem fx:id="openList1MenuItem" mnemonicParsing="false" onAction="#openList1FileChooser" text="Liste 1 öffnen..." />
+                        <MenuItem fx:id="openList2MenuItem" mnemonicParsing="false" onAction="#openList2FileChooser" text="Liste 2 öffnen..." />
+                    </items>
+                  </Menu>
+                <Menu mnemonicParsing="false" text="Erstellen">
+                  <items>
+                    <MenuItem fx:id="editWeightsList1MenuItem" mnemonicParsing="false" onAction="#editWeightsList1" text="Liste 1 erstellen" />
+                        <MenuItem fx:id="editWeightsList2MenuItem" mnemonicParsing="false" onAction="#editWeightsList2" text="Liste 2 erstellen" />
+>>>>>>> Davide
                   </items>
                 </Menu>
               </menus>
@@ -41,11 +54,22 @@
                                  <children>
                                     <TableView fx:id="tableList1" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <columns>
+<<<<<<< HEAD
                                         <TableColumn fx:id="idColList1" prefWidth="55.0" resizable="false" text="ID" />
                                         <TableColumn fx:id="per1ColList1" prefWidth="113.0" resizable="false" text="Person 1" />
                                           <TableColumn fx:id="per2ColList1" prefWidth="113.0" resizable="false" text="Person 2" />
                                           <TableColumn fx:id="kitchenColList1" minWidth="-Infinity" prefWidth="236.0" resizable="false" text="Küche" />
                                           <TableColumn fx:id="courseColList1" minWidth="0.0" prefWidth="100.0" resizable="false" text="Kochgang" />
+=======
+                                        <TableColumn fx:id="idColList1" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="ID" />
+                                        <TableColumn fx:id="per1ColList1" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Person 1" />
+                                          <TableColumn fx:id="per2ColList1" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Person 2" />
+                                          <TableColumn fx:id="gender1ColList1" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht 1" />
+                                          <TableColumn fx:id="gender2ColList1" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht 2" />
+                                          <TableColumn fx:id="kitchenColList1" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Küche" />
+                                          <TableColumn fx:id="foodTypeColList1" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Essenspräferenz" />
+                                          <TableColumn fx:id="signedUpTogetherColList1" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Gemeinsam Angemeldet" />
+>>>>>>> Davide
                                       </columns>
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
@@ -55,7 +79,11 @@
                               </AnchorPane>
                               <AnchorPane minWidth="-Infinity" prefWidth="200.0" HBox.hgrow="NEVER">
                                  <children>
+<<<<<<< HEAD
                                     <TitledPane animated="false" collapsible="false" layoutX="-42.0" layoutY="14.0" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+=======
+                                    <TitledPane fx:id="identNumbersTableList1" animated="false" collapsible="false" layoutX="-42.0" layoutY="14.0" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+>>>>>>> Davide
                                       <content>
                                         <AnchorPane>
                                              <children>
@@ -76,6 +104,7 @@
                            <children>
                               <AnchorPane HBox.hgrow="ALWAYS">
                                  <children>
+<<<<<<< HEAD
                                     <TableView fx:id="tableList2" layoutX="7.0" layoutY="8.0" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <columns>
                                         <TableColumn fx:id="idColList2" prefWidth="55.0" text="ID" />
@@ -84,6 +113,19 @@
                                           <TableColumn fx:id="kitchenColList2" prefWidth="236.0" text="Küche" />
                                           <TableColumn fx:id="courseColList2" prefWidth="100.0" text="Kochgang" />
                                       </columns>
+=======
+                                    <TableView fx:id="tableList2" tableMenuButtonVisible="true" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                       <columns>
+                                          <TableColumn fx:id="idColList2" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="ID" />
+                                          <TableColumn fx:id="per1ColList2" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Person 1" />
+                                          <TableColumn fx:id="per2ColList2" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Person 2" />
+                                          <TableColumn fx:id="gender1ColList2" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht 1" />
+                                          <TableColumn fx:id="gender2ColList2" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Geschlecht 2" />
+                                          <TableColumn fx:id="kitchenColList2" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Küche" />
+                                          <TableColumn fx:id="foodTypeColList2" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Essenspräferenz" />
+                                          <TableColumn fx:id="signedUpTogetherColList2" editable="false" maxWidth="1.7976931348623157E308" minWidth="50.0" prefWidth="-1.0" resizable="false" text="Gemeinsam Angemeldet" />
+                                       </columns>
+>>>>>>> Davide
                                        <columnResizePolicy>
                                           <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                                        </columnResizePolicy>
@@ -92,7 +134,11 @@
                               </AnchorPane>
                               <AnchorPane minWidth="-Infinity" prefWidth="200.0" HBox.hgrow="NEVER">
                                  <children>
+<<<<<<< HEAD
                                     <TitledPane animated="false" collapsible="false" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+=======
+                                    <TitledPane fx:id="identNumbersTableList2" animated="false" collapsible="false" text="Kennzahlen" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+>>>>>>> Davide
                                       <content>
                                         <AnchorPane>
                                              <children>
