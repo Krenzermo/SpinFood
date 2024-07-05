@@ -287,11 +287,13 @@ public class MainController {
         successorsPairList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeCreatePairButtonActivity());
 
         successorsPairList.itemsProperty().addListener((observableValue, oldValue, newValue) -> changeDoPairSuccessorsButtonActivity());
+        pairTable.itemsProperty().addListener((observableValue, oldValue, newValue) -> changeDoPairSuccessorsButtonActivity());
 
         groupTable.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Group>) change -> changeSplitGroupButtonActivity());
         groupTable.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitGroupButtonActivity());
 
         successorsGroupList.itemsProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
+        groupTable.itemsProperty().addListener((observableValue, oldValue, newValue) -> changeCreateGroupButtonActivity());
 
         successorsGroupList.getSelectionModel().getSelectedItems().addListener((ListChangeListener<? super Pair>) change -> changeSplitSuccessorPairButtonActivity());
         successorsGroupList.focusedProperty().addListener((observableValue, oldValue, newValue) -> changeSplitSuccessorPairButtonActivity());
@@ -747,7 +749,18 @@ public class MainController {
             return;
         }
 
+        int successorCount = groupList.getSuccessorPairs().size();
+
         replaceGroupData();
+
+        if (successorCount == groupList.getSuccessorPairs().size()) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Fehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Die Paare können nicht konfliktfrei hinzugefügt werden.");
+            alert.showAndWait();
+            return;
+        }
         updateTables();
     }
 
@@ -1019,7 +1032,6 @@ public class MainController {
             DialogPane dialogPane = loader.load();
             UnsubscriberController controller = loader.getController();
             controller.initData(participant, pairList, groupList, root.getScene().getWindow());
-            controller.getOwner().setUserData(this);
 
             Stage dialogStage = new Stage();
             dialogStage.setScene(new Scene(dialogPane));
@@ -1069,6 +1081,4 @@ public class MainController {
         cancellationHandler.pairSuccessorParticipants();
         updateTables();
     }
-
-
 }

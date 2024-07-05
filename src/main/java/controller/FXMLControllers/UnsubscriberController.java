@@ -53,8 +53,8 @@ public class UnsubscriberController extends Dialog<PairList> {
         labelParticipant.setText("Teilnehmer: " + participant.getName());
         comboBoxSuccessor.getItems().addAll(getSuccessorList());
 
-		// this does nothing as it is not possible to retrieve the data the way this is initialized
-	    // See i.e., dialog window pairingWeightsController
+        // this does nothing as it is not possible to retrieve the data the way this is initialized
+        // See i.e., dialog window pairingWeightsController
         setResultConverter(buttonType -> {
             if (!buttonType.equals(ButtonType.CANCEL)) {
                 return getPairList();
@@ -73,13 +73,12 @@ public class UnsubscriberController extends Dialog<PairList> {
 
     @FXML
     private void handleLogOut(ActionEvent event) {
-        Platform.runLater(() -> {
-            List<Participant> cancelledParticipants = new ArrayList<>();
-            cancelledParticipants.add(participant);
+        List<Participant> cancelledParticipants = new ArrayList<>();
+        cancelledParticipants.add(participant);
 
-            CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-            cancellationHandler.handleCancellation(cancelledParticipants);
-        });
+        CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
+        cancellationHandler.handleCancellation(cancelledParticipants);
+
         closeWindow();
     }
 
@@ -87,9 +86,7 @@ public class UnsubscriberController extends Dialog<PairList> {
     private void handleSubstitute(ActionEvent event) {
         Participant successor = comboBoxSuccessor.getValue();
         if (successor != null) {
-            Platform.runLater(() -> {
-                replaceParticipant(participant, successor);
-            });
+            replaceParticipant(participant, successor);
             closeWindow();
         }
     }
@@ -100,16 +97,15 @@ public class UnsubscriberController extends Dialog<PairList> {
         if (affectedPair != null) {
             Participant partner = affectedPair.getOtherParticipant(participant);
 
-            Platform.runLater(() -> {
-                List<Participant> cancelledParticipants = new ArrayList<>();
-                cancelledParticipants.add(participant);
-                if (partner != null) {
-                    cancelledParticipants.add(partner);
-                }
+            List<Participant> cancelledParticipants = new ArrayList<>();
+            cancelledParticipants.add(participant);
+            if (partner != null) {
+                cancelledParticipants.add(partner);
+            }
 
-                CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-                cancellationHandler.handleCancellation(cancelledParticipants);
-            });
+            CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
+            cancellationHandler.handleCancellation(cancelledParticipants);
+
             closeWindow();
         }
     }

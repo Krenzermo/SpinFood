@@ -52,12 +52,11 @@ public class CancellationHandler {
                 } else {
                     handlePartialPairCancellation(affectedPair, cancelledParticipant);
                 }
-
-                if (!Objects.isNull(groupList)) {
-                    updateGroups(affectedPair);
-                }
             } else {
                 handleSingleCancellation(cancelledParticipant);
+            }
+            if (!Objects.isNull(groupList) && !Objects.isNull(affectedPair)) {
+                updateGroups(affectedPair);
             }
         }
     }
@@ -86,7 +85,7 @@ public class CancellationHandler {
     /**
      * Handles the cancellation of a single participant.
      *
-     * @param cancelledParticipant the participant that is being cancelled
+     * @param cancelledParticipant the participant that is being canceled
      */
     private void handleSingleCancellation(Participant cancelledParticipant) {
         participantSuccessors.remove(cancelledParticipant);
