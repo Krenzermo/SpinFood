@@ -409,4 +409,8 @@ public class Pair implements ParticipantCollection {
         }
         return participants[0].equals(participant) ? participants[1] : participants[0];
     }
+
+    public boolean isGroupsEmpty() {
+        return Objects.isNull(groups[0]) && Objects.isNull(groups[1]) && Objects.isNull(groups[2]);
+    }
 }

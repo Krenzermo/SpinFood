@@ -64,7 +64,11 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		this.identNumber = getIdentNumber();
 		this.pairList = pairList;
 		this.identNumber = deriveIdentNumber();
-		successorPairs.addAll(inputData.getPairSuccessorList());
+		for (Pair pair : pairList) {
+			if (pair.isGroupsEmpty() && !successorPairs.contains(pair)) {
+				successorPairs.add(pair);
+			}
+		}
 	}
 
 	public GroupList(List<Pair> pairs, GroupWeights weights) {

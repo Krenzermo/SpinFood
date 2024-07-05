@@ -1,5 +1,6 @@
 package model.processing;
 
+import controller.FXMLControllers.MainController;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.list.GroupList;
@@ -8,6 +9,7 @@ import model.event.list.weight.GroupWeights;
 import model.person.Participant;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -52,7 +54,7 @@ public class CancellationHandler {
                 }
 
                 if (!Objects.isNull(groupList)) {
-                    updateGroups();
+                    updateGroups(affectedPair);
                 }
             } else {
                 handleSingleCancellation(cancelledParticipant);
@@ -93,7 +95,7 @@ public class CancellationHandler {
     /**
      * Updates the groups by forming new pairs and groups from the successor lists.
      */
-    public void updateGroups() {
+    public void updateGroups(Pair affectedPair) {
         List<Pair> newPairs = new ArrayList<>();
 
         // First form new pairs from participant successors
@@ -109,5 +111,10 @@ public class CancellationHandler {
 
         // Add all new pairs to the existing pair list
         pairList.addAll(newPairs);
+
+        // this is redundant as MainController.replaceGroupData() creates a new GroupList anyway
+        if (!Objects.isNull(affectedPair.getGroups().get(0))) {
+            MainController.removeGroupCluster(MainController.getGroupCluster(affectedPair.getGroups().get(0)), groupList);
+        }
     }
 }
