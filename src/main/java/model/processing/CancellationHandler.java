@@ -9,6 +9,7 @@ import model.person.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * This class handles the cancellation of participants and manages the updates required for pairs and groups.
@@ -54,7 +55,9 @@ public class CancellationHandler {
             }
         }
 
-        updateGroups(groupWeights);
+        if (!Objects.isNull(groupList)) {
+            updateGroups(groupWeights);
+        }
     }
 
     /**

@@ -880,12 +880,7 @@ public class MainController {
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.showAndWait();
 
-			updatePairTable(); // Update tables after the dialog is closed to reflect changes
-
-	        if (!Objects.isNull(groupList)) {
-				updateGroupTable();
-	        }
-
+			updateTables(); // Update tables after the dialog is closed to reflect changes
 		} catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -901,5 +896,14 @@ public class MainController {
         writeGroupDataToTab();
         writeGroupListIdentNumbersToTab();
         writeGroupListSuccessorsToTab();
+    }
+
+    public void updateTables() {
+        if (!Objects.isNull(pairList)) {
+            updatePairTable();
+        }
+        if (!Objects.isNull(groupList)) {
+            updateGroupTable();
+        }
     }
 }
