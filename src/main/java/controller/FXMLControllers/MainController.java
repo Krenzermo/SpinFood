@@ -628,6 +628,14 @@ public class MainController {
 
                 tabPane.getSelectionModel().select(groupTab);
             } catch (NullPointerException e) {
+                if (Objects.isNull(pairList)) {
+                    Alert alert = new Alert(Alert.AlertType.ERROR);
+                    alert.setTitle("Fehler");
+                    alert.setHeaderText("Ein Fehler ist aufgetreten!");
+                    alert.setContentText("Es wurden noch keine Paar-Liste erstellt.");
+                    alert.showAndWait();
+                    return;
+                }
                 Alert alert = new Alert(Alert.AlertType.ERROR);
                 alert.setTitle("Dateifehler");
                 alert.setHeaderText("Ein Fehler ist aufgetreten!");
@@ -735,12 +743,9 @@ public class MainController {
 		                        .noneMatch(groupList.getParticipants()::contains))
                 .toList();
 
-        // assert pairs.size() >= 9;
-        if (pairs.size() < 9) {
-            throw new IllegalStateException("More or less than 9 successor pairs were selected. Total: " + pairs.size());
-        }
-
-        if (pairs.stream().flatMap(pair -> pair.getParticipants().stream()).anyMatch(groupList.getParticipants()::contains)) {
+        // assert pairs.size() >= 9; // this constraint may be violated, the other shouldn't ever be violated
+        // assert !pairs.stream().flatMap(pair -> pair.getParticipants().stream()).anyMatch(groupList.getParticipants()::contains);
+        if (pairs.size() < 9 || pairs.stream().flatMap(pair -> pair.getParticipants().stream()).anyMatch(groupList.getParticipants()::contains)) {
             Alert alert = new Alert(Alert.AlertType.ERROR);
             alert.setTitle("Fehler");
             alert.setHeaderText("Ein Fehler ist aufgetreten!");
@@ -1076,7 +1081,7 @@ public class MainController {
     }
 
     @FXML
-    public void doPairSuccessorsMethod(ActionEvent actionEvent) {
+    void doPairSuccessorsMethod(ActionEvent actionEvent) {
         CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
         cancellationHandler.pairSuccessorParticipants();
         updateTables();
