@@ -50,9 +50,9 @@ class CancellationHandlerTest {
         participant5 = new Participant("5", new Name("Eve", "Martinez"), FoodType.VEGGIE, (byte) 27, Gender.FEMALE, KitchenAvailability.YES, 1, 0.0, 0.0);
         participant6 = new Participant("6", new Name("Frank", "Miller"), FoodType.NONE, (byte) 32, Gender.MALE, KitchenAvailability.NO, 1, 0.0, 0.0);
 
-        pair1 = new Pair(participant1, participant2);
-        pair2 = new Pair(participant3, participant4);
-        pair3 = new Pair(participant5, participant6);
+        pair1 = new Pair(participant1, participant2, 1);
+        pair2 = new Pair(participant3, participant4, 2);
+        pair3 = new Pair(participant5, participant6, 3);
 
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
@@ -81,7 +81,7 @@ class CancellationHandlerTest {
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
 
-        cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
+        cancellationHandler.handleCancellation(cancelledParticipants, groupWeights);
 
         // Verify that the participant was removed and the remaining participant was added to successors
         assertFalse(pairList.contains(pair1));
@@ -98,7 +98,7 @@ class CancellationHandlerTest {
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
 
-        cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
+        cancellationHandler.handleCancellation(cancelledParticipants, groupWeights);
 
         // Verify that the pair was removed and the groups were updated accordingly
         assertFalse(pairList.contains(pair1)); // Ensure the pair was removed
@@ -117,9 +117,9 @@ class CancellationHandlerTest {
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
 
-        cancellationHandler.handleCancellation(cancelledParticipants, pairingWeights, groupWeights);
+        cancellationHandler.handleCancellation(cancelledParticipants, groupWeights);
 
-        cancellationHandler.updateGroups(pairingWeights, groupWeights);
+        cancellationHandler.updateGroups(groupWeights);
 
         // Verify that the groups list was updated accordingly
         assertFalse(groupList.contains(group1)); // Ensure the group was removed
