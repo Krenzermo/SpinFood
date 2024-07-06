@@ -117,8 +117,5 @@ public class CancellationHandler {
         pairSuccessorParticipants();
 
         // this is redundant as MainController.replaceGroupData() creates a new GroupList anyway
-        if (!Objects.isNull(affectedPair.getGroups().get(0))) {
-            MainController.removeGroupCluster(MainController.getGroupCluster(affectedPair.getGroups().get(0)), groupList);
-        }
     }
 }

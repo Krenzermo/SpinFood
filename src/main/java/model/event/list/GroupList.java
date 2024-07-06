@@ -59,7 +59,9 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		this.weights = groupWeights;
 		Group.COUNTER = 0;
 		List<Pair> sortedPairsList = sortPairs(pairList);
-		sortedPairsList.removeAll(inputData.getPairSuccessorList());
+		if (pairList.containsAll(inputData.getPairInputData()) && pairList.containsAll(inputData.getPairSuccessorList())) {
+			sortedPairsList.removeAll(inputData.getPairSuccessorList());
+		}
 		setList(buildBestGroups(sortedPairsList, groupWeights));
 		this.identNumber = getIdentNumber();
 		this.pairList = pairList;
