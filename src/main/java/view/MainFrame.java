@@ -1,17 +1,21 @@
 package view;
 
-import controller.FXMLControllers.MainController;
 import javafx.application.Application;
-import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.Modality;
 import javafx.stage.Stage;
 
 import java.io.File;
 import java.net.URL;
 
+/**
+ * Run with this VM configuration:
+ * <p>
+ * --module-path
+ * "C:\Program Files\Java\javafx-sdk-22.0.1\lib"
+ * --add-modules
+ * javafx.controls,javafx.fxml
+ */
 public class MainFrame extends Application {
 
     public static Stage stage;
