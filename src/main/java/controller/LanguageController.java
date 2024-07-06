@@ -28,7 +28,7 @@ public class LanguageController {
 		english = ResourceBundle.getBundle("application", Locale.ENGLISH);
 	}
 
-	public static LanguageController getInstance() {
+	public static synchronized LanguageController getInstance() {
 		if (instance == null) {
 			instance = new LanguageController();
 		}
