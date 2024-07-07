@@ -1,6 +1,8 @@
 package model.event.collection;
 
-import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableValue;
 import model.event.Location;
 import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
@@ -11,20 +13,19 @@ import model.person.Participant;
 import model.event.Course;
 import model.event.io.InputData;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
 /** This class represents one Pair of {@link Participant} that complies with the defined rules.
  *
- * @author Finn Brecher
- * @author Davide Piacenza
- * @author Daniel Hinkelmann
+ * @autor Finn Brecher
+ * @autor Davide Piacenza
+ * @autor Daniel Hinkelmann
  */
 public class Pair implements ParticipantCollection {
 
-    private int id;
+    private final int id;
     private final Participant[] participants = new Participant[2];
     private Kitchen kitchen;
     private boolean kitchenOf;
@@ -36,20 +37,39 @@ public class Pair implements ParticipantCollection {
     private int dessertNumber;
     public final boolean signedUpTogether;
 
-    private static int COUNTER = 0;
+    //private static int COUNTER = 0;
     private static final InputData inputData = InputData.getInstance();
 
-    public Pair(Participant participant1, Participant participant2) {
-        this(participant1, participant2, false);
+    public Pair(Participant participant1, Participant participant2, int idCounter) {
+        this(participant1, participant2, false, idCounter);
     }
 
-    public Pair(Participant participant1, Participant participant2, boolean signedUpTogether) {
-        id = COUNTER++;
+    public Pair(Participant participant1, Participant participant2, boolean signedUpTogether, int idCounter) {
+        id = idCounter;
         participants[0] = participant1;
         participants[1] = participant2;
         this.signedUpTogether = signedUpTogether;
         this.kitchen = autoAssignKitchen();
         this.foodType = autoAssignFoodType();
+        participant1.setPair(this);
+        participant2.setPair(this);
+    }
+
+    /**
+     * Creates a shallow Copy of the specified {@link Pair}.
+     * That copy does not contain the {@link Group} information of the original {@link Pair}
+     *
+     * @param pair the specified {@link Pair}
+     */
+    public Pair(Pair pair) {
+        this.participants[0] = new Participant(pair.participants[0]);
+        this.participants[1] = new Participant(pair.participants[1]);
+        participants[0].setPair(this);
+        participants[1].setPair(this);
+        this.kitchen = pair.kitchen;
+        this.foodType = pair.foodType;
+        this.signedUpTogether = pair.signedUpTogether;
+        this.id = pair.id;
     }
 
     private FoodType autoAssignFoodType() {
@@ -67,8 +87,6 @@ public class Pair implements ParticipantCollection {
         int value = list.stream().mapToInt(FoodType::getValue).max().getAsInt();
         return FoodType.herbiFromValue(value);
     }
-
-
 
     private boolean hasOnlyCarni(List<FoodType> list) {
         return !(list.contains(FoodType.VEGGIE) || list.contains(FoodType.VEGAN));
@@ -99,12 +117,16 @@ public class Pair implements ParticipantCollection {
 
     @Override
     public int getAgeDifference() {
-        return participants[0].getAge().getAgeDifference(participants[1].getAge());
+        return participants[0].getAgeRange().getAgeDifference(participants[1].getAgeRange());
     }
 
     @Override
     public Course getCourse() {
         return course;
+    }
+
+    public int getId() {
+        return id;
     }
 
     public List<Group> getGroups() {
@@ -197,6 +219,40 @@ public class Pair implements ParticipantCollection {
         }
 
         return participants[1].getKitchen();
+    }
+
+    /**
+     * Replaces a participant in the pair with a new participant.
+     *
+     * @param oldParticipant the participant to be replaced
+     * @param newParticipant the new participant to be added to the pair
+     * @throws IllegalArgumentException if the old participant is not in the pair
+     * @throws IllegalArgumentException if the new participant is already in the pair
+     * @throws NullPointerException if the new participant is null
+     */
+    public void replaceParticipant(Participant oldParticipant, Participant newParticipant) {
+        if (newParticipant == null) {
+            throw new NullPointerException("New participant must not be null");
+        }
+        if (!contains(oldParticipant)) {
+            throw new IllegalArgumentException("Old participant is not part of this pair");
+        }
+        if (contains(newParticipant)) {
+            throw new IllegalArgumentException("New participant is already part of this pair");
+        }
+
+        if (participants[0].equals(oldParticipant)) {
+            participants[0] = newParticipant;
+        } else {
+            participants[1] = newParticipant;
+        }
+
+        // EXTRA kein update der anderen Parameter --> hat Tutor bestätigt
+        // Methode wird eh nur in der händischen Eingabe der GUI verwendet
+    }
+
+    private boolean contains(Participant participant) {
+        return participants[0].equals(participant) || participants[1].equals(participant);
     }
 
     /**
@@ -306,7 +362,7 @@ public class Pair implements ParticipantCollection {
         return foodType;
     }
     public double getAverageAgeRange() {
-        return (participants[0].getAge().value + participants[1].getAge().value)/ 2.0;
+        return (participants[0].getAgeRange().value + participants[1].getAgeRange().value)/ 2.0;
     }
 
     public void setStarterNumber(int starterNumber) {
@@ -333,7 +389,28 @@ public class Pair implements ParticipantCollection {
         this.dessertNumber = dessertNumber;
     }
 
-    public SimpleStringProperty getIdAsProperty() {
-        return new SimpleStringProperty(String.valueOf(id));
+    public ObservableValue<Integer> getIdAsObservable() {
+        return new SimpleIntegerProperty(id).asObject();
+    }
+
+    public ObservableValue<Boolean> getSignedUpTogetherAsObservable() {
+        return new SimpleBooleanProperty(signedUpTogether);
+    }
+
+    /**
+     * Gets the partner of the specified {@link Participant} in this {@link Pair} and returns {@code null} otherwise
+     *
+     * @param participant the specified {@link Participant}
+     * @return the other {@link Participant} in {@code this} or {@code null}
+     */
+    public Participant getOtherParticipant(Participant participant) {
+        if (!contains(participant)) {
+            return null;
+        }
+        return participants[0].equals(participant) ? participants[1] : participants[0];
+    }
+
+    public boolean isGroupsEmpty() {
+        return Objects.isNull(groups[0]) && Objects.isNull(groups[1]) && Objects.isNull(groups[2]);
     }
 }

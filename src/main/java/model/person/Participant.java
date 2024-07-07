@@ -1,5 +1,8 @@
 package model.person;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import model.event.collection.Group;
 import model.event.collection.ParticipantCollection;
 import model.event.collection.Pair;
@@ -22,6 +25,7 @@ public class Participant {
     private final String id;
     private final Name name;
     private final FoodType foodType;
+    private final byte age;
     private final AgeRange ageRange;
     private final Gender gender;
     private KitchenAvailability hasKitchen;
@@ -33,22 +37,34 @@ public class Participant {
         this.id = id;
         this.name = name;
         this.foodType = foodType;
+        this.age = age;
         this.ageRange = AgeRange.getAgeRange(age);
         this.gender = gender;
         this.hasKitchen = hasKitchen;
         this.kitchen = new Kitchen(new Location(kitchenLongitude, kitchenLatitude), kitchenStory);
         this.pair = null;
-        this.groups = null;
     }
 
     public Participant(String id, Name name, FoodType foodType, byte age, Gender gender) {
         this.id = id;
         this.name = name;
         this.foodType = foodType;
+        this.age = age;
         this.ageRange = AgeRange.getAgeRange(age);
         this.gender = gender;
         this.hasKitchen = KitchenAvailability.NO;
         this.kitchen = null;
+        this.pair = null;
+    }
+
+    /**
+     * Creates a shallow Copy of the specified {@link Participant}.
+     * That copy does not contain the {@link Pair} or the {@link Group} information of the original {@link Participant}
+     *
+     * @param participant the specified {@link Participant}
+     */
+    public Participant(Participant participant) {
+        this(participant.getId(), participant.getName(), participant.getFoodType(), participant.getAge(), participant.getGender());
     }
 
     @Override
@@ -80,12 +96,20 @@ public class Participant {
         return this.kitchen.compareTo(o.kitchen);
     }
 
-    public AgeRange getAge() {
+    public byte getAge() {
+        return age;
+    }
+
+    public AgeRange getAgeRange() {
         return ageRange;
     }
 
     public String getId() {
         return id;
+    }
+
+    public ObservableValue<String> getIdAsObservable() {
+        return new SimpleStringProperty(id);
     }
 
     public Name getName() {
@@ -94,10 +118,6 @@ public class Participant {
 
     public FoodType getFoodType() {
         return foodType;
-    }
-
-    public AgeRange getAgeRange() {
-        return ageRange;
     }
 
     public Gender getGender() {
@@ -153,5 +173,9 @@ public class Participant {
     public void setNoKitchen() {
         this.hasKitchen = KitchenAvailability.NO;
         this.kitchen = null;
+    }
+
+    public void clearPair() {
+        this.pair = null;
     }
 }

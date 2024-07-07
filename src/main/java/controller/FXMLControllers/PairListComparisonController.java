@@ -1,6 +1,6 @@
 package controller.FXMLControllers;
 
-import javafx.application.Platform;
+import controller.LanguageController;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -12,7 +12,6 @@ import javafx.stage.Modality;
 import javafx.stage.Window;
 import model.event.Course;
 import model.event.collection.Pair;
-import model.event.io.InputData;
 import model.event.list.PairList;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.PairingWeights;
@@ -20,11 +19,10 @@ import model.event.list.weight.PairingWeights;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.util.Objects;
+import java.util.List;
 
 public class PairListComparisonController extends Dialog<PairList> {
-
-    InputData inputData = InputData.getInstance();
+    private final LanguageController languageController = LanguageController.getInstance();
 
     @FXML
     private TableColumn<Pair, String> courseColList1;
@@ -36,28 +34,28 @@ public class PairListComparisonController extends Dialog<PairList> {
     private DialogPane dialog;
 
     @FXML
-    private MenuItem editWeightsList1;
+    private MenuItem openList1MenuItem;
 
     @FXML
-    private MenuItem editWeightsList2;
+    private MenuItem openList2MenuItem;
 
     @FXML
-    private TableColumn<Pair, String> idColList1;
+    private MenuItem editWeightsList1MenuItem;
 
     @FXML
-    private TableColumn<Pair, String> idColList2;
+    private MenuItem editWeightsList2MenuItem;
 
     @FXML
-    private ListView<String> identNumberList1;
+    private TableView<Pair> tableList1;
 
     @FXML
-    private ListView<String> identNumbersList2;
+    private TableView<Pair> tableList2;
 
     @FXML
-    private TableColumn<Pair, String> kitchenColList1;
+    private TableColumn<Pair, Integer> idColList1;
 
     @FXML
-    private TableColumn<Pair, String> kitchenColList2;
+    private TableColumn<Pair, Integer> idColList2;
 
     @FXML
     private TableColumn<Pair, String> per1ColList1;
@@ -72,10 +70,46 @@ public class PairListComparisonController extends Dialog<PairList> {
     private TableColumn<Pair, String> per2ColList2;
 
     @FXML
-    private TableView<Pair> tableList1;
+    private TableColumn<Pair, String> gender1ColList1;
 
     @FXML
-    private TableView<Pair> tableList2;
+    private TableColumn<Pair, String> gender1ColList2;
+
+    @FXML
+    private TableColumn<Pair, String> gender2ColList1;
+
+    @FXML
+    private TableColumn<Pair, String> gender2ColList2;
+
+    @FXML
+    private TableColumn<Pair, String> kitchenColList1;
+
+    @FXML
+    private TableColumn<Pair, String> kitchenColList2;
+
+    @FXML
+    private TableColumn<Pair, String> foodTypeColList1;
+
+    @FXML
+    private TableColumn<Pair, String> foodTypeColList2;
+
+    @FXML
+    private TableColumn<Pair, Boolean> signedUpTogetherColList1;
+
+    @FXML
+    private TableColumn<Pair, Boolean> signedUpTogetherColList2;
+
+    @FXML
+    private TitledPane identNumbersTableList1;
+
+    @FXML
+    private TitledPane identNumbersTableList2;
+
+    @FXML
+    private ListView<String> identNumberList1;
+
+    @FXML
+    private ListView<String> identNumbersList2;
 
     private PairList pairList1;
     private IdentNumber pairIdentNumber1;
@@ -84,6 +118,27 @@ public class PairListComparisonController extends Dialog<PairList> {
     private ButtonType acceptList1ButtonType;
     private ButtonType acceptList2ButtonType;
 
+    @FXML
+    private void initialize() {
+        bindAllComponents();
+
+        MainController.addListenersToTable(tableList1);
+        MainController.makeTableNotReorderable(tableList1);
+        gender1ColList1.setVisible(false);
+        gender2ColList1.setVisible(false);
+        kitchenColList1.setVisible(false);
+
+        MainController.addListenersToTable(tableList2);
+        MainController.makeTableNotReorderable(tableList2);
+        gender1ColList2.setVisible(false);
+        gender2ColList2.setVisible(false);
+        kitchenColList2.setVisible(false);
+    }
+
+    private void bindAllComponents() {
+        // TODO: this
+    }
+
     public void init(Window owner) {
         try {
             String relPath = "src/main/java/view/fxml/comparePairList.fxml";
@@ -91,9 +146,10 @@ public class PairListComparisonController extends Dialog<PairList> {
             String absPath = file.getAbsolutePath();
             URL url = new URL("file:///" + absPath);
             FXMLLoader loader = new FXMLLoader(url);
+            loader.setController(this); // This is the most important part. Otherwise, all fields are mysteriously null
 
-            this.acceptList1ButtonType = new ButtonType("Obere Liste übernehmen", ButtonBar.ButtonData.OK_DONE);
-            this.acceptList2ButtonType = new ButtonType("Untere Liste übernehmen", ButtonBar.ButtonData.OK_DONE);
+            this.acceptList1ButtonType = new ButtonType("Obere Liste übernehmen", ButtonBar.ButtonData.APPLY);
+            this.acceptList2ButtonType = new ButtonType("Untere Liste übernehmen", ButtonBar.ButtonData.APPLY);
 
             dialog = loader.load();
             dialog.getButtonTypes().addAll(
@@ -101,42 +157,74 @@ public class PairListComparisonController extends Dialog<PairList> {
                     acceptList2ButtonType,
                     ButtonType.CANCEL
             );
-            dialog.lookupButton(acceptList1ButtonType).addEventFilter(ActionEvent.ACTION, this::pairListOneAccepted);
-            dialog.lookupButton(acceptList2ButtonType).addEventFilter(ActionEvent.ACTION, this::pairListTwoAccepted);
 
-            setResultConverter(dialogButton -> {
-                if (dialogButton == acceptList1ButtonType) {
-                    return pairList1;
-                } else if (dialogButton == acceptList2ButtonType) {
-                    return pairList2;
+            setResultConverter(buttonType -> {
+                if (buttonType == acceptList1ButtonType) {
+                    return getPairList1();
                 }
-                return null;
+                if (buttonType == acceptList2ButtonType) {
+                    return getPairList2();
+                }
+                return getResult();
             });
+
             initOwner(owner);
             initModality(Modality.APPLICATION_MODAL);
-            setResizable(false);
+            setResizable(true);
             setTitle("Paar Listen vergleichen");
             setDialogPane(dialog);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
+        if (pairList1 != null) {
+            writePairDataToTab(tableList1, pairList1, identNumberList1);
+        }
     }
 
-    private void pairListTwoAccepted(ActionEvent actionEvent) {
-        setResult(pairList2);
-        actionEvent.consume();
-        close();
+    private PairList getPairList1() {
+        return pairList1;
+    }
+
+    private PairList getPairList2() {
+        return pairList2;
     }
 
     @FXML
-    private void pairListOneAccepted(ActionEvent actionEvent) {
-        setResult(pairList1);
-        actionEvent.consume();
-        close();
+    void openList1FileChooser(ActionEvent event) {
+        // TODO: not necessary
     }
 
-    private PairList getPairList(ButtonType dialogButton) {
-        return dialogButton == acceptList1ButtonType? pairList1 : pairList2;
+    @FXML
+    void openList2FileChooser(ActionEvent event) {
+        // TODO: not necessary
+    }
+
+    @FXML
+    void editWeightsList1(ActionEvent event) {
+        String relPath = "src/main/java/view/fxml/pairingWeights.fxml";
+        File file = new File(relPath);
+        String absPath = file.getAbsolutePath();
+        PairingWeightsController dialog = new PairingWeightsController();
+        dialog.init(this.dialog.getScene().getWindow());
+
+        PairingWeights weights = dialog.showAndWait().orElse(null);
+
+        if (weights != null) {
+            try {
+                this.pairList1 = new PairList(weights);
+                this.pairIdentNumber1 = this.pairList1.getIdentNumber();
+            } catch (NullPointerException e) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Dateifehler");
+                alert.setHeaderText("Ein Fehler ist aufgetreten!");
+                alert.setContentText("Es wurden noch keine Dateien für die Teilnehmerdaten und/oder die After-Dinner-Location ausgewählt.");
+                alert.showAndWait();
+                return;
+            }
+            writePairDataToTab(tableList1, pairList1, identNumberList1);
+        }
+        //event.consume();
     }
 
     @FXML
@@ -151,7 +239,7 @@ public class PairListComparisonController extends Dialog<PairList> {
 
         if (weights != null) {
             try {
-                pairList2 = new PairList(inputData, weights);
+                this.pairList2 = new PairList(weights);
                 pairIdentNumber2 = pairList2.getIdentNumber();
             } catch (NullPointerException e) {
                 Alert alert = new Alert(Alert.AlertType.ERROR);
@@ -164,34 +252,7 @@ public class PairListComparisonController extends Dialog<PairList> {
 
             writePairDataToTab(tableList2, pairList2, identNumbersList2);
         }
-        event.consume();
-    }
-
-    @FXML
-    void editWeigthsList1(ActionEvent event) {
-        String relPath = "src/main/java/view/fxml/pairingWeights.fxml";
-        File file = new File(relPath);
-        String absPath = file.getAbsolutePath();
-        PairingWeightsController dialog = new PairingWeightsController();
-        dialog.init(this.dialog.getScene().getWindow());
-
-        PairingWeights weights = dialog.showAndWait().orElse(null);
-
-        if (weights != null) {
-            try {
-                this.pairList1 = new PairList(inputData, weights);
-                this.pairIdentNumber1 = this.pairList1.getIdentNumber();
-            } catch (NullPointerException e) {
-                Alert alert = new Alert(Alert.AlertType.ERROR);
-                alert.setTitle("Dateifehler");
-                alert.setHeaderText("Ein Fehler ist aufgetreten!");
-                alert.setContentText("Es wurden noch keine Dateien für die Teilnehmerdaten und/oder die After-Dinner-Location ausgewählt.");
-                alert.showAndWait();
-                return;
-            }
-            writePairDataToTab(tableList1, pairList1, identNumberList1);
-        }
-        event.consume();
+        //event.consume();
     }
 
 
@@ -199,17 +260,19 @@ public class PairListComparisonController extends Dialog<PairList> {
      * Writes the pair data to the table in the UI.
      * Clears existing items if necessary and sets up value factories for the table columns.
      */
-    protected synchronized void writePairDataToTab(TableView<Pair> pairTable, PairList pairList, ListView<String> listView) {
-        Platform.runLater(() -> {
+    private void writePairDataToTab(TableView<Pair> pairTable, PairList pairList, ListView<String> listView) {
             if (!pairTable.getItems().isEmpty()) {
                 pairTable.getItems().clear();
             } else {
                 setupValueFactories(
-                        (TableColumn<Pair, String>) pairTable.getColumns().get(0),
-                        (TableColumn<Pair, String>) pairTable.getColumns().get(1),
-                        (TableColumn<Pair, String>) pairTable.getColumns().get(2),
-                        (TableColumn<Pair, String>) pairTable.getColumns().get(3),
-                        (TableColumn<Pair, String>) pairTable.getColumns().get(4)
+		                (TableColumn<Pair, Integer>) pairTable.getColumns().get(0),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(1),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(2),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(3),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(4),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(5),
+		                (TableColumn<Pair, String>) pairTable.getColumns().get(6),
+		                (TableColumn<Pair, Boolean>) pairTable.getColumns().get(7)
                 );
             }
 
@@ -217,59 +280,67 @@ public class PairListComparisonController extends Dialog<PairList> {
             pairTable.setItems(data);
 
             writeIdentNumbersToTab(listView, pairList.getIdentNumber());
-        });
     }
 
     /**
      * Sets up the value factories for the table columns to display the pair data.
      */
-    protected void setupValueFactories(
-            TableColumn<Pair, String> idColPair,
+    private void setupValueFactories(
+            TableColumn<Pair, Integer> idColPair,
             TableColumn<Pair, String> partOneColPair,
             TableColumn<Pair, String> partTwoColPair,
+            TableColumn<Pair, String> genderOneColPair,
+            TableColumn<Pair, String> genderTwoColPair,
             TableColumn<Pair, String> kitchenColPair,
-            TableColumn<Pair, String> courseColPair
+            TableColumn<Pair, String> foodTypeColPair,
+            TableColumn<Pair, Boolean> signedUpTogether
     ) {
-        idColPair.setCellValueFactory(
-                cell -> cell.getValue().getIdAsProperty()
-        );
-
-        partOneColPair.setCellValueFactory(
-                cell -> cell.getValue().getParticipants().get(0).getName().asProperty()
-        );
-        partTwoColPair.setCellValueFactory(
-                cell -> cell.getValue().getParticipants().get(1).getName().asProperty()
-        );
-
-        kitchenColPair.setCellValueFactory(
-                cell -> cell.getValue().getKitchen().asProperty()
-        );
-
-        courseColPair.setCellValueFactory(
-                cell -> {
-                    Course course = cell.getValue().getCourse();
-                    if (course == null) {
-                        return new SimpleStringProperty("n.V.");
-                    }
-                    return course.asProperty();
-                }
-        );
+        idColPair.setCellValueFactory(cell -> cell.getValue().getIdAsObservable());
+        partOneColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(0).getName().asObservable());
+        partTwoColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(1).getName().asObservable());
+        genderOneColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(0).getGender().asObservable());
+        genderTwoColPair.setCellValueFactory(cell -> cell.getValue().getParticipants().get(1).getGender().asObservable());
+        kitchenColPair.setCellValueFactory(cell -> cell.getValue().getKitchen().asObservable());
+        foodTypeColPair.setCellValueFactory(cell -> cell.getValue().getFoodType().asObservable());
+        signedUpTogether.setCellValueFactory(cell -> cell.getValue().getSignedUpTogetherAsObservable());
     }
 
     /**
      * Writes the identifier numbers of the pairs to the list view in the UI.
      */
-    private synchronized void writeIdentNumbersToTab(ListView<String> pairIdentNumbersList, IdentNumber pairIdentNumber) {
-        Platform.runLater(() -> {
+    private void writeIdentNumbersToTab(ListView<String> pairIdentNumbersList, IdentNumber pairIdentNumber) {
             if (!pairIdentNumbersList.getItems().isEmpty()) {
                 pairIdentNumbersList.getItems().clear();
             }
 
             ObservableList<String> data = FXCollections.observableArrayList(pairIdentNumber.asList());
             pairIdentNumbersList.setItems(data);
-        });
     }
 
+    /**
+     * Call this method before calling init()
+     *
+     * @param list The {@link PairList} to be set as pairList1
+     */
+    public void setInitialList1(PairList list) {
+        if (list == null) {
+            return;
+        }
+        pairList1 = list;
+        pairIdentNumber1 = pairList1.getIdentNumber();
+    }
 
+    /**
+     * Call this method before calling init()
+     *
+     * @param list The {@link List} of {@link Pair} instances to be set as pairList1
+     */
+    public void setInitialList1(List<Pair> list) {
+        if (list == null) {
+            return;
+        }
+        pairList1 = new PairList(list);
+        pairIdentNumber1 = pairList1.getIdentNumber();
+    }
 }
 

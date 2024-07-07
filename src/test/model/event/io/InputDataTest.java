@@ -91,7 +91,7 @@ public class InputDataTest {
         for (Participant participant : participants) {
             Assertions.assertNotNull(participant.getGender());
             Assertions.assertNotNull(participant.getFoodType());
-            Assertions.assertTrue(participant.getAge().value > 0);  // Assuming age should be positive
+            Assertions.assertTrue(participant.getAgeRange().value > 0);  // Assuming age should be positive
         }
     }
 

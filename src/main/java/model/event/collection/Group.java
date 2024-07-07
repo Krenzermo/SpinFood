@@ -1,5 +1,8 @@
 package model.event.collection;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleStringProperty;
+import javafx.beans.value.ObservableValue;
 import model.event.Course;
 import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
@@ -9,6 +12,7 @@ import model.person.Participant;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /** This class holds a Group (3 {@link Pair}) in compliance with the defined rules
@@ -24,7 +28,8 @@ public class Group implements ParticipantCollection{
 	private Kitchen kitchen;
 	private Course course;
 	private int id;
-	private static int COUNTER = 0;
+	public static int COUNTER = 0;
+	private int cookIndex;
 
 
 	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen) {
@@ -33,6 +38,10 @@ public class Group implements ParticipantCollection{
 		this.course = course;
 		this.kitchen = kitchen;
 		setPairIds();
+		cookIndex = getKitchenOwner(kitchen);
+		if (cookIndex < 0) {
+			throw new IllegalStateException("Couldn't find any owner of kitchen: " + kitchen);
+		}
 	}
 
 	private void setPairIds(){
@@ -57,6 +66,15 @@ public class Group implements ParticipantCollection{
 		}
 	}
 
+
+	private int getKitchenOwner(Kitchen kitchen){
+		for (int i = 0; i < pairs.length; i++){
+			if (pairs[i].getKitchen().equals(kitchen)){
+				return i;
+			}
+		}
+		return -1;
+	}
 
 	/**
 	 * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollection
@@ -146,5 +164,43 @@ public class Group implements ParticipantCollection{
 
 	public int getId() {
 		return id;
+	}
+
+	public ObservableValue<Integer> getIdAsObservable() {
+		return new SimpleIntegerProperty(id).asObject();
+	}
+
+	public ObservableValue<Integer> getCookPairIdAsObservable() {
+		return new SimpleIntegerProperty(pairs[cookIndex].getId()).asObject();
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(pairs[0], pairs[1], pairs[2]);
+	}
+
+	@Override
+	public boolean equals(Object object) {
+		if (!(object instanceof Group group)) {
+			return false;
+		}
+
+		List<Pair> list = Arrays.stream(group.getPairs()).sequential().toList();
+
+		if (list.size() != 3) {
+			throw new RuntimeException("fuck this"); // TODO: delete
+		}
+
+		for (Pair pair : list) {
+			if (!pair.equals(pairs[0]) && !pair.equals(pairs[1]) && !pair.equals(pairs[2])) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "{Pair1: " + pairs[0] + ", Pair2: " + pairs[1] + ", Pair3: " + pairs[2] + "}";
 	}
 }
