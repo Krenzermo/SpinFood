@@ -10,13 +10,13 @@ public class State {
     private GroupList groupList;
 
     public State(PairList pairList, GroupList groupList) {
-        prev = this;
+        prev = null;
         this.pairList = pairList;
         this.groupList = groupList;
     }
 
     public State updateState(PairList pairList, GroupList groupList) {
-        prev = this;
+        prev = new State(this.pairList, this.groupList); //TODO: Use copy constructor
         this.pairList = pairList;
         this.groupList = groupList;
         return this;

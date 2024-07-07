@@ -41,7 +41,6 @@ import java.util.*;
  * It manages the loading of participant lists, party locations, and executing algorithms to create pairs and groups.
  */
 public class MainController {
-    private State state;
     private final InputData inputData = InputData.getInstance();
     private final LanguageController languageController = LanguageController.getInstance();
     private PairList pairList;
@@ -53,6 +52,8 @@ public class MainController {
 
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
+
+    private State state = new State(pairList, groupList);
 
     @FXML
     private VBox root;
@@ -249,6 +250,8 @@ public class MainController {
     @FXML
     public void initialize() {
         bindAllComponents();
+
+        undo.setDisable(true);
 
         addListenersToTable(pairTable);
         makeTableNotReorderable(pairTable);
@@ -538,6 +541,7 @@ public class MainController {
      */
     @FXML
     void executeGroupAlgo(ActionEvent event) {
+        undo.setDisable(true);
         String relPath = "src/main/java/view/fxml/groupWeights.fxml";
         File file = new File(relPath);
         String absPath = file.getAbsolutePath();
@@ -568,6 +572,7 @@ public class MainController {
                 return;
             }
         }
+        state.updateState(pairList, groupList);
         event.consume();
     }
 
@@ -579,6 +584,7 @@ public class MainController {
      */
     @FXML
     void executePairAlgorithm(ActionEvent event) throws Exception {
+        undo.setDisable(true);
         String relPath = "src/main/java/view/fxml/pairingWeights.fxml";
         File file = new File(relPath);
         String absPath = file.getAbsolutePath();
@@ -605,6 +611,7 @@ public class MainController {
                 return;
             }
         }
+        state.updateState(pairList, groupList);
         event.consume();
     }
 
@@ -620,6 +627,7 @@ public class MainController {
         }
 
         undo.setDisable(false);
+        state.updateState(pairList, groupList);
     }
 
     @FXML
@@ -635,7 +643,7 @@ public class MainController {
         updatePairTable();
 
         undo.setDisable(false);
-        state.updateState();
+        state.updateState(pairList, groupList);
     }
 
     @FXML
@@ -659,6 +667,9 @@ public class MainController {
         groupList.getSuccessorPairs().addAll(pairs);
 
         updateGroupTable();
+
+        undo.setDisable(false);
+        state.updateState(pairList, groupList);
     }
 
     @FXML
@@ -678,6 +689,9 @@ public class MainController {
         groupList.getSuccessorPairs().removeAll(pairs);
 
         updateGroupTable();
+
+        undo.setDisable(false);
+        state.updateState(pairList, groupList);
     }
 
     private void removePair(Pair pair) {
