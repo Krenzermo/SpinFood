@@ -1,6 +1,5 @@
 package model.processing.states;
 
-import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.PairList;
 

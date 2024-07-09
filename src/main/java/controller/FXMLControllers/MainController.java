@@ -655,7 +655,7 @@ public class MainController {
                 return;
             }
         }
-        state.updateState(pairList, groupList);
+        updateState();
         event.consume();
     }
 
@@ -694,7 +694,7 @@ public class MainController {
                 return;
             }
         }
-        state.updateState(pairList, groupList);
+        updateState();
         event.consume();
     }
 
@@ -709,7 +709,6 @@ public class MainController {
         updateTables();
 
         undo.setDisable(false);
-        state.updateState(pairList, groupList);
     }
 
     @FXML
@@ -752,7 +751,6 @@ public class MainController {
         updateTables();
 
         undo.setDisable(false);
-        state.updateState(pairList, groupList);
     }
 
     @FXML
@@ -789,7 +787,6 @@ public class MainController {
         updateTables();
 
         undo.setDisable(false);
-        state.updateState(pairList, groupList);
     }
 
     @FXML
@@ -1104,8 +1101,14 @@ public class MainController {
             updatePairTable();
         }
         if (!Objects.isNull(groupList)) {
+            assert !Objects.isNull(pairList);
             updateGroupTable();
+            updateState();
         }
+    }
+
+    private void updateState() {
+        state.updateState(pairList, groupList);
     }
 
     @FXML
