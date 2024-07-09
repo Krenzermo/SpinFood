@@ -43,11 +43,21 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	private static final InputData inputData = InputData.getInstance();
 	private final PairList pairList;
 	private IdentNumber identNumber;
-	private final List<Pair> successorPairs = new ArrayList<>();
+	private List<Pair> successorPairs = new ArrayList<>();
 	private final Weights weights;
 	//private final List<Kitchen> starterKitchens = new ArrayList<>();
 	//private final List<Kitchen> mainKitchens = new ArrayList<>();
 	//private final List<Kitchen> dessertKitchens = new ArrayList<>();
+
+	/**
+	 * Copy constructor
+	 */
+	public GroupList(GroupList groupList) {
+		pairList = new PairList(groupList.pairList);
+		identNumber = groupList.identNumber;
+		successorPairs = new ArrayList<>(groupList.successorPairs);
+		weights = groupList.weights;
+	}
 
 	/**
 	 * Constructs a GroupList instance.

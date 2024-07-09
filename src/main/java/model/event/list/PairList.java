@@ -25,8 +25,18 @@ import java.util.List;
 public class PairList extends ParticipantCollectionList<Pair> {
     private static final InputData inputData = InputData.getInstance();
     private final IdentNumber identNumber;
-    private final List<Participant> successors = new ArrayList<>();
+    private List<Participant> successors = new ArrayList<>();
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
+
+    /**
+     * Copy constructor
+     */
+    public PairList(PairList pairList) {
+        this.identNumber = pairList.identNumber;
+        successors = new ArrayList<>(pairList.successors);
+        pairIdCounter = pairList.pairIdCounter;
+        setList(new ArrayList<>(pairList.getPairs()));
+    }
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.

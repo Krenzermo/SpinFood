@@ -443,6 +443,7 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartList(ActionEvent event) {
+        undo.setDisable(true);
         FileChooser fileChooser = new FileChooser();
         ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
         ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
@@ -513,6 +514,7 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartLoc(ActionEvent event) {
+        undo.setDisable(true);
         FileChooser fileChooser = new FileChooser();
         ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
         ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
@@ -973,11 +975,16 @@ public class MainController {
 
         pairList = state.getPairList();
         pairIdentNumber = pairList.getIdentNumber();
+        updatePairTable();
 
         groupList = state.getGroupList();
-        groupIdentNumber = groupList.getIdentNumber();
+        if (groupList != null) {
+            groupIdentNumber = groupList.getIdentNumber();
+            updateGroupTable();
+        }
 
-        updatePairTable();
-        updateGroupTable();
+        if (state.getPrev() == null) {
+            undo.setDisable(true);
+        }
     }
 }

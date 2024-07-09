@@ -22,6 +22,16 @@ public class GroupIdentNumber extends IdentNumber {
     private double pathLengthStdDev;
     private final GroupList groupList;
 
+    public GroupIdentNumber(GroupIdentNumber num) {
+        super(new GroupList(num.groupList));
+        groupList = new GroupList(num.groupList);
+        genderDiversity = num.genderDiversity;
+        ageDifference = num.ageDifference;
+        preferenceDeviation = num.preferenceDeviation;
+        averagePathLength = num.averagePathLength;
+        pathLengthStdDev = num.pathLengthStdDev;
+    }
+
     public GroupIdentNumber(GroupList participantCollection) {
         super(participantCollection);
         this.numSuccessors = participantCollection.getSuccessorPairs().size();

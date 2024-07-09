@@ -20,6 +20,7 @@ import java.util.List;
  */
 public abstract class IdentNumber {
 	//TODO: this
+    ParticipantCollectionList participantCollectionList;
     protected int numElems;
     protected int numSuccessors;
     protected double genderDiversity;
@@ -27,6 +28,7 @@ public abstract class IdentNumber {
     protected double preferenceDeviation;
 
     protected IdentNumber(ParticipantCollectionList participantCollection) {
+        this.participantCollectionList = participantCollection;
         numElems = calcNumElems(participantCollection);
         numSuccessors = calcNumSuccessors(participantCollection);
     }
