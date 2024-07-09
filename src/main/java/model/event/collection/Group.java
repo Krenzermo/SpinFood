@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import model.event.Course;
+import model.event.list.GroupList;
 import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.person.AgeRange;
@@ -42,6 +43,22 @@ public class Group implements ParticipantCollection{
 		if (cookIndex < 0) {
 			throw new IllegalStateException("Couldn't find any owner of kitchen: " + kitchen);
 		}
+	}
+
+	/**
+	 * Copy constructor for class {@link Group}.
+	 * Copies all fields but does not copy the {@link Group} class information.
+	 * This constructor returns a deep copy (also copies the {@link Pair} instances).
+	 *
+	 * @param group the specified {@link Group}
+	 */
+	public Group(Group group) {
+		id = group.id;
+		course = group.course;
+		kitchen = group.kitchen;
+		cookIndex = group.cookIndex;
+		Pair[] temp = group.getPairs();
+		pairs = new Pair[]{new Pair(temp[0]), new Pair(temp[1]), new Pair(temp[2])};
 	}
 
 	private void setPairIds(){

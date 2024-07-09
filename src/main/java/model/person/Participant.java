@@ -54,6 +54,22 @@ public class Participant {
         this.kitchen = null;
     }
 
+    /**
+     * Copy-Constructor for class {@link Participant}.
+     * This constructor copies all fields but not the {@link Pair} or {@link Group} class information.
+     *
+     * @param participant the specified {@link Participant}
+     */
+    public Participant(Participant participant) {
+        this.id = participant.id;
+        this.name = participant.name;
+        this.foodType = participant.foodType;
+        this.ageRange = participant.ageRange;
+        this.gender = participant.gender;
+        this.hasKitchen = participant.hasKitchen;
+        this.kitchen = participant.kitchen;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id, name, foodType, ageRange, gender, hasKitchen, kitchen);

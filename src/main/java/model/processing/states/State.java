@@ -1,55 +1,60 @@
 package model.processing.states;
 
+import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.PairList;
 
-public class State {
+import java.util.Objects;
 
+public class State {
     private State prev;
     private PairList pairList;
     private GroupList groupList;
 
-    public State(PairList pairList, GroupList groupList) {
+    private static State mainState;
+
+    public static synchronized State getInstance() {
+        if (mainState == null) {
+            mainState = new State();
+        }
+        return mainState;
+    }
+
+    private State() {
+        mainState = this;
         prev = null;
-        this.pairList = pairList;
-        this.groupList = groupList;
+        pairList = null;
+        groupList = null;
+    }
+
+    private State(State prev) {
+        this.prev = prev;
+        pairList = prev.getPairList();
+        groupList = prev.getGroupList();
     }
 
     public void updateState(PairList pairList, GroupList groupList) {
-        if (pairList == null && groupList == null) {
+        if (pairList == null) {
+            assert groupList == null;
             return;
         }
 
-        assert pairList != null;
-        var pl = new PairList(pairList);
-        GroupList gl = null;
-        if (this.pairList == null) {
-            prev = new State(null, null);
-        } else if (groupList == null) {
-            prev = new State(new PairList(this.pairList), null);
+        prev = new State(this);
+
+        if (groupList == null) {
+            this.pairList = new PairList(pairList);
+            this.groupList = null;
         } else {
-            gl = new GroupList(groupList);
-            prev = new State(new PairList(this.pairList), new GroupList(this.groupList));
+            this.groupList = new GroupList(groupList);
+            this.pairList = groupList.getPairList();
         }
-        this.pairList = pl;
-        this.groupList = gl;
     }
 
     public State revertState() {
-        var pl = new PairList(prev.pairList);
-        GroupList gl = null;
-        if (prev.groupList != null) {
-            gl = new GroupList(prev.groupList);
-        }
+        prev = new State(this);
 
-        if (groupList != null) {
-            prev = new State(new PairList(pairList), new GroupList(groupList));
-        } else {
-            prev = new State(new PairList(pairList), null);
-        }
-
-        pairList = pl;
-        groupList = gl;
+        pairList = prev.getPairList();
+        groupList = prev.getGroupList();
 
         return this;
     }

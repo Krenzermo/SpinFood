@@ -53,7 +53,7 @@ public class MainController {
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
 
-    private State state = new State(pairList, groupList);
+    private State state = State.getInstance();
 
     @FXML
     private VBox root;

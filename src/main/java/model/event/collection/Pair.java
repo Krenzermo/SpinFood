@@ -53,13 +53,27 @@ public class Pair implements ParticipantCollection {
         this.foodType = autoAssignFoodType();
     }
 
+    /**
+     * Copy constructor for class {@link Pair}.
+     * Copies all fields but not the {@link Group} class information.
+     * This constructor returns a deep copy (also copies the {@link Participant} instances).
+     *
+     * @param pair the specified {@link Pair}
+     */
     public Pair(Pair pair) {
-        this.participants[0] = pair.participants[0];
-        this.participants[1] = pair.participants[1];
+        this.participants[0] = new Participant(pair.participants[0]);
+        this.participants[1] = new Participant(pair.participants[1]);
+        participants[0].setPair(this);
+        participants[1].setPair(this);
         this.kitchen = pair.kitchen;
         this.foodType = pair.foodType;
         this.signedUpTogether = pair.signedUpTogether;
         this.id = pair.id;
+        this.kitchenOf = pair.kitchenOf;
+        this.course = pair.course;
+        this.starterNumber = pair.starterNumber;
+        this.mainNumber = pair.mainNumber;
+        this.dessertNumber = pair.dessertNumber;
     }
 
     private FoodType autoAssignFoodType() {

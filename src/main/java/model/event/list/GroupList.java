@@ -15,6 +15,7 @@ import model.person.Participant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The GroupList class represents a collection of Groups of Pairs.
@@ -50,13 +51,17 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	//private final List<Kitchen> dessertKitchens = new ArrayList<>();
 
 	/**
-	 * Copy constructor
+	 * Copy constructor for class {@link GroupList}.
+	 * Copies all fields including the {@link Group} class information.
+	 * This constructor returns a deep copy (also copies the {@link PairList}, {@link Group}, {@link Pair}, {@link Participant} instances)
 	 */
 	public GroupList(GroupList groupList) {
 		pairList = new PairList(groupList.pairList);
 		identNumber = groupList.identNumber;
-		successorPairs = new ArrayList<>(groupList.successorPairs);
+		successorPairs = groupList.successorPairs.stream().map(Pair::new).toList();
 		weights = groupList.weights;
+
+		// TODO: copy Group class information, maybe using MainController.getGroupCluster()
 	}
 
 	/**

@@ -1,5 +1,6 @@
 package model.event.list;
 
+import model.event.collection.Group;
 import model.event.io.InputData;
 import model.event.list.weight.PairingWeights;
 import model.event.collection.Pair;
@@ -11,6 +12,7 @@ import model.person.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * The PairList class represents a collection of pairs of participants.
@@ -29,13 +31,15 @@ public class PairList extends ParticipantCollectionList<Pair> {
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
 
     /**
-     * Copy constructor
+     * Copy constructor for class {@link PairList}.
+     * Copies all fields but keeps none of the {@link Group} class information.
+     * This constructor returns a deep copy (also copies the {@link Participant} successor and the {@link Pair} instances).
      */
     public PairList(PairList pairList) {
         this.identNumber = pairList.identNumber;
-        successors = new ArrayList<>(pairList.successors);
+        successors = pairList.successors.stream().map(Participant::new).toList();
         pairIdCounter = pairList.pairIdCounter;
-        setList(new ArrayList<>(pairList.getPairs()));
+        setList(pairList.getPairs().stream().map(Pair::new).toList());
     }
 
     /**
