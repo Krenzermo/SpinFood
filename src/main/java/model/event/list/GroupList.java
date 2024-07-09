@@ -54,9 +54,9 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 */
 	public GroupList(GroupList groupList) {
 		pairList = new PairList(groupList.pairList);
-		identNumber = groupList.identNumber;
+		identNumber = new GroupIdentNumber((GroupIdentNumber) groupList.identNumber);
 		successorPairs = new ArrayList<>(groupList.successorPairs);
-		weights = groupList.weights;
+		weights = new GroupWeights((GroupWeights) groupList.weights);
 	}
 
 	/**

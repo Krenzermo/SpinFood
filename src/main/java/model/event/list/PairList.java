@@ -32,7 +32,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * Copy constructor
      */
     public PairList(PairList pairList) {
-        this.identNumber = pairList.identNumber;
+        this.identNumber = new PairIdentNumber((PairIdentNumber) pairList.identNumber);
         successors = new ArrayList<>(pairList.successors);
         pairIdCounter = pairList.pairIdCounter;
         setList(new ArrayList<>(pairList.getPairs()));
