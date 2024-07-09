@@ -613,7 +613,9 @@ public class MainController {
                 return;
             }
         }
-        state.updateState(pairList, groupList);
+        if (groupList != null) {
+            state.updateState(pairList, groupList);
+        }
         event.consume();
     }
 
@@ -627,9 +629,11 @@ public class MainController {
         if (!Objects.isNull(groupList)) {
             updateGroupTable();
         }
+        if (groupList != null) {
+            undo.setDisable(false);
+            state.updateState(pairList, groupList);
+        }
 
-        undo.setDisable(false);
-        state.updateState(pairList, groupList);
     }
 
     @FXML
@@ -644,8 +648,10 @@ public class MainController {
         pairList.getSuccessors().removeAll(participants);
         updatePairTable();
 
-        undo.setDisable(false);
-        state.updateState(pairList, groupList);
+        if (groupList != null) {
+            undo.setDisable(false);
+            state.updateState(pairList, groupList);
+        }
     }
 
     @FXML
@@ -973,15 +979,14 @@ public class MainController {
     void goBackState(ActionEvent event) {
         this.state = state.revertState();
 
-        pairList = state.getPairList();
-        pairIdentNumber = pairList.getIdentNumber();
-        updatePairTable();
+        groupList = new GroupList(state.getGroupList());
+        pairList = groupList.getPairList();
 
-        groupList = state.getGroupList();
-        if (groupList != null) {
-            groupIdentNumber = groupList.getIdentNumber();
-            updateGroupTable();
-        }
+        groupIdentNumber = groupList.getIdentNumber();
+        pairIdentNumber = pairList.getIdentNumber();
+
+        updatePairTable();
+        updateGroupTable();
 
         if (state.getPrev() == null) {
             undo.setDisable(true);

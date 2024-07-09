@@ -15,6 +15,7 @@ import model.person.Participant;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The GroupList class represents a collection of Groups of Pairs.
@@ -54,9 +55,11 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 */
 	public GroupList(GroupList groupList) {
 		pairList = new PairList(groupList.pairList);
-		identNumber = new GroupIdentNumber((GroupIdentNumber) groupList.identNumber);
-		successorPairs = new ArrayList<>(groupList.successorPairs);
-		weights = new GroupWeights((GroupWeights) groupList.weights);
+		identNumber = groupList.identNumber;
+		successorPairs = new ArrayList<>(groupList.successorPairs.stream().map(Pair::new).collect(Collectors.toList()));
+		weights = groupList.weights;
+		setList(buildBestGroups(sortPairs(pairList), (GroupWeights) weights));
+		// TODO: copy Group class information, maybe using MainController.getGroupCluster()
 	}
 
 	/**
