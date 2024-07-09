@@ -1057,7 +1057,7 @@ public class MainController {
 
     private void replaceGroupData() {
         if (!Objects.isNull(groupList) && !groupTable.getItems().isEmpty()) {
-            List<Pair> successors = groupList.getSuccessorPairs();
+            //List<Pair> successors = groupList.getSuccessorPairs();
             this.groupList = new GroupList(pairList, groupWeights);
             //groupList.getSuccessorPairs().addAll(successors);
             this.groupIdentNumber = groupList.getIdentNumber();
