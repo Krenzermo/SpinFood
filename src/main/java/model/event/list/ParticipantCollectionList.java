@@ -30,7 +30,7 @@ public abstract class ParticipantCollectionList<E extends ParticipantCollection>
 	 *
 	 * @return the {@link IdentNumber} (Identifying Numbers) of {@code this}
 	 */
-	abstract IdentNumber getIdentNumber();
+	abstract IdentNumber<E> getIdentNumber();
 
 	/**
 	 * Evaluates the {@link ParticipantCollectionList}.

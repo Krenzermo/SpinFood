@@ -77,7 +77,7 @@ public class UnsubscriberController extends Dialog<PairList> {
     }
 
     @FXML
-    private void handleLogOut(ActionEvent event) {
+    void handleLogOut(ActionEvent event) {
         List<Participant> cancelledParticipants = new ArrayList<>();
         cancelledParticipants.add(participant);
 
@@ -88,7 +88,7 @@ public class UnsubscriberController extends Dialog<PairList> {
     }
 
     @FXML
-    private void handleSubstitute(ActionEvent event) {
+    void handleSubstitute(ActionEvent event) {
         Participant successor = comboBoxSuccessor.getValue();
         if (successor != null) {
             replaceParticipant(participant, successor);
@@ -97,7 +97,7 @@ public class UnsubscriberController extends Dialog<PairList> {
     }
 
     @FXML
-    private void handleLogOutAsPair(ActionEvent event) {
+    void handleLogOutAsPair(ActionEvent event) {
         Pair affectedPair = participant.getPair();
         if (affectedPair != null) {
             Participant partner = affectedPair.getOtherParticipant(participant);

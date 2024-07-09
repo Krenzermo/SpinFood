@@ -44,9 +44,9 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 	private static final InputData inputData = InputData.getInstance();
 	private final PairList pairList;
-	private IdentNumber identNumber;
+	private IdentNumber<Group> identNumber;
 	private List<Pair> successorPairs = new ArrayList<>();
-	private final Weights weights;
+	private final GroupWeights weights;
 	//private final List<Kitchen> starterKitchens = new ArrayList<>();
 	//private final List<Kitchen> mainKitchens = new ArrayList<>();
 	//private final List<Kitchen> dessertKitchens = new ArrayList<>();
@@ -62,7 +62,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		successorPairs = groupList.successorPairs.stream().map(Pair::new).collect(Collectors.toCollection(ArrayList::new));
 		weights = groupList.weights;
 
-		setList(buildBestGroups(pairList, (GroupWeights) weights));
+		setList(buildBestGroups(pairList, weights));
 	}
 
 	/**
@@ -103,7 +103,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param pairList the list of pairs to be sorted
 	 * @return the sorted list of pairs
 	 */
-	private List<Pair> sortPairs(PairList pairList) {     //TODO hier direkt List<Pair> genommen
+	private static List<Pair> sortPairs(List<Pair> pairList) {
 		List<Pair> sortedPairList = new ArrayList<>();
 
 		for (Pair pair : pairList) {
@@ -204,7 +204,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param pairsToBeGrouped the list of matched pairs
 	 * @return the list of groups
 	 */
-	private List<Group> makeGroups(List<Pair> pairsToBeGrouped, List<Kitchen> starterKitchens, List<Kitchen> mainKitchens, List<Kitchen> dessertKitchens) {
+	private static List<Group> makeGroups(List<Pair> pairsToBeGrouped, List<Kitchen> starterKitchens, List<Kitchen> mainKitchens, List<Kitchen> dessertKitchens) {
 		List<Group> groupList = new ArrayList<>();
 		if (pairsToBeGrouped.size() < 9) {
 			System.out.println("Error: matchedPairList has fewer than 9 elements. Size: " + pairsToBeGrouped.size());
@@ -280,7 +280,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return groupList;
 	}
 
-	private List<Pair> sortGroupCluster(List<Pair> pairsToBeGrouped) {
+	private static List<Pair> sortGroupCluster(List<Pair> pairsToBeGrouped) {
 		List<Pair> sortedCluster = new ArrayList<>();
 
 		sortedCluster.add(pairsToBeGrouped.remove(0));
@@ -299,7 +299,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return  sortedCluster;
 	}
 
-	private int findNearestPair(Pair cookingPair, List<Pair> pairsToBeGrouped) {
+	private static int findNearestPair(Pair cookingPair, List<Pair> pairsToBeGrouped) {
 		int nearestPairPos = 0;
 		double distance = 1;
 		for(int i = 0; i < pairsToBeGrouped.size(); i++){
@@ -314,7 +314,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	}
 
 
-	private List<Pair> removeDoubleKitchens(List<Pair> testedPairList2, List<Kitchen> starterKitchens, List<Kitchen> mainKitchens, List<Kitchen> dessertKitchens) {
+	private static List<Pair> removeDoubleKitchens(List<Pair> testedPairList2, List<Kitchen> starterKitchens, List<Kitchen> mainKitchens, List<Kitchen> dessertKitchens) {
 		List<Pair> testedPairList = new ArrayList<>(testedPairList2);
 		List<Pair> nulledList = new ArrayList<>();
 		List<Pair> meatList = new ArrayList<>();
@@ -579,7 +579,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param num             the number of swaps
 	 * @return the list of pairs after swapping
 	 */
-	private List<Pair> swapPositions(List<Pair> matchedPairList, List<Integer> meatPositions, int num) {
+	private static List<Pair> swapPositions(List<Pair> matchedPairList, List<Integer> meatPositions, int num) {
 		List<Pair> swappedList = new ArrayList<>();
 
 		if (num == 3) {
@@ -612,7 +612,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param matchedPairList the list of matched pairs
 	 * @return the list of positions of meat pairs
 	 */
-	private List<Integer> findMeatPosition(List<Pair> matchedPairList) {
+	private static List<Integer> findMeatPosition(List<Pair> matchedPairList) {
 		List<Integer> meatPositions = new ArrayList<>();
 		for (int i = 0; i < matchedPairList.size(); i++) {
 			if (matchedPairList.get(i).getFoodType() == FoodType.MEAT || matchedPairList.get(i).getFoodType() == FoodType.NONE) {
@@ -631,7 +631,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param matchedPairList  the list of matched pairs
 	 * @return the calculated score
 	 */
-	private double calculateGroupScore(Pair pair1, Pair testedPair, GroupWeights groupWeights, List<Pair> matchedPairList) {
+	private static double calculateGroupScore(Pair pair1, Pair testedPair, GroupWeights groupWeights, List<Pair> matchedPairList) {
 		double score = 0;
 
 		if (!testGroupComposition(testedPair, matchedPairList)) {
@@ -653,7 +653,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param groupWeights     the weights used for grouping criteria
 	 * @return the calculated score based on age difference
 	 */
-	private double compareGroupAge(List<Pair> matchedPairList, Pair testedPair, GroupWeights groupWeights) {
+	private static double compareGroupAge(List<Pair> matchedPairList, Pair testedPair, GroupWeights groupWeights) {
 		double groupAge = 0;
 		for (Pair pair : matchedPairList) {
 			groupAge += pair.getAverageAgeRange();
@@ -670,7 +670,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param groupWeights the weights used for grouping criteria
 	 * @return the calculated score based on food preference
 	 */
-	private double compareGroupFoodPreference(Pair pair1, Pair testedPair, GroupWeights groupWeights) {
+	private static double compareGroupFoodPreference(Pair pair1, Pair testedPair, GroupWeights groupWeights) {
 		double weight = groupWeights.getFoodPreferenceWeight();
 		switch (pair1.getFoodType()) {
 			case MEAT:
@@ -699,7 +699,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param groupWeights     the weights used for grouping criteria
 	 * @return the calculated score based on gender diversity
 	 */
-	private double compareGroupGender(List<Pair> matchedPairList, Pair testedPair, GroupWeights groupWeights) {
+	private static double compareGroupGender(List<Pair> matchedPairList, Pair testedPair, GroupWeights groupWeights) {
 		double groupGenderDeviation = 0;
 		for (Pair pair : matchedPairList) {
 			groupGenderDeviation += pair.getGenderDeviation();
@@ -726,7 +726,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param groupWeights the weights used for grouping criteria
 	 * @return the calculated score based on location distance
 	 */
-	private double compareLocation(Pair pair1, Pair testedPair, GroupWeights groupWeights) {
+	private static double compareLocation(Pair pair1, Pair testedPair, GroupWeights groupWeights) {
 		double distance = pair1.getKitchen().location().getDistance(testedPair.getKitchen().location());
 		double maxPossibleDistance = 0.07268611849857841; // Max distance in the given context
 		return groupWeights.getDistanceWeight() * (1 - distance / maxPossibleDistance);
@@ -739,7 +739,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param matchedPairList  the list of matched pairs
 	 * @return true if the group composition is valid, false otherwise
 	 */
-	private boolean testGroupComposition(Pair testedPair, List<Pair> matchedPairList) {
+	private static boolean testGroupComposition(Pair testedPair, List<Pair> matchedPairList) {
 		List <Kitchen> usedKitchens = new ArrayList<>();
 
 		for (Pair pair: matchedPairList){                           //TODO should make same kitchen in group cluster impossible
@@ -766,7 +766,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @param foodType        the food type to count
 	 * @return the count of pairs with the specified food type
 	 */
-	private int listCountFoodType(List<Pair> matchedPairList, FoodType foodType) {
+	private static int listCountFoodType(List<Pair> matchedPairList, FoodType foodType) {
 		int foodTypeCount = 0;
 		for (Pair pair : matchedPairList) {
 			if (pair.getFoodType() == foodType) {
@@ -782,8 +782,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	 * @return the {@link IdentNumber} (Identifying Numbers) of this GroupList
 	 */
 	@Override
-	public IdentNumber getIdentNumber() {
-		// TODO: Implement this method
+	public IdentNumber<Group> getIdentNumber() {
 		return identNumber;
 	}
 

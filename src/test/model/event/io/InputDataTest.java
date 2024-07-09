@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Test class for InputData
@@ -44,7 +45,7 @@ public class InputDataTest {
      */
     @Test
     public void testParticipantsLoading() {
-        ArrayList<Participant> participants = inputData.getParticipantInputData();
+        List<Participant> participants = inputData.getParticipantInputData();
         Assertions.assertFalse(participants.isEmpty());
         Assertions.assertEquals("Person1", participants.get(0).getName().firstName());
     }
@@ -54,7 +55,7 @@ public class InputDataTest {
      */
     @Test
     public void testPairsLoading() {
-        ArrayList<Pair> pairs = inputData.getPairInputData();
+        List<Pair> pairs = inputData.getPairInputData();
         Assertions.assertFalse(pairs.isEmpty());
         Assertions.assertTrue(pairs.get(0).signedUpTogether);
     }
@@ -75,7 +76,7 @@ public class InputDataTest {
      */
     @Test
     public void testCorrectPairAssignment() {
-        ArrayList<Pair> pairs = inputData.getPairInputData();
+        List<Pair> pairs = inputData.getPairInputData();
         for (Pair pair : pairs) {
             Assertions.assertTrue(pair.signedUpTogether);
             Assertions.assertNotEquals(pair.getParticipants().get(0).getId(), pair.getParticipants().get(1).getId());
@@ -87,7 +88,7 @@ public class InputDataTest {
      */
     @Test
     public void testDataValueValidation() {
-        ArrayList<Participant> participants = inputData.getParticipantInputData();
+        List<Participant> participants = inputData.getParticipantInputData();
         for (Participant participant : participants) {
             Assertions.assertNotNull(participant.getGender());
             Assertions.assertNotNull(participant.getFoodType());
@@ -100,7 +101,7 @@ public class InputDataTest {
      */
     @Test
     public void testParticipantSuccessorLoading() {
-        ArrayList<Participant> successorParticipants = inputData.getParticipantSuccessorList();
+        List<Participant> successorParticipants = inputData.getParticipantSuccessorList();
         Assertions.assertTrue(successorParticipants.isEmpty());
         //if a singular Participant with a duplicate Kitchen signs up, that Participants Kitchen will be "forgotten"
         for (Participant participant : successorParticipants) { // will not be executed as there are no Successors
@@ -113,7 +114,7 @@ public class InputDataTest {
      */
     @Test
     public void testPairSuccessorLoading() {
-        ArrayList<Pair> successorPairs = inputData.getPairSuccessorList();
+        List<Pair> successorPairs = inputData.getPairSuccessorList();
         Assertions.assertFalse(successorPairs.isEmpty());
         for (Pair pair : successorPairs) {
             Assertions.assertNotNull(pair.getKitchen());
@@ -126,8 +127,8 @@ public class InputDataTest {
      */
     @Test
     public void testCorrectSuccessorAssignment() {
-        ArrayList<Participant> successorParticipants = inputData.getParticipantSuccessorList();
-        ArrayList<Pair> successorPairs = inputData.getPairSuccessorList();
+        List<Participant> successorParticipants = inputData.getParticipantSuccessorList();
+        List<Pair> successorPairs = inputData.getPairSuccessorList();
 
         Assertions.assertTrue(successorParticipants.isEmpty());
 

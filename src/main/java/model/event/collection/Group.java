@@ -116,7 +116,6 @@ public class Group implements ParticipantCollection{
 	 */
 	@Override
 	public Kitchen getKitchen() {
-		// TODO: this
 		return kitchen;
 	}
 
@@ -143,7 +142,6 @@ public class Group implements ParticipantCollection{
 	 */
 	@Override
 	public Course getCourse() {
-		// TODO: this
 		return course;
 	}
 

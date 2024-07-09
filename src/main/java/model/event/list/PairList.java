@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public class PairList extends ParticipantCollectionList<Pair> {
     private static final InputData inputData = InputData.getInstance();
-    private final IdentNumber identNumber;
+    private final IdentNumber<Pair> identNumber;
     private List<Participant> successors = new ArrayList<>();
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
     private final PairingWeights pairingWeights123;
@@ -138,7 +138,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights  the weights used for pairing criteria
      * @return the score for pairing the two participants
      */
-    public static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+    private static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         double score = 0;
         double kitchenScore = compareKitchen(participant1, testedParticipant);
         if (kitchenScore == Double.NEGATIVE_INFINITY) {
@@ -158,8 +158,6 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param testedParticipant the second participant being tested
      * @return the score based on the kitchen availability comparison
      */
-
-    //TODO fix gleiche küche unmöglich
     private static double compareKitchen(Participant participant1, Participant testedParticipant) {
 	    return switch (participant1.isHasKitchen()) {
 		    case YES -> (testedParticipant.isHasKitchen() == KitchenAvailability.YES &&
@@ -317,7 +315,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      *
      * @return the identifying number for the list of pairs
      */
-    private IdentNumber deriveIdentNumber() {
+    private IdentNumber<Pair> deriveIdentNumber() {
         return new PairIdentNumber(this);
     }
 
@@ -327,7 +325,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @return the identifying number for this PairList
      */
     @Override
-    public IdentNumber getIdentNumber() {
+    public IdentNumber<Pair> getIdentNumber() {
         return identNumber;
     }
 

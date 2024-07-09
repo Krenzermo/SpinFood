@@ -9,10 +9,7 @@ import model.person.Name;
 import model.person.Participant;
 import model.kitchen.Kitchen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.nio.file.Paths;
 
 /**
@@ -25,12 +22,11 @@ import java.nio.file.Paths;
  * in the corresponding classes in ArrayLists to return them all together
  */
 public class InputData {
-    private ArrayList<Participant> participantInputData;
-    private ArrayList<Pair> pairInputData;
-    private ArrayList<Participant> participantSuccessorList; // List to store participants with overused kitchens
-    private ArrayList<Pair> pairSuccessorList; // List to store pairs with overused kitchens
+    private List<Participant> participantInputData;
+    private List<Pair> pairInputData;
+    private List<Participant> participantSuccessorList; // List to store participants with overused kitchens
+    private List<Pair> pairSuccessorList; // List to store pairs with overused kitchens
     private Location eventLocation;
-    // TODO: add more robust logic for receiving the data
     private String participantDataFilePath;
     private String eventLocationDataFilePath;
     private static final String participantsPathDebug = "src/main/java/data/teilnehmerliste.csv";
@@ -338,7 +334,7 @@ public class InputData {
      * method to get the arraylist of the participants from the inputData
      * @return Arraylist of participants
      */
-    public ArrayList<Participant> getParticipantInputData() {
+    public List<Participant> getParticipantInputData() {
         return participantInputData;
     }
 
@@ -346,7 +342,7 @@ public class InputData {
      * method to get the arraylist of the pairs from the inputData
      * @return Arraylist of pairs
      */
-    public ArrayList<Pair> getPairInputData() {
+    public List<Pair> getPairInputData() {
         return pairInputData;
     }
 
@@ -354,7 +350,7 @@ public class InputData {
      * method to get the list of participant successors from the inputData
      * @return Arraylist of participant successors
      */
-    public ArrayList<Participant> getParticipantSuccessorList() {
+    public List<Participant> getParticipantSuccessorList() {
         return participantSuccessorList;
     }
 
@@ -362,7 +358,7 @@ public class InputData {
      * method to get the list of pair successors from the inputData
      * @return Arraylist of pair successors
      */
-    public ArrayList<Pair> getPairSuccessorList() {
+    public List<Pair> getPairSuccessorList() {
         return pairSuccessorList;
     }
 

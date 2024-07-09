@@ -28,7 +28,7 @@ public enum Course {
 		return "Course: " + this.name();
 	}
 
-    public SimpleStringProperty asProperty() {
+    public ObservableValue<String> asObservable() {
 		return new SimpleStringProperty(this.name());
     }
 }

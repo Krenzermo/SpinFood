@@ -19,8 +19,6 @@ import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 import model.person.Name;
-import model.person.Gender;
-import model.person.FoodType;
 import model.event.Course;
 import model.event.collection.Group;
 import model.event.collection.Pair;
@@ -57,7 +55,7 @@ public class MainController {
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
 
-    private State state = State.getInstance();
+    private static State state = State.getInstance();
 
     @FXML
     private VBox root;
@@ -406,7 +404,7 @@ public class MainController {
         }
     }
 
-    private TableColumn<?, ?> getClickedColumn(MouseEvent event, TableView<?> tableView) {
+    private static TableColumn<?, ?> getClickedColumn(MouseEvent event, TableView<?> tableView) {
         TableColumn<?, ?> column = null;
         double x = event.getX();
 
@@ -577,7 +575,7 @@ public class MainController {
     }
 
     @FXML
-    void savePairSuccessorsMenuItem(ActionEvent event) {
+    void savePairSuccessors(ActionEvent event) {
         // TODO: this
     }
 
@@ -893,7 +891,7 @@ public class MainController {
                     if (course == null) {
                         return new SimpleStringProperty("n.V.");
                     }
-                    return course.asProperty();
+                    return course.asObservable();
                 }
         );
         foodTypeColPair.setCellValueFactory(cell -> cell.getValue().getFoodType().asObservable());
@@ -906,7 +904,7 @@ public class MainController {
         pairTwoColGroup.setCellValueFactory(cell -> cell.getValue().getPairs()[1].getIdAsObservable());
         pairThreeColGroup.setCellValueFactory(cell -> cell.getValue().getPairs()[2].getIdAsObservable());
         kitchenColGroup.setCellValueFactory(cell -> cell.getValue().getKitchen().asObservable());
-        courseColGroup.setCellValueFactory(cell -> cell.getValue().getCourse().asProperty());
+        courseColGroup.setCellValueFactory(cell -> cell.getValue().getCourse().asObservable());
         cookIDColGroup.setCellValueFactory(cell -> cell.getValue().getCookPairIdAsObservable());
     }
 
@@ -1132,7 +1130,7 @@ public class MainController {
 
     @FXML
     void goBackState(ActionEvent event) {
-        this.state = state.revertState();
+        state = state.revertState();
 
         pairList = state.getPairList();
         groupList = state.getGroupList();
