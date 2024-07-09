@@ -46,15 +46,15 @@ public class State {
             this.groupList = null;
         } else {
             this.groupList = new GroupList(groupList);
-            this.pairList = groupList.getPairList();
+            this.pairList = this.groupList.getPairList();
         }
     }
 
     public State revertState() {
-        prev = new State(this);
-
         pairList = prev.getPairList();
         groupList = prev.getGroupList();
+
+        prev = null;
 
         return this;
     }

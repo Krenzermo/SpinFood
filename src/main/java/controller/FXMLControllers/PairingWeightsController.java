@@ -61,6 +61,7 @@ public class PairingWeightsController extends Dialog<PairingWeights> {
         // The language of default Buttons gets set to the current default language when initialized.
         // LanguageController always changes the default language to get around this.
         // This also means that default Buttons can't change the language dynamically.
+        // To circumvent this problem, we added an addChangeListener method to LanguageController.
     }
 
     public void init(Window owner) {

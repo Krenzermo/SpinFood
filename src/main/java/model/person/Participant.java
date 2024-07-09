@@ -25,6 +25,7 @@ public class Participant {
     private final String id;
     private final Name name;
     private final FoodType foodType;
+    private final byte age;
     private final AgeRange ageRange;
     private final Gender gender;
     private KitchenAvailability hasKitchen;
@@ -36,22 +37,24 @@ public class Participant {
         this.id = id;
         this.name = name;
         this.foodType = foodType;
+        this.age = age;
         this.ageRange = AgeRange.getAgeRange(age);
         this.gender = gender;
         this.hasKitchen = hasKitchen;
         this.kitchen = new Kitchen(new Location(kitchenLongitude, kitchenLatitude), kitchenStory);
         this.pair = null;
-        this.groups = null;
     }
 
     public Participant(String id, Name name, FoodType foodType, byte age, Gender gender) {
         this.id = id;
         this.name = name;
         this.foodType = foodType;
+        this.age = age;
         this.ageRange = AgeRange.getAgeRange(age);
         this.gender = gender;
         this.hasKitchen = KitchenAvailability.NO;
         this.kitchen = null;
+        this.pair = null;
     }
 
     /**
@@ -68,6 +71,7 @@ public class Participant {
         this.gender = participant.gender;
         this.hasKitchen = participant.hasKitchen;
         this.kitchen = participant.kitchen;
+        this.age = participant.getAge();
     }
 
     @Override
@@ -84,6 +88,13 @@ public class Participant {
             return false;
         }
         Participant other = (Participant) obj;
+        if (Objects.isNull(kitchen)) {
+            if (other.kitchen != null) {
+                return false;
+            }
+            return this.id.equals(other.id) && this.name.equals(other.name) && this.foodType.equals(other.foodType) && this.ageRange.equals(other.ageRange)
+                    && this.gender.equals(other.gender) && this.hasKitchen.equals(other.hasKitchen);
+        }
         return this.id.equals(other.id) && this.name.equals(other.name) && this.foodType.equals(other.foodType) && this.ageRange.equals(other.ageRange)
                 && this.gender.equals(other.gender) && this.hasKitchen.equals(other.hasKitchen) && this.kitchen.equals(other.kitchen);
     }
@@ -99,7 +110,11 @@ public class Participant {
         return this.kitchen.compareTo(o.kitchen);
     }
 
-    public AgeRange getAge() {
+    public byte getAge() {
+        return age;
+    }
+
+    public AgeRange getAgeRange() {
         return ageRange;
     }
 
@@ -117,10 +132,6 @@ public class Participant {
 
     public FoodType getFoodType() {
         return foodType;
-    }
-
-    public AgeRange getAgeRange() {
-        return ageRange;
     }
 
     public Gender getGender() {
@@ -176,5 +187,9 @@ public class Participant {
     public void setNoKitchen() {
         this.hasKitchen = KitchenAvailability.NO;
         this.kitchen = null;
+    }
+
+    public void clearPair() {
+        this.pair = null;
     }
 }

@@ -29,6 +29,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
     private final IdentNumber identNumber;
     private List<Participant> successors = new ArrayList<>();
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
+    private final PairingWeights pairingWeights123;
 
     /**
      * Copy constructor for class {@link PairList}.
@@ -37,6 +38,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      */
     public PairList(PairList pairList) {
         this.identNumber = pairList.identNumber;
+        this.pairingWeights123 = pairList.getPairingWeights();
         successors = pairList.successors.stream().map(Participant::new).toList();
         pairIdCounter = pairList.pairIdCounter;
         setList(pairList.getPairs().stream().map(Pair::new).toList());
@@ -54,11 +56,24 @@ public class PairList extends ParticipantCollectionList<Pair> {
                 add(pair);
             }
         }
+        for (Pair pair : inputData.getPairSuccessorList()) {
+            if (!contains(pair)) {
+                add(pair);
+            }
+        }
         this.identNumber = deriveIdentNumber();
         successors.addAll(inputData.getParticipantSuccessorList());
+        this.pairingWeights123 = pairingWeights;
+        //this.printFoodNumbers();
     }
 
 
+    /**
+     * Creates a PairList Object without running the Pairing Algorithm.
+     * Note that this can cause Problems if the PairList isn't just used temporarily.
+     *
+     * @param pairList the specified pairList
+     */
     public PairList(List<Pair> pairList) {
 	    setList(pairList);
         for (Pair pair : inputData.getPairInputData()) {
@@ -66,8 +81,14 @@ public class PairList extends ParticipantCollectionList<Pair> {
                 add(pair);
             }
         }
+        for (Pair pair : inputData.getPairSuccessorList()) {
+            if (!contains(pair)) {
+                add(pair);
+            }
+        }
         this.identNumber = deriveIdentNumber();
         successors.addAll(inputData.getParticipantSuccessorList());
+        this.pairingWeights123 = null;
     }
 
     /**
@@ -201,7 +222,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @return the score based on the age comparison
      */
     private static double compareAge(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
-        double ageDifference = participant1.getAge().getAgeDifference(testedParticipant.getAge());
+        double ageDifference = participant1.getAgeRange().getAgeDifference(testedParticipant.getAgeRange());
         return pairingWeights.getAgeDifferenceWeight() * (1 - 0.1 * ageDifference);
     }
 
@@ -373,5 +394,9 @@ public class PairList extends ParticipantCollectionList<Pair> {
 
     public int getPairIdCounterAndIncrement(){
         return pairIdCounter++;
+    }
+
+    public PairingWeights getPairingWeights() {
+        return pairingWeights123;
     }
 }

@@ -1,5 +1,6 @@
 package controller.FXMLControllers;
 
+import controller.LanguageController;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -21,6 +22,8 @@ import java.io.IOException;
 import java.net.URL;
 
 public class GroupListComparisonController extends Dialog<GroupList>{
+    private static final LanguageController languageController = LanguageController.getInstance();
+
 
     @FXML
     private TableColumn<Group, Integer> cookPairOne;
@@ -99,12 +102,18 @@ public class GroupListComparisonController extends Dialog<GroupList>{
 
     @FXML
     private void initialize() {
+        bindAllComponents();
+
         // same as in MainController
         MainController.addListenersToTable(tableOne);
         MainController.makeTableNotReorderable(tableOne);
 
         MainController.addListenersToTable(tableTwo);
         MainController.makeTableNotReorderable(tableTwo);
+    }
+
+    private void bindAllComponents() {
+        // TODO: this
     }
 
     public void init(Window owner, PairList pairList) {

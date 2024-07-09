@@ -86,7 +86,7 @@ public class Group implements ParticipantCollection{
 
 	private int getKitchenOwner(Kitchen kitchen){
 		for (int i = 0; i < pairs.length; i++){
-			if (pairs[i].getKitchen() == kitchen){
+			if (pairs[i].getKitchen().equals(kitchen)){
 				return i;
 			}
 		}

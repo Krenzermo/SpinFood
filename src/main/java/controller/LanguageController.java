@@ -28,7 +28,7 @@ public class LanguageController {
 		english = ResourceBundle.getBundle("application", Locale.ENGLISH);
 	}
 
-	public static LanguageController getInstance() {
+	public static synchronized LanguageController getInstance() {
 		if (instance == null) {
 			instance = new LanguageController();
 		}
@@ -70,7 +70,7 @@ public class LanguageController {
 		if (locale.equals(Locale.ENGLISH)) {
 			return english;
 		}
-		throw new IllegalStateException("Language not supported: " + getLanguage());
+		throw new IllegalArgumentException("Language not supported: " + getLanguage());
 	}
 
 	/**

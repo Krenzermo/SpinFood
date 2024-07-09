@@ -74,28 +74,22 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		this.weights = groupWeights;
 		Group.COUNTER = 0;
 		List<Pair> sortedPairsList = sortPairs(pairList);
+		if (pairList.containsAll(inputData.getPairInputData()) && pairList.containsAll(inputData.getPairSuccessorList())) {
+			sortedPairsList.removeAll(inputData.getPairSuccessorList());
+		}
 		setList(buildBestGroups(sortedPairsList, groupWeights));
 		this.identNumber = getIdentNumber();
 		this.pairList = pairList;
 		this.identNumber = deriveIdentNumber();
-		successorPairs.addAll(inputData.getPairSuccessorList());
+		for (Pair pair : pairList) {
+			if (pair.isGroupsEmpty() && !successorPairs.contains(pair)) {
+				successorPairs.add(pair);
+			}
+		}
 	}
 
 	public GroupList(List<Pair> pairs, GroupWeights weights) {
 		this(new PairList(pairs), weights);
-	}
-
-	/**
-	 * Uses an instance of GroupList to call the buildBestGroups Algorithm.
-	 * This is very ugly but necessary unless the algorithms are refactored into separate classes.
-	 *
-	 * @param instance any GroupList instance
-	 * @param pairs the List of Pairs to be grouped
-	 * @param weights the GroupWeights
-	 * @return the List of Groups
-	 */
-	public static List<Group> getGroups(GroupList instance, List<Pair> pairs, GroupWeights weights) {
-		return instance.buildBestGroups(pairs, weights);
 	}
 
 	private GroupIdentNumber deriveIdentNumber() {

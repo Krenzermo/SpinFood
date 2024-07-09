@@ -51,6 +51,8 @@ public class Pair implements ParticipantCollection {
         this.signedUpTogether = signedUpTogether;
         this.kitchen = autoAssignKitchen();
         this.foodType = autoAssignFoodType();
+        participant1.setPair(this);
+        participant2.setPair(this);
     }
 
     /**
@@ -121,7 +123,7 @@ public class Pair implements ParticipantCollection {
 
     @Override
     public int getAgeDifference() {
-        return participants[0].getAge().getAgeDifference(participants[1].getAge());
+        return participants[0].getAgeRange().getAgeDifference(participants[1].getAgeRange());
     }
 
     @Override
@@ -366,7 +368,7 @@ public class Pair implements ParticipantCollection {
         return foodType;
     }
     public double getAverageAgeRange() {
-        return (participants[0].getAge().value + participants[1].getAge().value)/ 2.0;
+        return (participants[0].getAgeRange().value + participants[1].getAgeRange().value)/ 2.0;
     }
 
     public void setStarterNumber(int starterNumber) {
@@ -399,5 +401,22 @@ public class Pair implements ParticipantCollection {
 
     public ObservableValue<Boolean> getSignedUpTogetherAsObservable() {
         return new SimpleBooleanProperty(signedUpTogether);
+    }
+
+    /**
+     * Gets the partner of the specified {@link Participant} in this {@link Pair} and returns {@code null} otherwise
+     *
+     * @param participant the specified {@link Participant}
+     * @return the other {@link Participant} in {@code this} or {@code null}
+     */
+    public Participant getOtherParticipant(Participant participant) {
+        if (!contains(participant)) {
+            return null;
+        }
+        return participants[0].equals(participant) ? participants[1] : participants[0];
+    }
+
+    public boolean isGroupsEmpty() {
+        return Objects.isNull(groups[0]) && Objects.isNull(groups[1]) && Objects.isNull(groups[2]);
     }
 }
