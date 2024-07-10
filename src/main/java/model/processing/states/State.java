@@ -1,5 +1,6 @@
 package model.processing.states;
 
+import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.PairList;
 
@@ -26,6 +27,13 @@ public class State {
         this.groupList = new GroupList(groupList);
         this.pairList = this.groupList.getPairList();
 
+    }
+
+    public void updateState(PairList pairList) {
+        prev = new State(this.pairList, this.groupList);
+
+        this.groupList = new GroupList(pairList);
+        this.pairList = groupList.getPairList();
     }
 
 

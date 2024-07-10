@@ -574,7 +574,7 @@ public class MainController {
                 return;
             }
         }
-        state.updateState(pairList, groupList);
+        state.updateState(pairList);
         event.consume();
     }
 
@@ -614,7 +614,7 @@ public class MainController {
             }
         }
         if (groupList != null) {
-            state.updateState(pairList, groupList);
+            state.updateState(pairList);
         }
         event.consume();
     }
@@ -631,7 +631,7 @@ public class MainController {
         }
         if (groupList != null) {
             undo.setDisable(false);
-            state.updateState(pairList, groupList);
+            state.updateState(pairList);
         }
 
     }
@@ -650,7 +650,7 @@ public class MainController {
 
         if (groupList != null) {
             undo.setDisable(false);
-            state.updateState(pairList, groupList);
+            state.updateState(pairList);
         }
     }
 
@@ -677,7 +677,7 @@ public class MainController {
         updateGroupTable();
 
         undo.setDisable(false);
-        state.updateState(pairList, groupList);
+        state.updateState(pairList);
     }
 
     @FXML
@@ -699,7 +699,7 @@ public class MainController {
         updateGroupTable();
 
         undo.setDisable(false);
-        state.updateState(pairList, groupList);
+        state.updateState(pairList);
     }
 
     private void removePair(Pair pair) {
@@ -879,6 +879,7 @@ public class MainController {
 
     @FXML
     void comparePairList(ActionEvent event) {
+        undo.setDisable(true);
         MainFrame.stage.hide();
         PairListComparisonController dialog = new PairListComparisonController();
         if (!Objects.isNull(pairList) && !pairList.isEmpty()) {
@@ -905,10 +906,13 @@ public class MainController {
             return;
         }
         MainFrame.stage.show();
+
+        state.updateState(pairList);
     }
 
     @FXML
     void compareGroupList(ActionEvent event) {
+        undo.setDisable(true);
         MainFrame.stage.hide();
         GroupListComparisonController dialog = new GroupListComparisonController();
 
@@ -938,9 +942,12 @@ public class MainController {
             return;
         }
         MainFrame.stage.show();
+
+        state.updateState(pairList);
     }
 
     private void showUnsubscriberDialog(Participant participant) {
+        undo.setDisable(true);
         try {
             String relPath = "src/main/java/view/fxml/Unsubscriber.fxml";
             File file = new File(relPath);
@@ -958,6 +965,8 @@ public class MainController {
             dialogStage.showAndWait();
 
             updatePairTable(); // Update tables after the dialog is closed to reflect changes
+
+            state.updateState(pairList);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -979,7 +988,7 @@ public class MainController {
     void goBackState(ActionEvent event) {
         this.state = state.revertState();
 
-        groupList = new GroupList(state.getGroupList());
+        groupList = new GroupList(state.getPairList());
         pairList = groupList.getPairList();
 
         groupIdentNumber = groupList.getIdentNumber();

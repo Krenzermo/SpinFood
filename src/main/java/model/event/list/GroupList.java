@@ -62,6 +62,70 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		// TODO: copy Group class information, maybe using MainController.getGroupCluster()
 	}
 
+	public GroupList(PairList pairList) {
+		this.pairList = new PairList(pairList);
+		successorPairs = recreateSuccessors();
+		setList(recreateGroups());
+		identNumber = deriveIdentNumber();
+		weights = null;
+	}
+
+	private List<Pair> recreateSuccessors() {
+		List<Pair> pairs = pairList.getPairs();
+		return pairs.stream().filter(pair -> pair.getCourse() == null).collect(Collectors.toList());
+	}
+
+	private List<Group> recreateGroups() {
+		List<Group> groups = new ArrayList<>();
+		List<Pair> pairs = pairList.getPairs();
+		pairs = pairs.stream().sorted((p1, p2) -> {
+			int starterCompare = Integer.compare(p1.getStarterNumber(), p2.getStarterNumber());
+			if (starterCompare != 0) {
+				return starterCompare;
+			}
+			int mainCompare = Integer.compare(p1.getMainNumber(), p2.getMainNumber());
+			if (mainCompare != 0) {
+				return mainCompare;
+			}
+			return Integer.compare(p1.getDessertNumber(), p2.getDessertNumber());
+		}).toList();
+
+		for (int i = 0; i < pairs.size(); i+=3) {
+			List<Pair> group = new ArrayList<>();
+			group.add(pairs.get(i));
+			for (int j = i + 1; j < i + 3;  j++) {
+				group.add(pairs.get(j));
+			}
+
+			Kitchen kitchen;
+			Course course;
+			int id;
+			if (group.get(0).getStarterNumber() == group.get(1).getStarterNumber()) {
+				id = group.get(0).getStarterNumber();
+				course = Course.STARTER;
+				kitchen = group.stream().filter(pair -> pair.getCourse() == Course.STARTER).toList().get(0).getKitchen();
+			} else if (group.get(0).getMainNumber() == group.get(1).getMainNumber()) {
+				id = group.get(0).getMainNumber();
+				course = Course.MAIN;
+				kitchen = group.stream().filter(pair -> pair.getCourse() == Course.MAIN).toList().get(0).getKitchen();
+			} else {
+				id = group.get(0).getDessertNumber();
+				course = Course.DESSERT;
+				kitchen = group.stream().filter(pair -> pair.getCourse() == Course.DESSERT).toList().get(0).getKitchen();
+			}
+			groups.add(new Group(
+					new Pair(group.get(0)),
+					new Pair(group.get(1)),
+					new Pair(group.get(2)),
+					course,
+					kitchen,
+					id));
+		}
+
+		return groups;
+
+	}
+
 	/**
 	 * Constructs a GroupList instance.
 	 *
