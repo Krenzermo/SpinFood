@@ -16,6 +16,10 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+/**
+ * Test class for CancellationHandler.
+ * This class contains tests to verify the functionality of the CancellationHandler class.
+ */
 public class CancellationHandlerTest {
 
     private CancellationHandler cancellationHandler;
@@ -23,16 +27,24 @@ public class CancellationHandlerTest {
     private GroupList groupList;
     private InputData inputData;
 
+    /**
+     * Sets up the necessary objects before each test.
+     * Initializes InputData, PairList, GroupList, and CancellationHandler.
+     */
     @Before
     public void setUp() {
         inputData = InputData.getInstanceDebug();
-        PairingWeights pairingWeights = new PairingWeights(1,1,1);
+        PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         pairList = new PairList(pairingWeights);
-        GroupWeights groupWeights = new GroupWeights(1,1,1,1);
-        groupList = new GroupList(pairList, groupWeights);  // Assuming some weights are needed here
+        GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
+        groupList = new GroupList(pairList, groupWeights);
         cancellationHandler = new CancellationHandler(pairList, groupList);
     }
 
+    /**
+     * Tests the full pair cancellation scenario.
+     * Verifies that the pair is removed from the pair list and neither participant is in the successors list.
+     */
     @Test
     public void testFullPairCancellation() {
         List<Pair> pairs = pairList.getPairs();
@@ -46,6 +58,10 @@ public class CancellationHandlerTest {
         assertFalse(pairList.getSuccessors().contains(pair.getParticipants().get(1)));
     }
 
+    /**
+     * Tests the partial pair cancellation scenario.
+     * Verifies that the pair is removed from the pair list and the remaining participant is in the successors list.
+     */
     @Test
     public void testPartialPairCancellation() {
         List<Pair> pairs = pairList.getPairs();
@@ -60,6 +76,10 @@ public class CancellationHandlerTest {
         assertTrue(pairList.getSuccessors().contains(pair.getOtherParticipant(cancelledParticipant)));
     }
 
+    /**
+     * Tests the single participant cancellation scenario.
+     * Verifies that the participant is removed from the successors list.
+     */
     @Test
     public void testSingleCancellation() {
         Participant singleParticipant = inputData.getParticipantInputData().get(0);
@@ -71,6 +91,10 @@ public class CancellationHandlerTest {
         assertFalse(pairList.getSuccessors().contains(singleParticipant));
     }
 
+    /**
+     * Tests the update of groups after a pair cancellation.
+     * Verifies that the groups are updated accordingly and the cancelled pair is not in the successor pairs list.
+     */
     @Test
     public void testUpdateGroupsAfterCancellation() {
         List<Pair> pairs = pairList.getPairs();
@@ -78,9 +102,8 @@ public class CancellationHandlerTest {
         List<Participant> cancelledParticipants = pair.getParticipants();
 
         cancellationHandler.handleCancellation(cancelledParticipants);
-
-        // Add checks to verify that the groups have been updated accordingly
+        
         assertFalse(groupList.getSuccessorPairs().contains(pair));
-        // Additional checks can be added here to verify group updates
+
     }
 }
