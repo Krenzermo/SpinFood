@@ -75,7 +75,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 	private List<Group> recreateGroups() {
 		List<Group> groups = new ArrayList<>();
-		List<Pair> pairs = pairList.getPairs();
+		List<Pair> pairs = pairList.getPairs().stream().filter(pair -> pair.getCourse() != null).collect(Collectors.toList());
 
 		pairs.sort(Comparator.comparing(Pair::getStarterNumber));
 		//System.out.println(pairs);
@@ -180,6 +180,8 @@ public class GroupList extends ParticipantCollectionList<Group> {
 			} else {
 				successorPairs.addAll(group);
 			}
+
+			group.clear();
 		}
 	}
 
