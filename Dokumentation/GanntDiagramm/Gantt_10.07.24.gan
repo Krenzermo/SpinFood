@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="Software Praktikum SS24" company="Philipps-Universität Marburg" webLink="https://gitlab.uni-marburg.de/hinkelma/sp24_gruppex_brecher_hinkelma_krenzerm_piacenza" view-date="2024-06-10" view-index="0" gantt-divider-location="365" resource-divider-location="300" version="3.3.3307" locale="de_DE">
+<?xml version="1.0" encoding="UTF-8"?><project name="Software Praktikum SS24" company="Philipps-Universität Marburg" webLink="https://gitlab.uni-marburg.de/hinkelma/sp24_gruppex_brecher_hinkelma_krenzerm_piacenza" view-date="2024-06-10" view-index="0" gantt-divider-location="350" resource-divider-location="300" version="3.3.3307" locale="de_DE">
     <description/>
     <view zooming-state="default:4" id="gantt-chart">
-        <field id="tpd3" name="Vorgang" width="198" order="0"/>
-        <field id="tpd4" name="Anfang" width="75" order="1"/>
-        <field id="tpd5" name="Ende" width="76" order="2"/>
+        <field id="tpd3" name="Vorgang" width="189" order="0"/>
+        <field id="tpd4" name="Anfang" width="72" order="1"/>
+        <field id="tpd5" name="Ende" width="73" order="2"/>
         <field id="tpd15" name="Notizen" width="20" order="3"/>
         <option id="filter.completedTasks" value="false"/>
         <option id="filter.dueTodayTasks" value="false"/>
@@ -60,14 +60,14 @@
             <task id="20" uid="1020efca91a44ab3b9e20a68749ef15c" name="Dokumentation" meeting="false" start="2024-05-28" duration="16" complete="100" expand="true"/>
         </task>
         <task id="11" uid="2321074f07ae44f799881a264f3ca092" name="Meilenstein 2" meeting="true" start="2024-06-13" duration="0" complete="0" priority="2" expand="true"/>
-        <task id="10" uid="b56629a97c4049d4ba7147a59e458f9a" name="4.Phase" meeting="false" start="2024-06-14" duration="27" complete="98" expand="true">
-            <task id="23" uid="0846e61c02784d51a97eb573a92ed46d" name="GUI" color="#999999" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2024-06-14" duration="27" complete="95" expand="true">
+        <task id="10" uid="b56629a97c4049d4ba7147a59e458f9a" name="4.Phase" meeting="false" start="2024-06-14" duration="27" complete="95" expand="true">
+            <task id="23" uid="0846e61c02784d51a97eb573a92ed46d" name="GUI" color="#999999" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2024-06-14" duration="27" complete="89" expand="true">
                 <task id="24" uid="f990e580db3e4287953e5cb191afcc81" name="GUI Grundriss" meeting="false" start="2024-06-14" duration="7" complete="100" expand="true"/>
                 <task id="25" uid="21afbaeca65b4c4994e49be5f0cd1aa0" name="Paare bilden und anzeigen" meeting="false" start="2024-06-20" duration="8" complete="100" expand="true"/>
                 <task id="28" uid="5eca2bb3bd5d4a438f41600996103dda" name="Gruppen bilden und anzeigen" color="#8cb6ce" meeting="false" start="2024-06-25" duration="10" complete="100" expand="true"/>
                 <task id="30" uid="25fe8a1c0adf43e493880d42c0a52d49" name="Paare/Gruppen vergleichen" color="#8cb6ce" meeting="false" start="2024-06-25" duration="10" complete="100" expand="true"/>
                 <task id="31" uid="5fc49e7d7b354af38c6cc5cf359c8d88" name="Paare/Gruppen manuell bearbeiten" color="#8cb6ce" meeting="false" start="2024-06-27" duration="10" complete="100" expand="true"/>
-                <task id="42" uid="e55ba06c25694ac9a2ada3c00f6c4e53" name="Undo/Redo bearbeiten" color="#8cb6ce" meeting="false" start="2024-06-27" duration="14" complete="75" expand="true"/>
+                <task id="42" uid="e55ba06c25694ac9a2ada3c00f6c4e53" name="Undo/Redo bearbeiten" color="#8cb6ce" meeting="false" start="2024-06-27" duration="14" complete="45" expand="true"/>
                 <task id="41" uid="c229cc324c5f4d4abfbc2fbf51540783" name="GUI testen" color="#8cb6ce" meeting="false" start="2024-06-28" duration="13" complete="100" expand="true"/>
             </task>
             <task id="34" uid="afafa2b2fc304f7fa944f3b2ebf407f9" name="Code" color="#999999" meeting="false" start="2024-06-14" duration="27" complete="100" expand="true">
