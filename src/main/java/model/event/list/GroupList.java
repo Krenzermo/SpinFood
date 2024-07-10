@@ -222,10 +222,20 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		}
 	}
 
+	/**
+	 * alternate constructor with a list of pairs
+	 * @param pairs the list of pairs to build the groupList from
+	 * @param weights weights for the grouping algorithm
+	 */
+
 	public GroupList(List<Pair> pairs, GroupWeights weights) {
 		this(new PairList(pairs), weights);
 	}
 
+	/**
+	 * makes an identNumber object based on this the GroupList
+	 * @return the identNumber object for this GroupList
+	 */
 	private GroupIdentNumber deriveIdentNumber() {
 		return new GroupIdentNumber(this);
 	}
@@ -269,6 +279,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	/**
 	 * Builds the best groups of pairs based on the provided GroupWeights.
 	 * Groups are created in batches of 9 pairs each.
+	 * Resets possible leftover groupIDs for successors Pairs
 	 *
 	 * @param pairList     the list of pairs to be grouped
 	 * @param groupWeights the weights used for grouping criteria
@@ -327,8 +338,15 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		}
 
 		successorPairs.addAll(sortedPairList);
+		resetGroupIds(successorPairs);
+
 
 		return bestGroupList;
+	}
+	private void resetGroupIds(List<Pair> successorList){
+		for (Pair pair:successorList){
+			pair.clearGroups();
+		}
 	}
 
 	/**
@@ -413,6 +431,12 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return groupList;
 	}
 
+	/**
+	 * sorts the pairs for optimal pathlength, starterpairs choose closest main course pair and main course pairs
+	 * choose the closest dessert pair
+	 * @param pairsToBeGrouped list of pairs to be sorted
+	 * @return sorted list of pairs
+	 */
 	private List<Pair> sortGroupCluster(List<Pair> pairsToBeGrouped) {
 		List<Pair> sortedCluster = new ArrayList<>();
 
@@ -446,7 +470,16 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		return  nearestPairPos;
 	}
 
-
+	/**
+	 * method to sort pairs in a pairlist, so that multi-used kitchens are not assigned to the same course
+	 * and meat/none pairs cant be the majority in a mixed group
+	 * @param testedPairList2 the list to be sorted
+	 * @param starterKitchens list of all kitchens assigned to the starter course
+	 * @param mainKitchens list of all kitchens assigned to the main course
+	 * @param dessertKitchens list of all kitchens assigned to the dessert course
+	 * @return a sorted list if that is possible, else returns a list with null elements to get filtered in the calling
+	 * method
+	 */
 	private List<Pair> removeDoubleKitchens(List<Pair> testedPairList2, List<Kitchen> starterKitchens, List<Kitchen> mainKitchens, List<Kitchen> dessertKitchens) {
 		List<Pair> testedPairList = new ArrayList<>(testedPairList2);
 		List<Pair> nulledList = new ArrayList<>();
@@ -984,5 +1017,22 @@ public class GroupList extends ParticipantCollectionList<Group> {
 
 	public Weights getWeights() {
 		return weights;
+	}
+
+	/**
+	 * method to get the pairlist with the successors removed for printing purpose
+	 * @return the pairlist with the successors subtracted
+	 */
+	public List<Pair> getPairListNoSuccessor() {
+		List<Pair> pairListNoSuccessor = new ArrayList<Pair>(pairList);
+		pairListNoSuccessor.removeAll(successorPairs);
+		return pairListNoSuccessor;
+	}
+
+	/**
+	 * method to update the IdentNumbers after a manual update
+	 */
+	public void updateIdentNumbers(){
+		this.identNumber = deriveIdentNumber();
 	}
 }

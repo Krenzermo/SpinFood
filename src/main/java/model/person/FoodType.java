@@ -24,12 +24,25 @@ public enum FoodType {
     private final int value;
     public final Function<FoodType, Integer> deviation;
 
+    /**
+     * Constructor for FoodType enum.
+     *
+     * @param value Numeric value representing the food type.
+     * @param function Function to calculate deviation from another food type.
+     * @param otherName Alternate name for the food type.
+     */
     FoodType(int value, Function<FoodType, Integer> function, String otherName) {
         this.value = value;
         this.deviation = function;
         this.otherName = otherName;
     }
 
+    /**
+     * Returns the FoodType enum constant based on the given numeric value.
+     *
+     * @param value Numeric value representing the food type.
+     * @return Corresponding FoodType enum constant.
+     */
     public static FoodType herbiFromValue(int value) {
         return value == 4 ? VEGAN : VEGGIE;
     }
@@ -39,14 +52,29 @@ public enum FoodType {
         return "FoodType: " + this.name();
     }
 
+    /**
+     * Retrieves the numeric value of the food type.
+     *
+     * @return Numeric value of the food type.
+     */
     public int getValue() {
         return value;
     }
 
+    /**
+     * Retrieves the alternate name of the food type.
+     *
+     * @return Alternate name of the food type.
+     */
     public String getOtherName() {
         return otherName;
     }
 
+    /**
+     * Returns an observable value of the food type name.
+     *
+     * @return Observable value of the food type name.
+     */
     public ObservableValue<String> asObservable() {
         return new SimpleStringProperty(this.name());
     }
