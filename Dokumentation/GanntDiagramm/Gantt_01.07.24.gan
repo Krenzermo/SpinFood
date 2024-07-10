@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?><project name="Software Praktikum SS24" company="Philipps-Universität Marburg" webLink="https://gitlab.uni-marburg.de/hinkelma/sp24_gruppex_brecher_hinkelma_krenzerm_piacenza" view-date="2024-06-10" view-index="0" gantt-divider-location="365" resource-divider-location="300" version="3.3.3307" locale="de_DE">
+    <description/>
+    <view zooming-state="default:4" id="gantt-chart">
+        <field id="tpd3" name="Vorgang" width="207" order="0"/>
+        <field id="tpd4" name="Anfang" width="78" order="1"/>
+        <field id="tpd5" name="Ende" width="79" order="2"/>
+        <field id="tpd15" name="Notizen" width="20" order="3"/>
+        <option id="filter.completedTasks" value="false"/>
+        <option id="filter.dueTodayTasks" value="false"/>
+        <option id="filter.overdueTasks" value="false"/>
+        <option id="filter.inProgressTodayTasks" value="false"/>
+        <option id="color.recent"><![CDATA[#999999 #ff3333]]></option>
+    </view>
+    <view id="resource-table">
+        <field id="0" name="Ressource" width="210" order="0"/>
+        <field id="1" name="Rolle" width="86" order="1"/>
+    </view>
+    <!-- -->
+    <calendars>
+        <day-types>
+            <day-type id="0"/>
+            <day-type id="1"/>
+            <default-week id="1" name="default" sun="0" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0"/>
+            <only-show-weekends value="false"/>
+            <overriden-day-types/>
+            <days/>
+        </day-types>
+    </calendars>
+    <tasks empty-milestones="true">
+        <taskproperties>
+            <taskproperty id="tpd0" name="type" type="default" valuetype="icon"/>
+            <taskproperty id="tpd1" name="priority" type="default" valuetype="icon"/>
+            <taskproperty id="tpd2" name="info" type="default" valuetype="icon"/>
+            <taskproperty id="tpd3" name="name" type="default" valuetype="text"/>
+            <taskproperty id="tpd4" name="begindate" type="default" valuetype="date"/>
+            <taskproperty id="tpd5" name="enddate" type="default" valuetype="date"/>
+            <taskproperty id="tpd6" name="duration" type="default" valuetype="int"/>
+            <taskproperty id="tpd7" name="completion" type="default" valuetype="int"/>
+            <taskproperty id="tpd8" name="coordinator" type="default" valuetype="text"/>
+            <taskproperty id="tpd9" name="predecessorsr" type="default" valuetype="text"/>
+        </taskproperties>
+        <task id="1" uid="387cebf21857425b8d75b18d64ea3521" name="1. Phase" meeting="false" project="true" start="2024-04-18" duration="7" complete="100" expand="true">
+            <task id="0" uid="e39f12f9e8f6470489059bc27f70281b" name="Einführung" meeting="false" start="2024-04-18" duration="1" complete="100" expand="true"/>
+            <task id="2" uid="9c9915c97a7742049eca1edfb696b0c8" name="Installation und Aufsetzten der Entwicklungsumgebung" meeting="false" start="2024-04-18" duration="7" complete="100" expand="true"/>
+        </task>
+        <task id="3" uid="31aa7492e2f6456a9df04772390691d3" name="2.Phase" meeting="false" start="2024-04-25" duration="21" complete="100" expand="true">
+            <task id="4" uid="58c34472e6f54b41a47fb14f4fa8c14d" name="Grundstruktur I/O schreiben + teilweise testen" meeting="false" start="2024-04-25" duration="11" complete="100" expand="true"/>
+            <task id="5" uid="26c0f0df776e40818acd479a6691e533" name="Code finalisieren und refaktoren + Tests für alle Klassen anfertigen + Dokumentation weiterführen" meeting="false" start="2024-05-06" duration="6" complete="100" expand="true"/>
+            <task id="6" uid="3f221b4dcb884b32a644922a84a70255" name="letzte Tests und Dokumentation hinzufügen + Feinschliff" meeting="false" start="2024-05-12" duration="4" complete="100" expand="true"/>
+        </task>
+        <task id="7" uid="8c57527528b6488caf17355fbe116829" name="Meilenstein 1" meeting="true" start="2024-05-16" duration="0" complete="100" priority="2" expand="true"/>
+        <task id="8" uid="a15df410978d443c9dd3fbb7d515c375" name="3.Phase" meeting="false" start="2024-05-16" duration="28" complete="100" expand="true">
+            <task id="9" uid="c3aa2c9d38884b068af0855c65cbf742" name="Planung Paaralgorithmus" meeting="false" start="2024-05-16" duration="7" complete="100" expand="true"/>
+            <task id="21" uid="6608fb826504405f972b31b00e1d7d99" name="Code aktualisieren und Refactoring" meeting="false" start="2024-05-16" duration="25" complete="100" expand="true"/>
+            <task id="15" uid="576208d15d97431fb05819a1c112134d" name="PairList inklusive Paarzuteilungsalgorithmus schreiben" meeting="false" start="2024-05-22" duration="7" complete="100" expand="true"/>
+            <task id="16" uid="73f1f993e041482693e0f6f17b4682d2" name="Planung Gruppenalgo" meeting="false" start="2024-05-29" duration="6" complete="100" expand="true"/>
+            <task id="17" uid="9ad3ea14c7ec4597a72a474e46299426" name="GroupList inklusive Gruppenzuteilungsalgorhitmus schreiben" meeting="false" start="2024-06-02" duration="5" complete="100" expand="true"/>
+            <task id="18" uid="fbeb1c4a2480463bb151bdcd32dff51d" name="Identnumbers und OutputData schreiben und testen" meeting="false" start="2024-05-26" duration="17" complete="100" expand="true"/>
+            <task id="19" uid="8d928de0f8ae45a28620e273cee29997" name="GroupList und PairList testen" meeting="false" start="2024-05-26" duration="17" complete="100" expand="true"/>
+            <task id="20" uid="1020efca91a44ab3b9e20a68749ef15c" name="Dokumentation" meeting="false" start="2024-05-28" duration="16" complete="100" expand="true"/>
+        </task>
+        <task id="11" uid="2321074f07ae44f799881a264f3ca092" name="Meilenstein 2" meeting="true" start="2024-06-13" duration="0" complete="0" priority="2" expand="true"/>
+        <task id="10" uid="b56629a97c4049d4ba7147a59e458f9a" name="4.Phase" meeting="false" start="2024-06-14" duration="34" complete="79" expand="true">
+            <task id="23" uid="0846e61c02784d51a97eb573a92ed46d" name="GUI" color="#999999" shape="0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0" meeting="false" start="2024-06-14" duration="28" complete="64" expand="true">
+                <task id="24" uid="f990e580db3e4287953e5cb191afcc81" name="GUI Grundriss" meeting="false" start="2024-06-14" duration="7" complete="100" expand="true"/>
+                <task id="25" uid="21afbaeca65b4c4994e49be5f0cd1aa0" name="Paare bilden und anzeigen" meeting="false" start="2024-06-20" duration="8" complete="100" expand="true"/>
+                <task id="28" uid="5eca2bb3bd5d4a438f41600996103dda" name="Gruppen bilden und anzeigen" color="#8cb6ce" meeting="false" start="2024-06-25" duration="10" complete="100" expand="true"/>
+                <task id="30" uid="25fe8a1c0adf43e493880d42c0a52d49" name="Paare/Gruppen vergleichen" color="#8cb6ce" meeting="false" start="2024-06-25" duration="10" complete="75" expand="true"/>
+                <task id="31" uid="5fc49e7d7b354af38c6cc5cf359c8d88" name="Paare/Gruppen manuell bearbeiten" color="#8cb6ce" meeting="false" start="2024-06-27" duration="8" complete="50" expand="true"/>
+                <task id="41" uid="c229cc324c5f4d4abfbc2fbf51540783" name="GUI testen" color="#8cb6ce" meeting="false" start="2024-06-28" duration="14" complete="0" expand="true"/>
+            </task>
+            <task id="34" uid="afafa2b2fc304f7fa944f3b2ebf407f9" name="Code" color="#999999" meeting="false" start="2024-06-14" duration="28" complete="91" expand="true">
+                <task id="36" uid="7b12eb87475b4787a7376146b5c775ce" name="Letzte Code Restraints/ Algo Anwendungsfälle umsetzten" color="#8cb6ce" meeting="false" start="2024-06-14" duration="24" complete="90" expand="true"/>
+                <task id="38" uid="d4722e3171ee44b399230710d60f07ad" name="Code testen" color="#8cb6ce" meeting="false" start="2024-06-14" duration="28" complete="90" expand="true"/>
+                <task id="39" uid="0a6953c9abbb41b98d90eeb33c0d871b" name="Code refactoren + Algoríthmus verbessern" color="#8cb6ce" meeting="false" start="2024-06-14" duration="28" complete="95" expand="true"/>
+            </task>
+            <task id="35" uid="817a9f1dee83479fa62a5c7a38a58669" name="Dokumentation" color="#8cb6ce" meeting="false" start="2024-06-14" duration="34" complete="75" expand="true"/>
+        </task>
+        <task id="13" uid="25f7d431380a4e55981e717e24898a6f" name="Meilenstein 3" meeting="true" start="2024-07-18" duration="0" complete="0" expand="true"/>
+        <task id="14" uid="91b7fd6796a649bbaa91d7364b4be43a" name="Projektende" meeting="true" start="2024-07-19" duration="0" complete="0" expand="true"/>
+    </tasks>
+    <resources/>
+    <allocations/>
+    <vacations/>
+    <previous/>
+    <roles roleset-name="Default"/>
+</project>

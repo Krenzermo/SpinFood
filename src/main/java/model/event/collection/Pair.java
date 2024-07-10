@@ -40,10 +40,26 @@ public class Pair implements ParticipantCollection {
     //private static int COUNTER = 0;
     private static final InputData inputData = InputData.getInstance();
 
+    /**
+     * Constructs a Pair object with two participants and assigns an ID.
+     *
+     * @param participant1 The first participant of the pair.
+     * @param participant2 The second participant of the pair.
+     * @param idCounter    The ID counter for uniquely identifying this pair.
+     */
+
     public Pair(Participant participant1, Participant participant2, int idCounter) {
         this(participant1, participant2, false, idCounter);
     }
 
+    /**
+     * Constructs a Pair object with two participants, signed up together status, and assigns an ID.
+     *
+     * @param participant1     The first participant of the pair.
+     * @param participant2     The second participant of the pair.
+     * @param signedUpTogether Indicates if the participants signed up together.
+     * @param idCounter        The ID counter for uniquely identifying this pair.
+     */
     public Pair(Participant participant1, Participant participant2, boolean signedUpTogether, int idCounter) {
         id = idCounter;
         participants[0] = participant1;
@@ -145,8 +161,13 @@ public class Pair implements ParticipantCollection {
         this.course = course;
     }
 
+    /**
+     * sets the groups for the pair
+     *
+     * @param groups
+     */
     public void setGroups(Group[] groups) {
-        for (Group group: groups)  {
+        for (Group group : groups) {
             // TODO: may need to be changed once Group is implemented.
             if (!Arrays.asList(group.getPairs()).contains(this)) {
                 throw new RuntimeException("cannot assign a Group to this Pair if the group does not contain the Pair");
@@ -164,7 +185,11 @@ public class Pair implements ParticipantCollection {
      * Clears this {@link Pair} of the instances of {@link Group}.
      */
     public void clearGroups() {
-        groups = new Group[] {null, null, null};
+        groups = new Group[]{null, null, null};
+        this.setCourse(null);
+        this.setStarterNumber(0);
+        this.setMainNumber(0);
+        this.setDessertNumber(0);
     }
 
     /**
@@ -232,7 +257,7 @@ public class Pair implements ParticipantCollection {
      * @param newParticipant the new participant to be added to the pair
      * @throws IllegalArgumentException if the old participant is not in the pair
      * @throws IllegalArgumentException if the new participant is already in the pair
-     * @throws NullPointerException if the new participant is null
+     * @throws NullPointerException     if the new participant is null
      */
     public void replaceParticipant(Participant oldParticipant, Participant newParticipant) {
         if (newParticipant == null) {
@@ -260,10 +285,12 @@ public class Pair implements ParticipantCollection {
     }
 
     /**
+     * Adds a participant to the pair.
+     *
      * @param participant element whose presence in this collection is to be ensured
      * @return {@code true} if the operation was successful, {@code false} otherwise
      * @throws IllegalArgumentException if this ParticipantCollection already contains the Element
-     * @throws NullPointerException if the element is null
+     * @throws NullPointerException     if the element is null
      */
     @Override
     public boolean add(Participant participant) {
@@ -317,7 +344,8 @@ public class Pair implements ParticipantCollection {
         return starterNumber + " " + mainNumber + " " + dessertNumber;
     }
 
-    /** Creates an Output String for this pair object in the following format:
+    /**
+     * Creates an Output String for this pair object in the following format:
      * <p>- Name of Participant 1 </p>
      * <p> - Name of Participant 2 </p>
      * <p> - Signed up together? </p>
@@ -339,7 +367,8 @@ public class Pair implements ParticipantCollection {
         return participants[0].getName().asOutputString() + ";" + participants[1].getName().asOutputString() + ";" + signedUpTogether + ";" + kitchen.asOutputString() + ";" + foodType.getOtherName() + ";" + id + ";" + starterNumber + ";" + mainNumber + ";" + dessertNumber + ";" + kitchenOf + ";" + s;
     }
 
-    /** Calculates the deviation of Food preferences of the Participants of this Pair
+    /**
+     * Calculates the deviation of Food preferences of the Participants of this Pair
      *
      * @return The Preference deviation
      */
@@ -347,7 +376,8 @@ public class Pair implements ParticipantCollection {
         return participants[0].getFoodType().deviation.apply(participants[1].getFoodType());
     }
 
-    /** Calculates the absolute deviation from .5 of the women-to-participants ratio
+    /**
+     * Calculates the absolute deviation from .5 of the women-to-participants ratio
      *
      * @return The absolute gender deviation
      */
@@ -355,6 +385,9 @@ public class Pair implements ParticipantCollection {
         return Math.abs(getParticipants().stream().map(Participant::getGender).filter(g -> g == Gender.FEMALE).count() / 2d - .5);
     }
 
+    /**
+     * @return the distance from the pairs kitchen to the eventlocation
+     */
     public double getDistance() {
         return kitchen.location().getDistance(InputData.getInstance().getEventLocation());
     }

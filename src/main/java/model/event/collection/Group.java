@@ -33,6 +33,16 @@ public class Group implements ParticipantCollection{
 	private int cookIndex;
 
 
+	/**
+	 * Constructs a Group with the specified pairs, course, and kitchen.
+	 * Sets the pair IDs and determines the cook index based on the kitchen owner.
+	 *
+	 * @param pair1 the first pair in the group
+	 * @param pair2 the second pair in the group
+	 * @param pair3 the third pair in the group
+	 * @param course the course assigned to the group
+	 * @param kitchen the kitchen assigned to the group
+	 */
 	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen) {
 		id = COUNTER++;
 		this.pairs = new Pair[]{pair1, pair2, pair3};
@@ -163,22 +173,37 @@ public class Group implements ParticipantCollection{
 		return false;
 	}
 
+	/**
+	 * @return a string representation of the Group in a specific output format
+	 */
 	public String asOutputString() {
 		return id + ";" + course.getAsInt() + ";" + pairs[0].asOutputString() + ";" + pairs[1].asOutputString() + ";" + pairs[2].asOutputString();
 	}
 
+	/**
+	 * @return the pairs in this Group
+	 */
 	public Pair[] getPairs() {
 		return pairs;
 	}
 
+	/**
+	 * @return the ID of this Group
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * @return the ID of this Group as an observable value
+	 */
 	public ObservableValue<Integer> getIdAsObservable() {
 		return new SimpleIntegerProperty(id).asObject();
 	}
 
+	/**
+	 * @return the ID of the cook pair in this Group as an observable value
+	 */
 	public ObservableValue<Integer> getCookPairIdAsObservable() {
 		return new SimpleIntegerProperty(pairs[cookIndex].getId()).asObject();
 	}
