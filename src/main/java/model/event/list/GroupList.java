@@ -836,4 +836,10 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	public Weights getWeights() {
 		return weights;
 	}
+
+	public List<Pair> getPairListNoSuccessor() {
+		List<Pair> pairListNoSuccessor = new ArrayList<Pair>(pairList);
+		pairListNoSuccessor.removeAll(successorPairs);
+		return pairListNoSuccessor;
+	}
 }
