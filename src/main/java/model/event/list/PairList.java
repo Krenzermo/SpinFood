@@ -37,6 +37,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
         this.identNumber = new PairIdentNumber((PairIdentNumber) pairList.identNumber);
         successors = pairList.getSuccessors().stream().map(Participant::new).collect(Collectors.toList());
         pairIdCounter = pairList.pairIdCounter;
+        pairingWeights123 = pairList.pairingWeights123;
         setList(new ArrayList<>(pairList.getPairs().stream().map(Pair::new).collect(Collectors.toList())));
     }
 

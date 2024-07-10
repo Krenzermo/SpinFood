@@ -861,7 +861,9 @@ public class MainController {
         if (!Objects.isNull(groupList)) {
             for (Group group : pair.getGroups()) {
                 groupList.remove(group);
-
+                if (group == null) {
+                    continue;
+                }
                 for (Pair PairTemp : group.getPairs()) {
                     PairTemp.clearGroups();
                 }
@@ -1128,7 +1130,7 @@ public class MainController {
             replaceGroupData();
 			updateTables(); // Update tables after the dialog is closed to reflect changes
 
-            state.updateState(pairList, groupWeights)
+            state.updateState(pairList, groupWeights);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

@@ -63,14 +63,15 @@ public class Participant {
      *
      * @param participant the specified {@link Participant}
      */
-    public Participant(Participant participant) {
+    /*public Participant(Participant participant) {
         this(participant.getId(), participant.getName(), participant.getFoodType(), participant.getAge(), participant.getGender());
     }
-
+     */
     public Participant(Participant participant) {
         id = participant.id;
         name = participant.name;
         foodType = participant.foodType;
+        age = participant.age;
         ageRange = participant.ageRange;
         gender = participant.gender;
         hasKitchen = participant.hasKitchen;
