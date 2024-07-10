@@ -12,9 +12,7 @@ import model.kitchen.Kitchen;
 import model.person.FoodType;
 import model.person.Participant;
 
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -62,12 +60,12 @@ public class GroupList extends ParticipantCollectionList<Group> {
 		// TODO: copy Group class information, maybe using MainController.getGroupCluster()
 	}
 
-	public GroupList(PairList pairList) {
+	public GroupList(PairList pairList, Weights weights) {
 		this.pairList = new PairList(pairList);
 		successorPairs = recreateSuccessors();
 		setList(recreateGroups());
 		identNumber = deriveIdentNumber();
-		weights = null;
+		this.weights = weights;
 	}
 
 	private List<Pair> recreateSuccessors() {
@@ -78,7 +76,116 @@ public class GroupList extends ParticipantCollectionList<Group> {
 	private List<Group> recreateGroups() {
 		List<Group> groups = new ArrayList<>();
 		List<Pair> pairs = pairList.getPairs();
-		pairs = pairs.stream().sorted((p1, p2) -> {
+
+		pairs.sort(Comparator.comparing(Pair::getStarterNumber));
+		//System.out.println(pairs);
+		extracted(pairs, groups, 's');
+
+
+
+		pairs.sort(Comparator.comparing(Pair::getMainNumber));
+		//System.out.println(pairs);
+		extracted(pairs, groups, 'm');
+
+
+
+		pairs.sort(Comparator.comparing(Pair::getDessertNumber));
+		//System.out.println(pairs);
+		extracted(pairs, groups, 'd');
+
+
+
+		return groups;
+
+	}
+
+	private void extracted(List<Pair> pairs, List<Group> groups, char mode) {
+		List<Pair> group = new ArrayList<>();
+		for (int i = 0; i < pairs.size(); i+= group.size() != 0 ? group.size() : 3) {
+			int id = switch (mode) {
+				case 's' -> pairs.get(i).getStarterNumber();
+				case 'm' -> pairs.get(i).getMainNumber();
+				case 'd' -> pairs.get(i).getDessertNumber();
+				default -> throw new IllegalArgumentException();
+			};
+			group.add(pairs.get(i));
+			int j = i + 1;
+			if (j >= pairs.size()) {
+				successorPairs.addAll(group);
+				continue;
+			}
+			int id2 = switch (mode) {
+				case 's' -> pairs.get(j).getStarterNumber();
+				case 'm' -> pairs.get(j).getMainNumber();
+				case 'd' -> pairs.get(j).getDessertNumber();
+				default -> throw new IllegalArgumentException();
+			};
+			while (id == id2 && j < pairs.size()) {
+				 group.add(pairs.get(j++));
+				 try {
+					 id2 = switch (mode) {
+						 case 's' -> pairs.get(j).getStarterNumber();
+						 case 'm' -> pairs.get(j).getMainNumber();
+						 case 'd' -> pairs.get(j).getDessertNumber();
+						 default -> throw new IllegalArgumentException();
+					 };
+				 } catch (IndexOutOfBoundsException ignored){}
+			}
+
+			//System.out.println(group);
+
+			if (group.size() != 3) {
+				successorPairs.addAll(group);
+				continue;
+			}
+
+			Kitchen kitchen;
+			Course course;
+			if (group.get(0).getStarterNumber() == group.get(1).getStarterNumber()) {
+				id = group.get(0).getStarterNumber();
+				course = Course.STARTER;
+				try {
+					kitchen = group.stream().filter(pair -> pair.getCourse() == Course.STARTER).toList().get(0).getKitchen();
+				} catch (ArrayIndexOutOfBoundsException e) {
+					this.successorPairs.addAll(group);
+					continue;
+				}
+			} else if (group.get(0).getMainNumber() == group.get(1).getMainNumber()) {
+				id = group.get(0).getMainNumber();
+				course = Course.MAIN;
+				try {
+					kitchen = group.stream().filter(pair -> pair.getCourse() == Course.MAIN).toList().get(0).getKitchen();
+				} catch (ArrayIndexOutOfBoundsException e) {
+					this.successorPairs.addAll(group);
+					continue;
+				}
+			} else {
+				id = group.get(0).getDessertNumber();
+				course = Course.DESSERT;
+				try {
+					kitchen = group.stream().filter(pair -> pair.getCourse() == Course.DESSERT).toList().get(0).getKitchen();
+				} catch (ArrayIndexOutOfBoundsException e) {
+					this.successorPairs.addAll(group);
+					continue;
+				}
+			}
+			if (group.size() == 3) {
+				groups.add(new Group(
+						new Pair(group.get(0)),
+						new Pair(group.get(1)),
+						new Pair(group.get(2)),
+						course,
+						kitchen,
+						id));
+			} else {
+				successorPairs.addAll(group);
+			}
+		}
+	}
+
+	private class PairComparator implements Comparator<Pair> {
+		@Override
+		public int compare(Pair p1, Pair p2) {
 			int starterCompare = Integer.compare(p1.getStarterNumber(), p2.getStarterNumber());
 			if (starterCompare != 0) {
 				return starterCompare;
@@ -88,42 +195,7 @@ public class GroupList extends ParticipantCollectionList<Group> {
 				return mainCompare;
 			}
 			return Integer.compare(p1.getDessertNumber(), p2.getDessertNumber());
-		}).toList();
-
-		for (int i = 0; i < pairs.size(); i+=3) {
-			List<Pair> group = new ArrayList<>();
-			group.add(pairs.get(i));
-			for (int j = i + 1; j < i + 3;  j++) {
-				group.add(pairs.get(j));
-			}
-
-			Kitchen kitchen;
-			Course course;
-			int id;
-			if (group.get(0).getStarterNumber() == group.get(1).getStarterNumber()) {
-				id = group.get(0).getStarterNumber();
-				course = Course.STARTER;
-				kitchen = group.stream().filter(pair -> pair.getCourse() == Course.STARTER).toList().get(0).getKitchen();
-			} else if (group.get(0).getMainNumber() == group.get(1).getMainNumber()) {
-				id = group.get(0).getMainNumber();
-				course = Course.MAIN;
-				kitchen = group.stream().filter(pair -> pair.getCourse() == Course.MAIN).toList().get(0).getKitchen();
-			} else {
-				id = group.get(0).getDessertNumber();
-				course = Course.DESSERT;
-				kitchen = group.stream().filter(pair -> pair.getCourse() == Course.DESSERT).toList().get(0).getKitchen();
-			}
-			groups.add(new Group(
-					new Pair(group.get(0)),
-					new Pair(group.get(1)),
-					new Pair(group.get(2)),
-					course,
-					kitchen,
-					id));
 		}
-
-		return groups;
-
 	}
 
 	/**

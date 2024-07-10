@@ -60,6 +60,10 @@ public class Pair implements ParticipantCollection {
         this.foodType = pair.foodType;
         this.signedUpTogether = pair.signedUpTogether;
         this.id = pair.id;
+        this.course = pair.course;
+        this.starterNumber = pair.starterNumber;
+        this.mainNumber = pair.mainNumber;
+        this.dessertNumber = pair.dessertNumber;
     }
 
     private FoodType autoAssignFoodType() {
@@ -299,7 +303,8 @@ public class Pair implements ParticipantCollection {
 
     @Override
     public String toString() {
-        return "{Participant1: " + participants[0] + " Participant2: " + participants[1] + kitchen + "}";
+        //return "{Participant1: " + participants[0] + " Participant2: " + participants[1] + kitchen + "}";
+        return starterNumber + " " + mainNumber + " " + dessertNumber;
     }
 
     /** Creates an Output String for this pair object in the following format:

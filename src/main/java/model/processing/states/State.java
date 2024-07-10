@@ -3,6 +3,8 @@ package model.processing.states;
 import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.PairList;
+import model.event.list.weight.GroupWeights;
+import model.event.list.weight.Weights;
 
 public class State {
 
@@ -29,19 +31,19 @@ public class State {
 
     }
 
-    public void updateState(PairList pairList) {
+    public void updateState(PairList pairList, Weights weights) {
         prev = new State(this.pairList, this.groupList);
 
-        this.groupList = new GroupList(pairList);
+        this.groupList = new GroupList(pairList, weights);
         this.pairList = groupList.getPairList();
     }
 
 
-    public State revertState() {
-        var gl = new GroupList(prev.groupList);
+    public State revertState(Weights weights) {
+        var gl = new GroupList(prev.pairList, weights);
         var pl = gl.getPairList();
 
-        var gl2 = new GroupList(groupList);
+        var gl2 = new GroupList(pairList, weights);
         prev = new State(gl2.getPairList(), gl2);
 
         pairList = pl;

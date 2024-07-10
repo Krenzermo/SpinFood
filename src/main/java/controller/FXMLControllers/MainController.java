@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.FileChooser.ExtensionFilter;
@@ -22,11 +23,13 @@ import model.event.Course;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.io.InputData;
+import model.event.io.OutputData;
 import model.event.list.GroupList;
 import model.event.list.PairList;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
+import model.event.list.weight.Weights;
 import model.person.Participant;
 import model.processing.states.State;
 import view.MainFrame;
@@ -488,12 +491,43 @@ public class MainController {
 
     @FXML
     void savePairList(ActionEvent event) {
-        // TODO: this
+        if (groupList == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Gruppenlistenfehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Die Gruppenliste wurde noch nicht erstellt.");
+            alert.showAndWait();
+            return;
+        }
+
+
+        DirectoryChooser dir = new DirectoryChooser();
+        dir.setTitle("Speicherort für Paarliste wählen");
+        File file = dir.showDialog(root.getScene().getWindow());
+        OutputData outputData = new OutputData(file.getPath(), groupList);
+        outputData.makePairOutputFile("pairs");
+
+        System.exit(0);
     }
 
     @FXML
     void saveGroupList(ActionEvent event) {
-        // TODO: this
+        if (groupList == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Gruppenlistenfehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Die Gruppenliste wurde noch nicht erstellt.");
+            alert.showAndWait();
+            return;
+        }
+
+        DirectoryChooser dir = new DirectoryChooser();
+        dir.setTitle("Speicherort für Paarliste wählen");
+        File file = dir.showDialog(root.getScene().getWindow());
+        OutputData outputData = new OutputData(file.getPath(), groupList);
+        outputData.makeGroupOutputFile("groups");
+
+        System.exit(0);
     }
 
     @FXML
@@ -574,7 +608,7 @@ public class MainController {
                 return;
             }
         }
-        state.updateState(pairList);
+        state.updateState(pairList, groupWeights);
         event.consume();
     }
 
@@ -614,7 +648,7 @@ public class MainController {
             }
         }
         if (groupList != null) {
-            state.updateState(pairList);
+            state.updateState(pairList, groupWeights);
         }
         event.consume();
     }
@@ -631,7 +665,7 @@ public class MainController {
         }
         if (groupList != null) {
             undo.setDisable(false);
-            state.updateState(pairList);
+            state.updateState(pairList, groupWeights);
         }
 
     }
@@ -650,7 +684,7 @@ public class MainController {
 
         if (groupList != null) {
             undo.setDisable(false);
-            state.updateState(pairList);
+            state.updateState(pairList, groupWeights);
         }
     }
 
@@ -676,8 +710,8 @@ public class MainController {
 
         updateGroupTable();
 
-        undo.setDisable(false);
-        state.updateState(pairList);
+        undo.setDisable(true);
+        state.updateState(pairList, groupWeights);
     }
 
     @FXML
@@ -698,8 +732,8 @@ public class MainController {
 
         updateGroupTable();
 
-        undo.setDisable(false);
-        state.updateState(pairList);
+        undo.setDisable(true);
+        state.updateState(pairList, groupWeights);
     }
 
     private void removePair(Pair pair) {
@@ -907,7 +941,7 @@ public class MainController {
         }
         MainFrame.stage.show();
 
-        state.updateState(pairList);
+        state.updateState(pairList, groupWeights);
     }
 
     @FXML
@@ -943,7 +977,7 @@ public class MainController {
         }
         MainFrame.stage.show();
 
-        state.updateState(pairList);
+        state.updateState(pairList, groupWeights);
     }
 
     private void showUnsubscriberDialog(Participant participant) {
@@ -966,7 +1000,7 @@ public class MainController {
 
             updatePairTable(); // Update tables after the dialog is closed to reflect changes
 
-            state.updateState(pairList);
+            state.updateState(pairList, groupWeights);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -986,9 +1020,9 @@ public class MainController {
 
     @FXML
     void goBackState(ActionEvent event) {
-        this.state = state.revertState();
+        this.state = state.revertState(groupWeights);
 
-        groupList = new GroupList(state.getPairList());
+        groupList = new GroupList(state.getPairList(), (Weights) groupWeights);
         pairList = groupList.getPairList();
 
         groupIdentNumber = groupList.getIdentNumber();
