@@ -66,7 +66,7 @@ public class CancellationHandler {
      *
      * @param affectedPair the pair that is being cancelled
      */
-    private void handleFullPairCancellation(Pair affectedPair) {
+    public void handleFullPairCancellation(Pair affectedPair) {
         pairList.remove(affectedPair);
     }
 
@@ -76,7 +76,7 @@ public class CancellationHandler {
      * @param affectedPair the pair that includes the cancelled participant
      * @param cancelledParticipant the participant that is being cancelled
      */
-    private void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant) {
+    public void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant) {
         Participant remainingParticipant = affectedPair.getOtherParticipant(cancelledParticipant);
         remainingParticipant.clearPair();
         participantSuccessors.add(remainingParticipant);

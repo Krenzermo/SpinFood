@@ -100,7 +100,9 @@ class CancellationHandlerTest {
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
 
+
         cancellationHandler.handleCancellation(cancelledParticipants);
+
 
         // Verify that the pair was removed and the groups were updated accordingly
         assertFalse(pairList.contains(pair1)); // Ensure the pair was removed
@@ -119,9 +121,11 @@ class CancellationHandlerTest {
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
         GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
 
+
         cancellationHandler.handleCancellation(cancelledParticipants);
 
         cancellationHandler.updateGroups(pair1);
+
 
         // Verify that the groups list was updated accordingly
         assertFalse(pairList.contains(pair1)); // Ensure the group was removed
