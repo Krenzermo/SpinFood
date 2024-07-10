@@ -10,6 +10,13 @@ import model.event.list.ParticipantCollectionList;
  */
 public class PairIdentNumber extends IdentNumber{
 
+    public PairIdentNumber(PairIdentNumber num) {
+        super(num.participantCollectionList);
+        genderDiversity = num.genderDiversity;
+        ageDifference = num.ageDifference;
+        preferenceDeviation = num.preferenceDeviation;
+    }
+
     public PairIdentNumber(PairList participantCollection) {
         super(participantCollection);
         genderDiversity = calcGenderDiversity(participantCollection);

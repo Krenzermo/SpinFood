@@ -67,6 +67,18 @@ public class Participant {
         this(participant.getId(), participant.getName(), participant.getFoodType(), participant.getAge(), participant.getGender());
     }
 
+    public Participant(Participant participant) {
+        id = participant.id;
+        name = participant.name;
+        foodType = participant.foodType;
+        ageRange = participant.ageRange;
+        gender = participant.gender;
+        hasKitchen = participant.hasKitchen;
+        kitchen = participant.kitchen;
+        pair = participant.pair;
+        groups = participant.groups;
+    }
+
     @Override
     public int hashCode() {
         return Objects.hash(id, name, foodType, ageRange, gender, hasKitchen, kitchen);
@@ -81,9 +93,17 @@ public class Participant {
             return false;
         }
         Participant other = (Participant) obj;
+        if (Objects.isNull(kitchen)) {
+            if (other.kitchen != null) {
+                return false;
+            }
+            return this.id.equals(other.id) && this.name.equals(other.name) && this.foodType.equals(other.foodType) && this.ageRange.equals(other.ageRange)
+                    && this.gender.equals(other.gender) && this.hasKitchen.equals(other.hasKitchen);
+        }
         return this.id.equals(other.id) && this.name.equals(other.name) && this.foodType.equals(other.foodType) && this.ageRange.equals(other.ageRange)
                 && this.gender.equals(other.gender) && this.hasKitchen.equals(other.hasKitchen) && this.kitchen.equals(other.kitchen);
     }
+
 
     @Override
     public String toString() {

@@ -4,6 +4,7 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import model.event.Course;
+import model.event.list.GroupList;
 import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.person.AgeRange;
@@ -42,6 +43,14 @@ public class Group implements ParticipantCollection{
 		if (cookIndex < 0) {
 			throw new IllegalStateException("Couldn't find any owner of kitchen: " + kitchen);
 		}
+	}
+
+	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen, int id) {
+		this.id = id;
+		this.pairs = new Pair[]{pair1, pair2, pair3};
+		this.course = course;
+		this.kitchen = kitchen;
+		cookIndex = getKitchenOwner(kitchen);
 	}
 
 	private void setPairIds(){

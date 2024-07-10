@@ -11,6 +11,7 @@ import model.person.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * The PairList class represents a collection of pairs of participants.
@@ -25,9 +26,19 @@ import java.util.List;
 public class PairList extends ParticipantCollectionList<Pair> {
     private static final InputData inputData = InputData.getInstance();
     private final IdentNumber identNumber;
-    private final List<Participant> successors = new ArrayList<>();
+    private List<Participant> successors = new ArrayList<>();
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
     private final PairingWeights pairingWeights123;
+
+    /**
+     * Copy constructor
+     */
+    public PairList(PairList pairList) {
+        this.identNumber = new PairIdentNumber((PairIdentNumber) pairList.identNumber);
+        successors = pairList.getSuccessors().stream().map(Participant::new).collect(Collectors.toList());
+        pairIdCounter = pairList.pairIdCounter;
+        setList(new ArrayList<>(pairList.getPairs().stream().map(Pair::new).collect(Collectors.toList())));
+    }
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
