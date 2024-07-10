@@ -61,6 +61,10 @@ public class InputData {
 
      */
 
+    /**
+     * Private constructor for Singleton pattern.
+     * Initializes lists and maps to manage event data.
+     */
     private InputData() {
         inputData = this;
         this.participantInputData = null;
@@ -73,11 +77,22 @@ public class InputData {
         this.eventLocation = null;
     }
 
+    /**
+     * Initializes the InputData instance with file paths for participant and event location data.
+     *
+     * @param participantDataFilePath The file path for participant data.
+     * @param eventLocationDataFilePath The file path for event location data.
+     */
     public void init(String participantDataFilePath, String eventLocationDataFilePath) {
         initEventLocation(eventLocationDataFilePath);
         initParticipants(participantDataFilePath);
     }
 
+    /**
+     * Initializes participant-related data structures and file path.
+     *
+     * @param participantDataFilePath The file path for participant data.
+     */
     public void initParticipants(String participantDataFilePath) {
         this.participantInputData = new ArrayList<>();
         this.participantSuccessorList = new ArrayList<>();
@@ -88,6 +103,11 @@ public class InputData {
         saveParticipants();
 
     }
+
+    /**
+     *  sets the eventlocation filepath
+     * @param eventLocationDataFilePath the path to the eventlocation file
+     */
 
     public void initEventLocation(String eventLocationDataFilePath) {
         this.eventLocationDataFilePath = eventLocationDataFilePath;
@@ -109,6 +129,10 @@ public class InputData {
         return inputData;
     }
 
+    /**
+     *
+     * @return inputData for debugging and testing
+     */
     public static synchronized InputData getInstanceDebug() {
         if (inputData == null) {
             InputData inputData = new InputData();

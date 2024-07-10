@@ -24,7 +24,7 @@ import java.util.List;
  */
 public class PairList extends ParticipantCollectionList<Pair> {
     private static final InputData inputData = InputData.getInstance();
-    private final IdentNumber identNumber;
+    private IdentNumber identNumber;
     private final List<Participant> successors = new ArrayList<>();
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
     private final PairingWeights pairingWeights123;
@@ -377,11 +377,22 @@ public class PairList extends ParticipantCollectionList<Pair> {
         System.out.println("AllVeggie: " + (veganParticipants + veggieParticipants));
     }
 
+    /**
+     * method to return and increment the pairIdCounter variable
+     * @return the incremented variable
+     */
     public int getPairIdCounterAndIncrement(){
         return pairIdCounter++;
     }
 
     public PairingWeights getPairingWeights() {
         return pairingWeights123;
+    }
+
+    /**
+     * method to update the IdentNumber object after a manual update
+     */
+    public void updateIdentNumbers() {
+        this.identNumber = deriveIdentNumber();
     }
 }

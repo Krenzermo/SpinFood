@@ -10,6 +10,10 @@ import model.event.list.ParticipantCollectionList;
  */
 public class PairIdentNumber extends IdentNumber{
 
+    /**computes the IdentNumbers based on the input pairlist
+     *
+     * @param participantCollection is a pairlist, for which the Identnumbers are calculated
+     */
     public PairIdentNumber(PairList participantCollection) {
         super(participantCollection);
         genderDiversity = calcGenderDiversity(participantCollection);

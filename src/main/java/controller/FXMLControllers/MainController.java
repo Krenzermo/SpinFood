@@ -1065,12 +1065,14 @@ public class MainController {
     }
 
     private void updatePairTable() {
+        pairList.updateIdentNumbers();
         writePairDataToTab();
         writePairListIdentNumbersToTab();
         writePairListSuccessorsToTab();
     }
 
     private void updateGroupTable() {
+        groupList.updateIdentNumbers();
         writeGroupDataToTab();
         writeGroupListIdentNumbersToTab();
         writeGroupListSuccessorsToTab();

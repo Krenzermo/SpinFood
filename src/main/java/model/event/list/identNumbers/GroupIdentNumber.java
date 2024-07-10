@@ -23,6 +23,12 @@ public class GroupIdentNumber extends IdentNumber {
     private double pathLengthStdDev;
     private final GroupList groupList;
 
+    /**
+     * Constructs a GroupIdentNumber object with the specified GroupList.
+     * Initializes various statistics related to group characteristics and pair paths.
+     *
+     * @param participantCollection The GroupList from which to calculate IdentNumbers.
+     */
     public GroupIdentNumber(GroupList participantCollection) {
         super(participantCollection);
         this.numSuccessors = participantCollection.getSuccessorPairs().size();
@@ -151,14 +157,26 @@ public class GroupIdentNumber extends IdentNumber {
         return groupDeviation;
     }
 
+    /**
+     *
+     * @return the averagePathLength
+     */
     public double getAveragePathLength() {
         return averagePathLength;
     }
 
+    /**
+     *
+     * @return the totalPathLength
+     */
     public double getTotalPathLength() {
         return totalPathLength;
     }
 
+    /**
+     *
+     * @return the standard deviation of the pathLength
+     */
     public double getPathLengthStdDev() {
         return pathLengthStdDev;
     }

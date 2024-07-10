@@ -92,6 +92,9 @@ public class CancellationHandler {
         participantSuccessors.remove(cancelledParticipant);
     }
 
+    /**
+     * method to pair Successor Participant to new pairs
+     */
     public void pairSuccessorParticipants() {
         List<Pair> newPairs = new ArrayList<>();
 

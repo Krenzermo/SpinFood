@@ -15,6 +15,12 @@ import java.util.Objects;
  */
 public record Name(String firstName, String lastName) {
 
+    /**
+     * Checks if this Name object is equal to another object.
+     *
+     * @param obj The object to compare.
+     * @return True if the objects are equal, false otherwise.
+     */
     public boolean equals(Object obj) {
         if (this == obj) {
             return true;
@@ -38,10 +44,20 @@ public record Name(String firstName, String lastName) {
         return firstName + " " + lastName;
     }
 
+    /**
+     * Returns a string representation suitable for output purposes.
+     *
+     * @return The concatenated first name and last name.
+     */
     public String asOutputString() {
         return firstName + lastName;
     }
 
+    /**
+     * Returns an observable value of the full name.
+     *
+     * @return Observable value representing the full name as SimpleStringProperty.
+     */
     public ObservableValue<String> asObservable() {
         return new SimpleStringProperty(firstName + " " + lastName);
     }

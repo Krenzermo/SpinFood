@@ -36,10 +36,11 @@ public class OutputData {
     }
 
 
-    /** This method writes the GroupList to a csv File sorted by Courses.
+    /** This method writes the PairList of a GroupList to a csv File sorted by Courses.
      *
      * See {@link Pair#asOutputString()} for the format of each entry
      *
+     * @param string names the file
      */
     public void makePairOutputFile(String string) {
         List<Pair> pairs = groupList.getPairListNoSuccessor();
@@ -56,6 +57,11 @@ public class OutputData {
         }
     }
 
+    /**
+     * this method writes a GroupList to a csv file
+     *
+     * @param string names the file
+     */
     public void makeGroupOutputFile(String string) {
         List<Group> groups = groupList.getGroups().stream().sorted(Comparator.comparing(Group::getCourse)).toList();
         try(BufferedWriter writer = new BufferedWriter(new FileWriter(outputFilePath + "/" + string + ".csv"))) {
