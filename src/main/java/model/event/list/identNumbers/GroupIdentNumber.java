@@ -171,8 +171,20 @@ public class GroupIdentNumber extends IdentNumber {
                 ", Geschlechterdiversität: " + genderDiversity +
                 ", Altersunterschied: " + ageDifference +
                 ", Vorliebenabweichung: " + preferenceDeviation +
-                ", \nDurchschnittliche Pfadlänge: " + averagePathLength +
+                ", Durchschnittliche Pfadlänge: " + averagePathLength +
                 ", Gesamte Pfadlänge: " + totalPathLength +
                 ", Standardabweichung der Pfadlängen: " + pathLengthStdDev;
+    }
+    @Override
+    public List<String> asList() {
+        return List.of(
+                "Anzahl Paare:\t\t" + numElems,
+                "Anzahl Nachrücker:\t" + numSuccessors,
+                "Altersdifferenz:\t\t" + Math.round(ageDifference * 1_000_000) / 1_000_000d,
+                "Geschlechterdiversität:\t" + Math.round(genderDiversity * 1_000_000) / 1_000_000d,
+                "Vorliebenabweichung:\t" + Math.round(preferenceDeviation * 1_000_000) / 1_000_000d,
+                "Durchschnittliche Pfadlänge:\t" + Math.round(averagePathLength * 1_000_000) / 1_000_000d
+
+        );
     }
 }
