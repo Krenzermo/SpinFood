@@ -632,15 +632,6 @@ public class MainController {
         System.exit(0);
     }
 
-    @FXML
-    void saveParticipantSuccessors(ActionEvent event) {
-        // TODO: this
-    }
-
-    @FXML
-    void savePairSuccessorsMenuItem(ActionEvent event) {
-        // TODO: this
-    }
 
     /**
      * Opens a file chooser for selecting the party location file.
