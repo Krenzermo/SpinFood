@@ -27,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public class PairList extends ParticipantCollectionList<Pair> {
     private static final InputData inputData = InputData.getInstance();
-    private final IdentNumber<Pair> identNumber;
+    private IdentNumber<Pair> identNumber;
     private List<Participant> successors = new ArrayList<>();
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
     private final PairingWeights pairingWeights123;
@@ -38,11 +38,11 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * This constructor returns a deep copy (also copies the {@link Participant} successor and the {@link Pair} instances).
      */
     public PairList(PairList pairList) {
-        this.identNumber = pairList.identNumber;
-        this.pairingWeights123 = pairList.getPairingWeights();
-        successors = pairList.successors.stream().map(Participant::new).collect(Collectors.toCollection(ArrayList::new));
+        this.identNumber = new PairIdentNumber((PairIdentNumber) pairList.identNumber);
+        successors = pairList.getSuccessors().stream().map(Participant::new).collect(Collectors.toList());
         pairIdCounter = pairList.pairIdCounter;
-        setList(pairList.getPairs().stream().map(Pair::new).collect(Collectors.toCollection(ArrayList::new)));
+        pairingWeights123 = pairList.pairingWeights123;
+        setList(new ArrayList<>(pairList.getPairs().stream().map(Pair::new).collect(Collectors.toList())));
     }
 
     /**
@@ -158,6 +158,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param testedParticipant the second participant being tested
      * @return the score based on the kitchen availability comparison
      */
+
     private static double compareKitchen(Participant participant1, Participant testedParticipant) {
 	    return switch (participant1.isHasKitchen()) {
 		    case YES -> (testedParticipant.isHasKitchen() == KitchenAvailability.YES &&
@@ -315,7 +316,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      *
      * @return the identifying number for the list of pairs
      */
-    private IdentNumber<Pair> deriveIdentNumber() {
+    public IdentNumber<Pair> deriveIdentNumber() {
         return new PairIdentNumber(this);
     }
 
@@ -391,11 +392,22 @@ public class PairList extends ParticipantCollectionList<Pair> {
         System.out.println("AllVeggie: " + (veganParticipants + veggieParticipants));
     }
 
+    /**
+     * method to return and increment the pairIdCounter variable
+     * @return the incremented variable
+     */
     public int getPairIdCounterAndIncrement(){
         return pairIdCounter++;
     }
 
     public PairingWeights getPairingWeights() {
         return pairingWeights123;
+    }
+
+    /**
+     * method to update the IdentNumber object after a manual update
+     */
+    public void updateIdentNumbers() {
+        this.identNumber = deriveIdentNumber();
     }
 }

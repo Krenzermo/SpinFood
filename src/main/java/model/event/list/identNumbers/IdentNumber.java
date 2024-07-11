@@ -82,6 +82,10 @@ public abstract class IdentNumber<E extends ParticipantCollection> {
         return "Anzahl: " + numElems + " Nachrücker: " + numSuccessors + " Geschlechterdiversität: " + genderDiversity + " Altersunterschied: " + ageDifference + " Vorliebenabweichung: " + preferenceDeviation;
     }
 
+    /**
+     *
+     * @return the identNumbers as a list for the GUI
+     */
     public List<String> asList() {
         return List.of(
                 "Anzahl Paare:\t\t" + numElems,

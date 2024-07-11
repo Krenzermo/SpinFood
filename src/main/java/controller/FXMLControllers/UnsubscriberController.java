@@ -73,16 +73,15 @@ public class UnsubscriberController extends Dialog<PairList> {
     }
 
     private List<Participant> getSuccessorList() {
-        return new ArrayList<>(pairList.getSuccessors());
+        return pairList != null ? new ArrayList<>(pairList.getSuccessors()) : new ArrayList<>();
     }
 
     @FXML
     void handleLogOut(ActionEvent event) {
-        List<Participant> cancelledParticipants = new ArrayList<>();
-        cancelledParticipants.add(participant);
+        Pair affectedPair = participant.getPair();
 
         CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-        cancellationHandler.handleCancellation(cancelledParticipants);
+        cancellationHandler.handlePartialPairCancellation(affectedPair, participant);
 
         closeWindow();
     }
@@ -100,16 +99,9 @@ public class UnsubscriberController extends Dialog<PairList> {
     void handleLogOutAsPair(ActionEvent event) {
         Pair affectedPair = participant.getPair();
         if (affectedPair != null) {
-            Participant partner = affectedPair.getOtherParticipant(participant);
-
-            List<Participant> cancelledParticipants = new ArrayList<>();
-            cancelledParticipants.add(participant);
-            if (partner != null) {
-                cancelledParticipants.add(partner);
-            }
 
             CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
-            cancellationHandler.handleCancellation(cancelledParticipants);
+            cancellationHandler.handleFullPairCancellation(affectedPair);
 
             closeWindow();
         }

@@ -16,6 +16,7 @@ import java.util.Objects;
 /**
  * This class handles the cancellation of participants and manages the updates required for pairs and groups.
  * It ensures that all groups and pairs are updated correctly after a cancellation event.
+ * @author Davide Piacenza
  */
 public class CancellationHandler {
 
@@ -66,7 +67,7 @@ public class CancellationHandler {
      *
      * @param affectedPair the pair that is being cancelled
      */
-    private void handleFullPairCancellation(Pair affectedPair) {
+    public void handleFullPairCancellation(Pair affectedPair) {
         pairList.remove(affectedPair);
     }
 
@@ -76,7 +77,7 @@ public class CancellationHandler {
      * @param affectedPair the pair that includes the cancelled participant
      * @param cancelledParticipant the participant that is being cancelled
      */
-    private void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant) {
+    public void handlePartialPairCancellation(Pair affectedPair, Participant cancelledParticipant) {
         Participant remainingParticipant = affectedPair.getOtherParticipant(cancelledParticipant);
         remainingParticipant.clearPair();
         participantSuccessors.add(remainingParticipant);
@@ -92,6 +93,9 @@ public class CancellationHandler {
         participantSuccessors.remove(cancelledParticipant);
     }
 
+    /**
+     * method to pair Successor Participant to new pairs
+     */
     public void pairSuccessorParticipants() {
         List<Pair> newPairs = new ArrayList<>();
 
@@ -116,6 +120,5 @@ public class CancellationHandler {
     public void updateGroups(Pair affectedPair) {
         pairSuccessorParticipants();
 
-        // this is redundant as MainController.replaceGroupData() creates a new GroupList anyway
     }
 }

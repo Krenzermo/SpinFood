@@ -1,131 +1,109 @@
 package model.event.io;
 
-import model.processing.CancellationHandler;
-import model.event.Course;
-import model.event.Location;
-import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.PairList;
+import model.event.io.InputData;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
-import model.kitchen.Kitchen;
-import model.person.FoodType;
-import model.person.Gender;
-import model.person.Name;
 import model.person.Participant;
-import model.kitchen.KitchenAvailability;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import model.processing.CancellationHandler;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
 
-class CancellationHandlerTest {
+/**
+ * Test class for CancellationHandler.
+ * This class contains tests to verify the functionality of the CancellationHandler class.
+ */
+public class CancellationHandlerTest {
 
+    private CancellationHandler cancellationHandler;
     private PairList pairList;
     private GroupList groupList;
-    private CancellationHandler cancellationHandler;
-    private Participant participant1;
-    private Participant participant2;
-    private Participant participant3;
-    private Participant participant4;
-    private Participant participant5;
-    private Participant participant6;
-    private Pair pair1;
-    private Pair pair2;
-    private Pair pair3;
-    private Group group1;
-    private static InputData inputData = InputData.getInstanceDebug();
+    private InputData inputData;
 
-    @BeforeEach
-    void setUp() {
-        int idCounter = 0;
-        // Initialize participants and pairs
-        participant1 = new Participant("1", new Name("Alice", "Smith"), FoodType.VEGGIE, (byte) 25, Gender.FEMALE, KitchenAvailability.YES, 1, 0.0, 0.0);
-        participant2 = new Participant("2", new Name("Bob", "Brown"), FoodType.MEAT, (byte) 30, Gender.MALE, KitchenAvailability.NO, 1, 0.0, 0.0);
-        participant3 = new Participant("3", new Name("Charlie", "Davis"), FoodType.NONE, (byte) 35, Gender.MALE, KitchenAvailability.YES, 1, 0.0, 0.0);
-        participant4 = new Participant("4", new Name("Diana", "Clark"), FoodType.VEGAN, (byte) 28, Gender.FEMALE, KitchenAvailability.NO, 1, 0.0, 0.0);
-        participant5 = new Participant("5", new Name("Eve", "Martinez"), FoodType.VEGGIE, (byte) 27, Gender.FEMALE, KitchenAvailability.YES, 1, 0.0, 0.0);
-        participant6 = new Participant("6", new Name("Frank", "Miller"), FoodType.NONE, (byte) 32, Gender.MALE, KitchenAvailability.NO, 1, 0.0, 0.0);
-
-
-        pair1 = new Pair(participant1, participant2, idCounter++);
-        pair2 = new Pair(participant3, participant4, idCounter++);
-        pair3 = new Pair(participant5, participant6, idCounter++);
-
+    /**
+     * Sets up the necessary objects before each test.
+     * Initializes InputData, PairList, GroupList, and CancellationHandler.
+     */
+    @Before
+    public void setUp() {
+        inputData = InputData.getInstanceDebug();
         PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
-        GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
-
         pairList = new PairList(pairingWeights);
-        pairList.add(pair1);
-        pairList.add(pair2);
-        pairList.add(pair3);
-
-        group1 = new Group(pair1, pair2, pair3, Course.MAIN, new Kitchen(new Location(0.0, 0.0), 1));
-        //pair1.setGroups(new Group[]{group1, null, null});
-        List<Group> groups = new ArrayList<>();
-        groups.add(group1);
-
+        GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
         groupList = new GroupList(pairList, groupWeights);
-        groupList.addAll(groups);
-
         cancellationHandler = new CancellationHandler(pairList, groupList);
     }
 
+    /**
+     * Tests the full pair cancellation scenario.
+     * Verifies that the pair is removed from the pair list and neither participant is in the successors list.
+     */
     @Test
-    void testHandleSingleCancellation() {
-        List<Participant> cancelledParticipants = new ArrayList<>();
-        cancelledParticipants.add(participant1);
-
-        PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
-        GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
+    public void testFullPairCancellation() {
+        List<Pair> pairs = pairList.getPairs();
+        Pair pair = pairs.get(0);
+        List<Participant> cancelledParticipants = pair.getParticipants();
 
         cancellationHandler.handleCancellation(cancelledParticipants);
 
-        // Verify that the participant was removed and the remaining participant was added to successors
-        assertFalse(pairList.contains(pair1));
-        assertFalse(pairList.getPairs().stream().flatMap(p -> p.getParticipants().stream()).anyMatch(p -> p.equals(participant1)));
-        assertFalse(pairList.getSuccessors().contains(participant1));
+        assertFalse(pairList.contains(pair));
+        assertFalse(pairList.getSuccessors().contains(pair.getParticipants().get(0)));
+        assertFalse(pairList.getSuccessors().contains(pair.getParticipants().get(1)));
     }
 
+    /**
+     * Tests the partial pair cancellation scenario.
+     * Verifies that the pair is removed from the pair list and the remaining participant is in the successors list.
+     */
     @Test
-    void testHandleFullPairCancellation() {
+    public void testPartialPairCancellation() {
+        List<Pair> pairs = pairList.getPairs();
+        Pair pair = pairs.get(0);
+        Participant cancelledParticipant = pair.getParticipants().get(0);
         List<Participant> cancelledParticipants = new ArrayList<>();
-        cancelledParticipants.add(participant1);
-        cancelledParticipants.add(participant2);
-
-        PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
-        GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
+        cancelledParticipants.add(cancelledParticipant);
 
         cancellationHandler.handleCancellation(cancelledParticipants);
 
-        // Verify that the pair was removed and the groups were updated accordingly
-        assertFalse(pairList.contains(pair1)); // Ensure the pair was removed
-        assertFalse(pairList.getPairs().stream().anyMatch(p -> p.equals(pair1)));
-        //assertFalse(groupList.getGroups().contains(group1)); // Ensure the group was updated  --> wieso schlägt das fehl
-        assertFalse(pairList.getSuccessors().contains(participant1));
-        assertFalse(pairList.getSuccessors().contains(participant2));
+        assertFalse(pairList.contains(pair));
+        assertTrue(pairList.getSuccessors().contains(pair.getOtherParticipant(cancelledParticipant)));
     }
 
+    /**
+     * Tests the single participant cancellation scenario.
+     * Verifies that the participant is removed from the successors list.
+     */
     @Test
-    void testUpdateGroups() {
+    public void testSingleCancellation() {
+        Participant singleParticipant = inputData.getParticipantInputData().get(0);
         List<Participant> cancelledParticipants = new ArrayList<>();
-        cancelledParticipants.add(participant1);
-        cancelledParticipants.add(participant2);
-
-        PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
-        GroupWeights groupWeights = new GroupWeights(1, 1, 1, 1);
+        cancelledParticipants.add(singleParticipant);
 
         cancellationHandler.handleCancellation(cancelledParticipants);
 
-        cancellationHandler.updateGroups(pair1);
+        assertFalse(pairList.getSuccessors().contains(singleParticipant));
+    }
 
-        // Verify that the groups list was updated accordingly
-        assertFalse(pairList.contains(pair1)); // Ensure the group was removed
-        // this test would need a complete group cluster to work (at least 18 participants in 9 pairs and 9 groups)
-        // assertFalse(groupList.contains(group1));
+    /**
+     * Tests the update of groups after a pair cancellation.
+     * Verifies that the groups are updated accordingly and the cancelled pair is not in the successor pairs list.
+     */
+    @Test
+    public void testUpdateGroupsAfterCancellation() {
+        List<Pair> pairs = pairList.getPairs();
+        Pair pair = pairs.get(0);
+        List<Participant> cancelledParticipants = pair.getParticipants();
+
+        cancellationHandler.handleCancellation(cancelledParticipants);
+        
+        assertFalse(groupList.getSuccessorPairs().contains(pair));
+
     }
 }

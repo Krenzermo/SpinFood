@@ -13,24 +13,29 @@ import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 
 import model.person.Name;
+import model.person.Gender;
+import model.person.FoodType;
 import model.event.Course;
 import model.event.collection.Group;
 import model.event.collection.Pair;
 import model.event.io.InputData;
+import model.event.io.OutputData;
 import model.event.list.GroupList;
 import model.event.list.PairList;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.PairingWeights;
+import model.event.list.weight.Weights;
 import model.person.Participant;
-import model.processing.states.State;
 import model.processing.CancellationHandler;
+import model.processing.states.State;
 import view.MainFrame;
 
 import java.io.File;
@@ -47,15 +52,15 @@ public class MainController {
     private final LanguageController languageController = LanguageController.getInstance();
     private PairList pairList;
     private GroupList groupList; // Added groupList for group-related operations
-    private IdentNumber pairIdentNumber;
-    private IdentNumber groupIdentNumber;
+    private IdentNumber<Pair> pairIdentNumber;
+	private IdentNumber<Group> groupIdentNumber;
     private PairingWeights pairingWeights;
     private GroupWeights groupWeights; // Added groupWeights for group-related operations
 
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
 
-    private static State state = State.getInstance();
+    private static State state;
 
     @FXML
     private VBox root;
@@ -369,6 +374,7 @@ public class MainController {
         });
 
          */
+        state = new State(groupList, pairList);
     }
 
     private void bindAllComponents() {
@@ -475,7 +481,7 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartList(ActionEvent event) {
-        undo.setDisable(true);
+        //undo.setDisable(true);
         FileChooser fileChooser = new FileChooser();
         ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
         ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
@@ -561,12 +567,43 @@ public class MainController {
 
     @FXML
     void savePairList(ActionEvent event) {
-        // TODO: this
+        if (groupList == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Gruppenlistenfehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Die Gruppenliste wurde noch nicht erstellt.");
+            alert.showAndWait();
+            return;
+        }
+
+
+        DirectoryChooser dir = new DirectoryChooser();
+        dir.setTitle("Speicherort für Paarliste wählen");
+        File file = dir.showDialog(root.getScene().getWindow());
+        OutputData outputData = new OutputData(file.getPath(), groupList);
+        outputData.makePairOutputFile("pairs");
+
+        System.exit(0);
     }
 
     @FXML
     void saveGroupList(ActionEvent event) {
-        // TODO: this
+        if (groupList == null) {
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Gruppenlistenfehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Die Gruppenliste wurde noch nicht erstellt.");
+            alert.showAndWait();
+            return;
+        }
+
+        DirectoryChooser dir = new DirectoryChooser();
+        dir.setTitle("Speicherort für Paarliste wählen");
+        File file = dir.showDialog(root.getScene().getWindow());
+        OutputData outputData = new OutputData(file.getPath(), groupList);
+        outputData.makeGroupOutputFile("groups");
+
+        System.exit(0);
     }
 
     @FXML
@@ -587,7 +624,7 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartLoc(ActionEvent event) {
-        undo.setDisable(true);
+        //undo.setDisable(true);
         FileChooser fileChooser = new FileChooser();
         ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
         ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
@@ -681,6 +718,8 @@ public class MainController {
 
                 replaceGroupData();
                 updateTables();
+                state.init(pairList, groupList);
+                undo.setDisable(true);
 
                 tabPane.getSelectionModel().select(pairTab);
             } catch (NullPointerException e) {
@@ -692,7 +731,7 @@ public class MainController {
                 return;
             }
         }
-        updateState();
+
         event.consume();
     }
 
@@ -706,7 +745,7 @@ public class MainController {
         replaceGroupData();
         updateTables();
 
-        undo.setDisable(false);
+		updateState();
     }
 
     @FXML
@@ -723,16 +762,18 @@ public class MainController {
             groupList.getSuccessorPairs().add(pair);
             pairList.getSuccessors().removeAll(participants);
 
-            replaceGroupData();
-            updateTables();
+	        replaceGroupData();
+	        updateTables();
         } catch (NullPointerException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Fehler");
-            alert.setHeaderText("Ein Fehler ist aufgetreten!");
-            alert.setContentText("Es wurden noch keine Gruppenliste erstellt.");
-            alert.showAndWait();
-            return;
+	        Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setTitle("Fehler");
+	        alert.setHeaderText("Ein Fehler ist aufgetreten!");
+	        alert.setContentText("Es wurden noch keine Gruppenliste erstellt.");
+	        alert.showAndWait();
+	        return;
         }
+
+		updateState();
     }
 
     @FXML
@@ -748,7 +789,7 @@ public class MainController {
         // replaceGroupData(); // this would make the button do absolutely nothing
         updateTables();
 
-        undo.setDisable(false);
+        updateState();
     }
 
     @FXML
@@ -784,7 +825,7 @@ public class MainController {
         }
         updateTables();
 
-        undo.setDisable(false);
+		updateState();
     }
 
     @FXML
@@ -809,7 +850,9 @@ public class MainController {
         if (!Objects.isNull(groupList)) {
             for (Group group : pair.getGroups()) {
                 groupList.remove(group);
-
+                if (group == null) {
+                    continue;
+                }
                 for (Pair PairTemp : group.getPairs()) {
                     PairTemp.clearGroups();
                 }
@@ -988,6 +1031,7 @@ public class MainController {
 
     @FXML
     void comparePairList(ActionEvent event) {
+        undo.setDisable(true);
         MainFrame.stage.hide();
         PairListComparisonController dialog = new PairListComparisonController();
         if (!Objects.isNull(pairList) && !pairList.isEmpty()) {
@@ -1002,6 +1046,9 @@ public class MainController {
         try {
             PairList temp = dialog.showAndWait().orElse(pairList);
             if (temp != pairList) {
+                if (pairList != null) {
+                    updateState();
+                }
                 pairList = temp;
                 this.pairIdentNumber = pairList.getIdentNumber();
 
@@ -1019,7 +1066,8 @@ public class MainController {
 
     @FXML
     void compareGroupList(ActionEvent event) {
-        MainFrame.stage.hide();
+        //undo.setDisable(true);
+		MainFrame.stage.hide();
         GroupListComparisonController dialog = new GroupListComparisonController();
 
         dialog.init(root.getScene().getWindow(), pairList);
@@ -1039,6 +1087,7 @@ public class MainController {
                 pairIdentNumber = pairList.getIdentNumber();
 
                 updateTables();
+				updateState();
 
                 tabPane.getSelectionModel().select(groupTab);
             }
@@ -1068,6 +1117,7 @@ public class MainController {
 
             replaceGroupData();
 			updateTables(); // Update tables after the dialog is closed to reflect changes
+			updateState();
 		} catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -1083,12 +1133,14 @@ public class MainController {
     }
 
     private void updatePairTable() {
+        pairList.updateIdentNumbers();
         writePairDataToTab();
         writePairListIdentNumbersToTab();
         writePairListSuccessorsToTab();
     }
 
     private void updateGroupTable() {
+        groupList.updateIdentNumbers();
         writeGroupDataToTab();
         writeGroupListIdentNumbersToTab();
         writeGroupListSuccessorsToTab();
@@ -1101,12 +1153,14 @@ public class MainController {
         if (!Objects.isNull(groupList)) {
             assert !Objects.isNull(pairList);
             updateGroupTable();
-            updateState();
         }
     }
 
     private void updateState() {
-        state.updateState(pairList, groupList);
+        if (!Objects.isNull(pairList)) {
+            undo.setDisable(false);
+            state.updateState(pairList, groupList);
+        }
     }
 
     @FXML
@@ -1131,17 +1185,21 @@ public class MainController {
     @FXML
     void goBackState(ActionEvent event) {
         state = state.revertState();
-
         pairList = state.getPairList();
         groupList = state.getGroupList();
 
-        updateTables();
+        replaceGroupData();
 
-        //System.out.println(state.getPrev().getPairList().getSuccessors());
-        //System.out.println(pairList.getSuccessors());
-
-        if (state.getPrev() == null) {
-            undo.setDisable(true);
+        if (pairList.containsAll(inputData.getPairInputData()) && pairList.containsAll(inputData.getPairSuccessorList()) && !Objects.isNull(groupList)) {
+            for (Pair pair: inputData.getPairSuccessorList()) {
+                if (!groupList.getSuccessorPairs().contains(pair)) {
+                    groupList.getSuccessorPairs().add(pair);
+                }
+            }
         }
+
+        updateTables();
+        updateState();
+        undo.setDisable(true);
     }
 }

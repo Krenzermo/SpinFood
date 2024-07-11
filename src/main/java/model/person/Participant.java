@@ -33,6 +33,19 @@ public class Participant {
     private Pair pair;
     private Group[] groups = new Group[3];
 
+    /**
+     * Constructs a Participant with specified attributes.
+     *
+     * @param id               Participant ID.
+     * @param name             Participant's name.
+     * @param foodType         Participant's food type preference.
+     * @param age              Participant's age.
+     * @param gender           Participant's gender.
+     * @param hasKitchen       Kitchen availability status.
+     * @param kitchenStory     Kitchen story number.
+     * @param kitchenLongitude Longitude of kitchen location.
+     * @param kitchenLatitude  Latitude of kitchen location.
+     */
     public Participant(String id, Name name, FoodType foodType, byte age, Gender gender, KitchenAvailability hasKitchen, int kitchenStory, double kitchenLongitude, double kitchenLatitude) {
         this.id = id;
         this.name = name;
@@ -45,6 +58,15 @@ public class Participant {
         this.pair = null;
     }
 
+    /**
+     * Constructs a Participant with specified attributes and default kitchen status (no kitchen).
+     *
+     * @param id       Participant ID.
+     * @param name     Participant's name.
+     * @param foodType Participant's food type preference.
+     * @param age      Participant's age.
+     * @param gender   Participant's gender.
+     */
     public Participant(String id, Name name, FoodType foodType, byte age, Gender gender) {
         this.id = id;
         this.name = name;
@@ -64,15 +86,20 @@ public class Participant {
      * @param participant the specified {@link Participant}
      */
     public Participant(Participant participant) {
-        this.id = participant.id;
-        this.name = participant.name;
-        this.foodType = participant.foodType;
-        this.ageRange = participant.ageRange;
-        this.gender = participant.gender;
-        this.hasKitchen = participant.hasKitchen;
-        this.kitchen = participant.kitchen;
-        this.age = participant.getAge();
+	    this.id = participant.id;
+	    this.name = participant.name;
+	    this.foodType = participant.foodType;
+	    this.ageRange = participant.ageRange;
+	    this.gender = participant.gender;
+	    this.hasKitchen = participant.hasKitchen;
+	    this.kitchen = participant.kitchen;
+	    this.age = participant.getAge();
     }
+	/*
+	public Participant(Participant participant) {
+        this(participant.getId(), participant.getName(), participant.getFoodType(), participant.getAge(), participant.getGender());
+    }
+	*/
 
     @Override
     public int hashCode() {
@@ -99,66 +126,135 @@ public class Participant {
                 && this.gender.equals(other.gender) && this.hasKitchen.equals(other.hasKitchen) && this.kitchen.equals(other.kitchen);
     }
 
+
+    /**
+     * Returns a string representation of this Participant.
+     *
+     * @return A string representation of this Participant.
+     */
     @Override
     public String toString() {
         //Don't call kitchen.toString() explicitly as kitchen may be null and this would yield a NullPointerException
         return "ID: " + id + ", Name: " + name.toString() + ", " + foodType + ", " + ageRange + ", " + gender + ", " + hasKitchen + ", " + kitchen;
     }
 
-
+    /**
+     * Compares this Participant's assigned kitchen with another Participant's assigned kitchen.
+     *
+     * @param o The other Participant to compare.
+     * @return A double value representing the comparison result.
+     */
     public double compareTo(Participant o) {
         return this.kitchen.compareTo(o.kitchen);
     }
 
+    /**
+     * Returns the age of the participant.
+     *
+     * @return The age of the participant.
+     */
     public byte getAge() {
         return age;
     }
 
+    /**
+     * Returns the age range category of the participant.
+     *
+     * @return The age range category of the participant.
+     */
     public AgeRange getAgeRange() {
         return ageRange;
     }
 
+    /**
+     * Returns the ID of the participant.
+     *
+     * @return The ID of the participant.
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Returns an observable value of the participant's ID.
+     *
+     * @return Observable value representing the participant's ID.
+     */
     public ObservableValue<String> getIdAsObservable() {
         return new SimpleStringProperty(id);
     }
 
+    /**
+     * Returns the name of the participant.
+     *
+     * @return The name of the participant.
+     */
     public Name getName() {
         return name;
     }
 
+    /**
+     * Returns the food type preference of the participant.
+     *
+     * @return The food type preference of the participant.
+     */
     public FoodType getFoodType() {
         return foodType;
     }
 
+    /**
+     * Returns the gender of the participant.
+     *
+     * @return The gender of the participant.
+     */
     public Gender getGender() {
         return gender;
     }
 
     /**
-     * @return  {@link KitchenAvailability#YES} if there is a kitchen,
-     *          {@link KitchenAvailability#NO} if there is no kitchen
-     *          and {@link KitchenAvailability#MAYBE} if there may be a kitchen.
+     * Returns the availability of a kitchen for the participant.
+     *
+     * @return {@link KitchenAvailability#YES} if there is a kitchen,
+     * {@link KitchenAvailability#NO} if there is no kitchen,
+     * {@link KitchenAvailability#MAYBE} if there may be a kitchen.
      */
     public KitchenAvailability isHasKitchen() {
         return hasKitchen;
     }
 
+    /**
+     * Returns the kitchen assigned to the participant.
+     *
+     * @return The kitchen assigned to the participant, or null if no kitchen is assigned.
+     */
     public Kitchen getKitchen() {
         return kitchen;
     }
 
+    /**
+     * Returns the pair this participant belongs to.
+     *
+     * @return The pair this participant belongs to, or null if not assigned to any pair.
+     */
     public Pair getPair() {
         return pair;
     }
 
+    /**
+     * Returns the groups this participant belongs to.
+     *
+     * @return The array of groups this participant belongs to.
+     */
     public Group[] getGroups() {
         return groups;
     }
 
+    /**
+     * Sets the pair this participant belongs to.
+     *
+     * @param pair The pair to set for this participant.
+     * @throws RuntimeException If the pair does not contain this participant.
+     */
     public void setPair(Pair pair) {
         if (!pair.contains(this))
             throw new RuntimeException("The pair does not contain this participant. " + "Pair: " + pair + ", Participant: " + this);
@@ -166,6 +262,14 @@ public class Participant {
         this.pair = pair;
     }
 
+    /**
+     * Sets the groups this participant belongs to.
+     *
+     * @param groups The array of groups to set for this participant.
+     * @throws RuntimeException If no pair is assigned to this participant.
+     * @throws RuntimeException If any group does not contain the participant's pair.
+     * @throws RuntimeException If the number of groups is not exactly 3.
+     */
     public void setGroups(Group[] groups) {
         if (pair == null) {
             throw new RuntimeException("cannot assign Groups to this Participant if no Pair is assigned.");
@@ -184,11 +288,17 @@ public class Participant {
         this.groups = groups;
     }
 
+    /**
+     * Sets the kitchen availability status to NO and clears the assigned kitchen.
+     */
     public void setNoKitchen() {
         this.hasKitchen = KitchenAvailability.NO;
         this.kitchen = null;
     }
 
+    /**
+     * Clears the assigned pair for this participant.
+     */
     public void clearPair() {
         this.pair = null;
     }

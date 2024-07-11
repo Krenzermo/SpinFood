@@ -20,6 +20,10 @@ public enum Gender {
         return "Gender: " + this.name();
     }
 
+    /**
+     *
+     * @return the Gender enum as SimpleStringProperty
+     */
     public ObservableValue<String> asObservable() {
         return new SimpleStringProperty(this.name());
     }

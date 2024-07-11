@@ -40,6 +40,11 @@ public class MainFrame extends Application {
     }
 
 
+    /**
+     * The main method, launches the JavaFX application.
+     *
+     * @param args Command line arguments .
+     */
     public static void main(String[] args) {
         launch(args);
     }

@@ -32,10 +32,19 @@
             return location.asOutputString();
         }
 
+        /**
+         *
+         * @return the kitchens location as SimpleStringProperty
+         */
         public ObservableValue<String> asObservable() {
             return new SimpleStringProperty(location.longitude() + ", " + location.latitude());
         }
 
+        /**
+         *  method to get the distance between the locations of two kitchens
+         * @param o the kitchen to be compared to the calling kitchen
+         * @return the distance between the kitchens locations as double
+         */
         public double compareTo(Kitchen o) {
             return (location.getDistance(InputData.getInstance().getEventLocation())
                     - o.location.getDistance(InputData.getInstance().getEventLocation()));
