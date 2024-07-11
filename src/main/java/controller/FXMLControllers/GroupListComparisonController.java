@@ -15,6 +15,7 @@ import model.event.list.GroupList;
 import model.event.list.PairList;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
+import model.event.list.weight.PairingWeights;
 
 import java.io.File;
 import java.io.IOException;
@@ -95,12 +96,8 @@ public class GroupListComparisonController extends Dialog<GroupList>{
     @FXML
     private TableView<Group> tableTwo;
 
-    @FXML
     private ButtonType acceptList1ButtonType;
-
-    @FXML
     private ButtonType acceptList2ButtonType;
-
     private GroupList groupListOne;
     private GroupList groupListTwo;
     private PairList pairList;
@@ -278,7 +275,7 @@ public class GroupListComparisonController extends Dialog<GroupList>{
         pairTwoColGroup.setCellValueFactory(cell -> cell.getValue().getPairs()[1].getIdAsObservable());
         pairThreeColGroup.setCellValueFactory(cell -> cell.getValue().getPairs()[2].getIdAsObservable());
         kitchenColGroup.setCellValueFactory(cell -> cell.getValue().getKitchen().asObservable());
-        courseColGroup.setCellValueFactory(cell -> cell.getValue().getCourse().asObservable());
+        courseColGroup.setCellValueFactory(cell -> cell.getValue().getCourse().asProperty());
         cookIDColGroup.setCellValueFactory(cell -> cell.getValue().getCookPairIdAsObservable());
     }
 

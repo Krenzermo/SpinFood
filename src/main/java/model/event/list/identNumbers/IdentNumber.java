@@ -18,15 +18,16 @@ import java.util.List;
  * @author Finn Brecher
  * @author Daniel Hinkelmann
  */
-public abstract class IdentNumber<E extends ParticipantCollection> {
-    protected ParticipantCollectionList<E> participantCollectionList;
+public abstract class IdentNumber {
+	//TODO: this
+    ParticipantCollectionList participantCollectionList;
     protected int numElems;
     protected int numSuccessors;
     protected double genderDiversity;
     protected double ageDifference;
     protected double preferenceDeviation;
 
-    protected IdentNumber(ParticipantCollectionList<E> participantCollection) {
+    protected IdentNumber(ParticipantCollectionList participantCollection) {
         this.participantCollectionList = participantCollection;
         numElems = calcNumElems(participantCollection);
         numSuccessors = calcNumSuccessors(participantCollection);
@@ -37,7 +38,7 @@ public abstract class IdentNumber<E extends ParticipantCollection> {
      * @param participantCollection The List
      * @return Number of Participants
      */
-    private int calcNumElems(ParticipantCollectionList<E> participantCollection) {
+    private int calcNumElems(ParticipantCollectionList participantCollection) {
         List<? extends ParticipantCollection> list;
         list = participantCollection instanceof PairList pairList ? pairList.getPairs() :
                                                                     ((GroupList)participantCollection).getGroups();
@@ -49,7 +50,7 @@ public abstract class IdentNumber<E extends ParticipantCollection> {
      * @param participantCollection The List
      * @return The number of Successors
      */
-    private int calcNumSuccessors(ParticipantCollectionList<E> participantCollection) {
+    private int calcNumSuccessors(ParticipantCollectionList participantCollection) {
         List<Participant> list;
         list = participantCollection instanceof PairList pairList ? pairList.getSuccessors() :
                                                                     ((GroupList)participantCollection).getSuccessors();
@@ -61,21 +62,21 @@ public abstract class IdentNumber<E extends ParticipantCollection> {
      * @param participantCollection The List
      * @return The gender diversity
      */
-    protected abstract double calcGenderDiversity(ParticipantCollectionList<E> participantCollection);
+    protected abstract double calcGenderDiversity(ParticipantCollectionList participantCollection);
 
     /** Calculates the average age difference for a ParticipantCollectionList
      *
      * @param participantCollection The List
      * @return The age difference
      */
-    protected abstract double calcAgeDifference(ParticipantCollectionList<E> participantCollection);
+    protected abstract double calcAgeDifference(ParticipantCollectionList participantCollection);
 
     /** Calculates the deviation in food preferences of this ParticipantCollectionList
      *
      * @param participantCollection The List
      * @return The deviation in food preferences
      */
-    protected abstract double calcPreferenceDeviation(ParticipantCollectionList<E> participantCollection);
+    protected abstract double calcPreferenceDeviation(ParticipantCollectionList participantCollection);
 
     @Override
     public String toString() {

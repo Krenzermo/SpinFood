@@ -16,7 +16,7 @@
      * @param location The location of the kitchen
      * @param story the story of the kitchen
      */
-    public record Kitchen(Location location, int story) {
+    public record Kitchen(Location location, int story){
 
         @Override
         public String toString() {

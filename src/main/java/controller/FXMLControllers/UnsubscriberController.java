@@ -83,11 +83,11 @@ public class UnsubscriberController extends Dialog<PairList> {
     }
 
     private List<Participant> getSuccessorList() {
-        return pairList != null ? new ArrayList<>(pairList.getSuccessors()) : new ArrayList<>();
+        return new ArrayList<>(pairList.getSuccessors());
     }
 
     @FXML
-    void handleLogOut(ActionEvent event) {
+    private void handleLogOut(ActionEvent event) {
         Pair affectedPair = participant.getPair();
 
         CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
@@ -97,7 +97,7 @@ public class UnsubscriberController extends Dialog<PairList> {
     }
 
     @FXML
-    void handleSubstitute(ActionEvent event) {
+    private void handleSubstitute(ActionEvent event) {
         Participant successor = comboBoxSuccessor.getValue();
         if (successor != null) {
             replaceParticipant(participant, successor);
@@ -106,7 +106,7 @@ public class UnsubscriberController extends Dialog<PairList> {
     }
 
     @FXML
-    void handleLogOutAsPair(ActionEvent event) {
+    private void handleLogOutAsPair(ActionEvent event) {
         Pair affectedPair = participant.getPair();
         if (affectedPair != null) {
 

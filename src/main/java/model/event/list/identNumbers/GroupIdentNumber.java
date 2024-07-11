@@ -10,7 +10,6 @@ import model.event.list.ParticipantCollectionList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**A class that holds and calculates the IdentNumbers for a {@link Group}
  *
@@ -18,10 +17,10 @@ import java.util.stream.Stream;
  * @author Davide Piacenza
  *
  */
-public class GroupIdentNumber extends IdentNumber<Group> {
-    private final double averagePathLength;
+public class GroupIdentNumber extends IdentNumber {
+    private double averagePathLength;
     private double totalPathLength;
-    private final double pathLengthStdDev;
+    private double pathLengthStdDev;
     private final GroupList groupList;
 
 
@@ -56,7 +55,7 @@ public class GroupIdentNumber extends IdentNumber<Group> {
     }
 
     @Override
-    protected double calcGenderDiversity(ParticipantCollectionList<Group> participantCollection) {
+    protected double calcGenderDiversity(ParticipantCollectionList participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
                 .mapToDouble(this::calculateGroupGenderDeviation)
@@ -64,7 +63,7 @@ public class GroupIdentNumber extends IdentNumber<Group> {
     }
 
     @Override
-    protected double calcAgeDifference(ParticipantCollectionList<Group> participantCollection) {
+    protected double calcAgeDifference(ParticipantCollectionList participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
                 .mapToDouble(this::calculateGroupAgeDifference)
@@ -72,14 +71,14 @@ public class GroupIdentNumber extends IdentNumber<Group> {
     }
 
     @Override
-    protected double calcPreferenceDeviation(ParticipantCollectionList<Group> participantCollection) {
+    protected double calcPreferenceDeviation(ParticipantCollectionList participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
                 .mapToDouble(this::calculateGroupPreferenceDeviation)
                 .average().orElse(0.0);
     }
 
-    private double calcTotalPathLength(ParticipantCollectionList<Group> participantCollection) {
+    private double calcTotalPathLength(ParticipantCollectionList participantCollection) {
         List<Pair> pairs = getAllPairs(participantCollection);
         List<Pair> pairsNoDuplicate = new ArrayList<>();
         for (Pair pair : pairs ){
@@ -115,10 +114,10 @@ public class GroupIdentNumber extends IdentNumber<Group> {
         return totalDistance;
     }
 
-    private double calcPathLengthStdDev(ParticipantCollectionList<Group> participantCollection) {
+    private double calcPathLengthStdDev(ParticipantCollectionList participantCollection) {
         List<Double> pathLengths = getAllPairs(participantCollection).stream()
                 .map(this::calculateTotalDistanceForPair)
-                .toList();
+                .collect(Collectors.toList());
 
         double mean = pathLengths.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
         double variance = pathLengths.stream().mapToDouble(length -> Math.pow(length - mean, 2)).average().orElse(0.0);
@@ -132,14 +131,14 @@ public class GroupIdentNumber extends IdentNumber<Group> {
                 .orElse(null);
     }
 
-    private List<Pair> getAllPairs(ParticipantCollectionList<Group> participantCollection) {
+    private List<Pair> getAllPairs(ParticipantCollectionList participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
-                .flatMap(group -> Stream.of(group.getPairs()))
+                .flatMap(group -> List.of(group.getPairs()).stream())
                 .collect(Collectors.toList());
     }
 
-    private int getTotalPairs(ParticipantCollectionList<Group> participantCollection) {
+    private int getTotalPairs(ParticipantCollectionList participantCollection) {
         return getAllPairs(participantCollection).size();
     }
 

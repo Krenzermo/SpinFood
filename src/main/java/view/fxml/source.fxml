@@ -32,7 +32,7 @@
                         <MenuItem fx:id="savePairListMenuItem" mnemonicParsing="false" onAction="#savePairList" text="Paarliste Speichern" />
                         <MenuItem fx:id="saveGroupListMenuItem" mnemonicParsing="false" onAction="#saveGroupList" text="Gruppenliste Speichern" />
                         <MenuItem fx:id="savePartSuccessorsMenuItem" mnemonicParsing="false" onAction="#saveParticipantSuccessors" text="Nachfolgerliste Speichern" />
-                        <MenuItem fx:id="savePairSuccessorsMenuItem" mnemonicParsing="false" onAction="#savePairSuccessors" text="Nachfolger-Paar Liste Speichern" />
+                        <MenuItem fx:id="savePairSuccessorsMenuItem" mnemonicParsing="false" onAction="#savePairSuccessorsMenuItem" text="Nachfolger-Paar Liste Speichern" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Erstellen">

@@ -80,26 +80,27 @@ public class Participant {
     }
 
     /**
-     * Copy-Constructor for class {@link Participant}.
-     * This constructor copies all fields but not the {@link Pair} or {@link Group} class information.
+     * Creates a shallow Copy of the specified {@link Participant}.
+     * That copy does not contain the {@link Pair} or the {@link Group} information of the original {@link Participant}
      *
      * @param participant the specified {@link Participant}
      */
-    public Participant(Participant participant) {
-	    this.id = participant.id;
-	    this.name = participant.name;
-	    this.foodType = participant.foodType;
-	    this.ageRange = participant.ageRange;
-	    this.gender = participant.gender;
-	    this.hasKitchen = participant.hasKitchen;
-	    this.kitchen = participant.kitchen;
-	    this.age = participant.getAge();
-    }
-	/*
-	public Participant(Participant participant) {
+    /*public Participant(Participant participant) {
         this(participant.getId(), participant.getName(), participant.getFoodType(), participant.getAge(), participant.getGender());
     }
-	*/
+     */
+    public Participant(Participant participant) {
+        id = participant.id;
+        name = participant.name;
+        foodType = participant.foodType;
+        age = participant.age;
+        ageRange = participant.ageRange;
+        gender = participant.gender;
+        hasKitchen = participant.hasKitchen;
+        kitchen = participant.kitchen;
+        pair = participant.pair;
+        groups = participant.groups;
+    }
 
     @Override
     public int hashCode() {
@@ -132,6 +133,7 @@ public class Participant {
      *
      * @return A string representation of this Participant.
      */
+
     @Override
     public String toString() {
         //Don't call kitchen.toString() explicitly as kitchen may be null and this would yield a NullPointerException

@@ -1,14 +1,17 @@
 package controller.FXMLControllers;
 
 import controller.LanguageController;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import model.event.Course;
 import model.event.collection.Pair;
@@ -125,7 +128,7 @@ public class PairsFromGroupController extends Dialog<Object>{
                     if (course == null) {
                         return new SimpleStringProperty("n.V.");
                     }
-                    return course.asObservable();
+                    return course.asProperty();
                 }
         );
     }

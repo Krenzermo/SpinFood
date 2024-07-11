@@ -22,7 +22,7 @@ import java.util.List;
  */
 public class OutputData {
 
-    private final String outputFilePath;
+    private String outputFilePath;
     private GroupList groupList;
 
 
