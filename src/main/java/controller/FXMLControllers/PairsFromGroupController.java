@@ -20,9 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-/**
- * PairsFromGroupController handles the logistics of showing more information about the make-up of a chosen group
- */
 public class PairsFromGroupController extends Dialog<Object>{
     private final LanguageController languageController = LanguageController.getInstance();
 
@@ -66,11 +63,6 @@ public class PairsFromGroupController extends Dialog<Object>{
         // TODO: this
     }
 
-    /**
-     * initialize window
-     * @param owner caller of window
-     * @param pairs pairs to be shown in detail
-     */
     public void init(Window owner, Pair[] pairs) {
         try {
             String relPath = "src/main/java/view/fxml/pairsFromGroup.fxml";

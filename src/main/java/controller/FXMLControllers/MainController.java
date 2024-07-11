@@ -260,9 +260,6 @@ public class MainController {
 
     //private Stage primaryStage = (Stage) root.getScene().getWindow();
 
-    /**
-     * method to initialize the GUI
-     */
     @FXML
     public void initialize() {
         bindAllComponents();
@@ -505,10 +502,6 @@ public class MainController {
         }
     }
 
-    /**
-     * opens a file chooser for the file of cancelling participants
-     * @param event that triggered the menu item
-     */
     @FXML
     void openFileChooserCancellationsList(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -558,10 +551,6 @@ public class MainController {
         }
     }
 
-    /**
-     * method to change language to german
-     * @param event that triggered the menu item
-     */
     @FXML
     void changeLanguageToGerman(ActionEvent event) {
         if (!languageController.getLanguage().equals(Locale.GERMAN)) {
@@ -570,11 +559,6 @@ public class MainController {
     }
 
 
-
-    /**
-     * method to change language to english
-     * @param event that triggered the menu item
-     */
     @FXML
     void changeLanguageToEnglish(ActionEvent event) {
         if (!languageController.getLanguage().equals(Locale.ENGLISH)) {
@@ -583,10 +567,7 @@ public class MainController {
     }
 
 
-    /**
-     * method to save the pairlist to a csv file
-     * @param event that triggered the menu item
-     */
+
     @FXML
     void savePairList(ActionEvent event) {
         if (groupList == null) {
@@ -608,10 +589,6 @@ public class MainController {
         System.exit(0);
     }
 
-    /**
-     * method to save the groupList to a named csv file
-     * @param event that triggered the menu item
-     */
     @FXML
     void saveGroupList(ActionEvent event) {
         if (groupList == null) {
@@ -761,10 +738,6 @@ public class MainController {
         event.consume();
     }
 
-    /**
-     * method to split pairs manually
-     *
-     */
     @FXML
     void splitPair(ActionEvent event) {
         Pair pair = pairTable.getSelectionModel().getSelectedItem();
@@ -781,10 +754,6 @@ public class MainController {
         }
     }
 
-    /**
-     * method to create pairs manually
-     * @param event that triggered the menu item
-     */
     @FXML
     void createPair(ActionEvent event) {
         try {
@@ -816,10 +785,6 @@ public class MainController {
         }
     }
 
-    /**
-     * method to split groups manually
-     * @param event that triggered the menu item
-     */
     @FXML
     public void splitGroup(ActionEvent event) {
         Group group = groupTable.getSelectionModel().getSelectedItem();
@@ -837,10 +802,6 @@ public class MainController {
         state.updateState(pairList, groupWeights);
     }
 
-    /**
-     * method to create groups manually
-     * @param event that triggered the menu item
-     */
     @FXML
     public void createGroup(ActionEvent event) {
         List<Pair> pairs = groupList.getSuccessorPairs().stream()
@@ -878,10 +839,6 @@ public class MainController {
         state.updateState(pairList, groupWeights);
     }
 
-    /**
-     * method to split pairs in the successors tab
-     * @param event that triggered the menu item
-     */
     @FXML
     void splitPairSuccessor(ActionEvent event) {
         Pair pair = successorsGroupList.getSelectionModel().getSelectedItem();
@@ -914,11 +871,6 @@ public class MainController {
         }
     }
 
-    /**
-     * method to remove a whole group clusters group at once
-     * @param groups the groups to be removed
-     * @param groupList the grouplist from which the groups should be removed
-     */
     public static void removeGroupCluster(List<Group> groups, GroupList groupList) {
         if (groups.size() != 9) {
             throw new IllegalStateException("More or less than 9 successor groups were selected. Total: " + groups.size());
@@ -1088,10 +1040,6 @@ public class MainController {
         });
     }
 
-    /**
-     * method to compare 2 pairLists and choose the better one
-     * @param event that triggered the menu item
-     */
     @FXML
     void comparePairList(ActionEvent event) {
         undo.setDisable(true);
@@ -1126,10 +1074,6 @@ public class MainController {
         state.updateState(pairList, groupWeights);
     }
 
-    /**
-     * method to compare to groupLists and choose the better one
-     * @param event that triggered the menu item
-     */
     @FXML
     void compareGroupList(ActionEvent event) {
         undo.setDisable(true);

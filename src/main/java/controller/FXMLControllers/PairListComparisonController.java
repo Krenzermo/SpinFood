@@ -20,10 +20,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
-/**
- * PairListComparisonController handles the logistic of comparing two pairs with different weights against each other
- * and choosing the better one
- */
 
 public class PairListComparisonController extends Dialog<PairList> {
     private final LanguageController languageController = LanguageController.getInstance();
@@ -143,10 +139,6 @@ public class PairListComparisonController extends Dialog<PairList> {
         // TODO: this
     }
 
-    /**
-     * method to initialize window to compare groups
-     * @param owner caller of this window
-     */
     public void init(Window owner) {
         try {
             String relPath = "src/main/java/view/fxml/comparePairList.fxml";
@@ -208,10 +200,6 @@ public class PairListComparisonController extends Dialog<PairList> {
         // TODO: not necessary
     }
 
-    /**
-     * method to change first lists weights
-     * @param event that triggered the menu item
-     */
     @FXML
     void editWeightsList1(ActionEvent event) {
         String relPath = "src/main/java/view/fxml/pairingWeights.fxml";
@@ -239,10 +227,6 @@ public class PairListComparisonController extends Dialog<PairList> {
         //event.consume();
     }
 
-    /**
-     * method to change second lists weights
-     * @param event that triggered the menu item
-     */
     @FXML
     void editWeightsList2(ActionEvent event) {
         String relPath = "src/main/java/view/fxml/pairingWeights.fxml";
