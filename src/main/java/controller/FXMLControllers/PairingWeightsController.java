@@ -17,6 +17,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
+/**
+ * PairingWeightsController handels the logistics of changing the pairWeights for creating a pairList
+ */
 public class PairingWeightsController extends Dialog<PairingWeights> {
     private final LanguageController languageController = LanguageController.getInstance();
 
@@ -64,6 +67,10 @@ public class PairingWeightsController extends Dialog<PairingWeights> {
         // To circumvent this problem, we added an addChangeListener method to LanguageController.
     }
 
+    /**
+     * method to initialize the window of pairingWeights
+     * @param owner caller of this window
+     */
     public void init(Window owner) {
         try {
             String relPath = "src/main/java/view/fxml/pairingWeights.fxml";
