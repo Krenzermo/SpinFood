@@ -1244,8 +1244,8 @@ public class MainController {
         groupIdentNumber = groupList.getIdentNumber();
         pairIdentNumber = pairList.getIdentNumber();
 
-        updatePairTable();
-        updateGroupTable();
+        replaceGroupData();
+        updateTables();
 
         if (state.getPrev() == null) {
             undo.setDisable(true);
