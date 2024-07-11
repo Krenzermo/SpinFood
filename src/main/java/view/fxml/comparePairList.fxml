@@ -18,12 +18,6 @@
          <children>
             <MenuBar AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
               <menus>
-                  <Menu mnemonicParsing="false" text="Öffnen">
-                    <items>
-                      <MenuItem fx:id="openList1MenuItem" mnemonicParsing="false" onAction="#openList1FileChooser" text="Liste 1 öffnen..." />
-                        <MenuItem fx:id="openList2MenuItem" mnemonicParsing="false" onAction="#openList2FileChooser" text="Liste 2 öffnen..." />
-                    </items>
-                  </Menu>
                 <Menu mnemonicParsing="false" text="Erstellen">
                   <items>
                     <MenuItem fx:id="editWeightsList1MenuItem" mnemonicParsing="false" onAction="#editWeightsList1" text="Liste 1 erstellen" />

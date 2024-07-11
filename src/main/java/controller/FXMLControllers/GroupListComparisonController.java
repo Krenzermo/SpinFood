@@ -158,7 +158,7 @@ public class GroupListComparisonController extends Dialog<GroupList>{
             initOwner(owner);
             initModality(Modality.APPLICATION_MODAL);
             setResizable(true);
-            setTitle("Paar Listen vergleichen");
+            setTitle("Gruppen Listen vergleichen");
             setDialogPane(dialogPane);
         } catch (IOException e) {
             throw new RuntimeException(e);
