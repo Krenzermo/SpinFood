@@ -19,6 +19,9 @@ import model.person.Participant;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * UnsubscriberController handles the logistics of removing canceled participants from the pairList and groupList
+ */
 public class UnsubscriberController extends Dialog<PairList> {
     private static final LanguageController languageController = LanguageController.getInstance();
 
@@ -50,6 +53,13 @@ public class UnsubscriberController extends Dialog<PairList> {
         // TODO: this
     }
 
+    /** initialize window
+     *
+     * @param participant to be removed
+     * @param pairList to be removed form
+     * @param groupList to be removed from
+     * @param owner caller of window
+     */
     public void initData(Participant participant, PairList pairList, GroupList groupList, Window owner) {
         this.participant = participant;
         this.pairList = pairList;

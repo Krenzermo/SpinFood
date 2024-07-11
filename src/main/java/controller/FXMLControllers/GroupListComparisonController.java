@@ -21,6 +21,10 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * GroupListComparisonController handles the logistic of comparing two groups with different weights against each other
+ * and choosing the better one
+ */
 public class GroupListComparisonController extends Dialog<GroupList>{
     private static final LanguageController languageController = LanguageController.getInstance();
 
@@ -116,6 +120,11 @@ public class GroupListComparisonController extends Dialog<GroupList>{
         // TODO: this
     }
 
+    /**
+     * method to initialize the grouplist comparison window
+     * @param owner caller of the window
+     * @param pairList the pairlist from which the groups are build
+     */
     public void init(Window owner, PairList pairList) {
         this.pairList = pairList;
         try {
@@ -164,7 +173,10 @@ public class GroupListComparisonController extends Dialog<GroupList>{
         return this.groupListOne;
     }
 
-
+    /**
+     * method to edit the weights of the first list
+     * @param event that triggered the menu item
+     */
     @FXML
     void editWeightsList1(ActionEvent event) {
         GroupWeightsController dialog = new GroupWeightsController();
@@ -188,6 +200,10 @@ public class GroupListComparisonController extends Dialog<GroupList>{
         }
     }
 
+    /**
+     * method to edit the weights of the second list
+     * @param event that triggered the menu item
+     */
     @FXML
     void editWeightsList2(ActionEvent event) {
         GroupWeightsController dialog = new GroupWeightsController();
