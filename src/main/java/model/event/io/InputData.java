@@ -9,10 +9,7 @@ import model.person.Name;
 import model.person.Participant;
 import model.kitchen.Kitchen;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
+import java.util.*;
 import java.nio.file.Paths;
 
 /**
@@ -25,12 +22,11 @@ import java.nio.file.Paths;
  * in the corresponding classes in ArrayLists to return them all together
  */
 public class InputData {
-    private ArrayList<Participant> participantInputData;
-    private ArrayList<Pair> pairInputData;
-    private ArrayList<Participant> participantSuccessorList; // List to store participants with overused kitchens
-    private ArrayList<Pair> pairSuccessorList; // List to store pairs with overused kitchens
+    private List<Participant> participantInputData;
+    private List<Pair> pairInputData;
+    private List<Participant> participantSuccessorList; // List to store participants with overused kitchens
+    private List<Pair> pairSuccessorList; // List to store pairs with overused kitchens
     private Location eventLocation;
-    // TODO: add more robust logic for receiving the data
     private String participantDataFilePath;
     private String eventLocationDataFilePath;
     private static final String participantsPathDebug = "src/main/java/data/teilnehmerliste.csv";
@@ -61,6 +57,10 @@ public class InputData {
 
      */
 
+    /**
+     * Private constructor for Singleton pattern.
+     * Initializes lists and maps to manage event data.
+     */
     private InputData() {
         inputData = this;
         this.participantInputData = null;
@@ -73,11 +73,22 @@ public class InputData {
         this.eventLocation = null;
     }
 
+    /**
+     * Initializes the InputData instance with file paths for participant and event location data.
+     *
+     * @param participantDataFilePath The file path for participant data.
+     * @param eventLocationDataFilePath The file path for event location data.
+     */
     public void init(String participantDataFilePath, String eventLocationDataFilePath) {
         initEventLocation(eventLocationDataFilePath);
         initParticipants(participantDataFilePath);
     }
 
+    /**
+     * Initializes participant-related data structures and file path.
+     *
+     * @param participantDataFilePath The file path for participant data.
+     */
     public void initParticipants(String participantDataFilePath) {
         this.participantInputData = new ArrayList<>();
         this.participantSuccessorList = new ArrayList<>();
@@ -88,6 +99,11 @@ public class InputData {
         saveParticipants();
 
     }
+
+    /**
+     *  sets the eventlocation filepath
+     * @param eventLocationDataFilePath the path to the eventlocation file
+     */
 
     public void initEventLocation(String eventLocationDataFilePath) {
         this.eventLocationDataFilePath = eventLocationDataFilePath;
@@ -109,6 +125,10 @@ public class InputData {
         return inputData;
     }
 
+    /**
+     *
+     * @return inputData for debugging and testing
+     */
     public static synchronized InputData getInstanceDebug() {
         if (inputData == null) {
             InputData inputData = new InputData();
@@ -338,7 +358,7 @@ public class InputData {
      * method to get the arraylist of the participants from the inputData
      * @return Arraylist of participants
      */
-    public ArrayList<Participant> getParticipantInputData() {
+    public List<Participant> getParticipantInputData() {
         return participantInputData;
     }
 
@@ -346,7 +366,7 @@ public class InputData {
      * method to get the arraylist of the pairs from the inputData
      * @return Arraylist of pairs
      */
-    public ArrayList<Pair> getPairInputData() {
+    public List<Pair> getPairInputData() {
         return pairInputData;
     }
 
@@ -354,7 +374,7 @@ public class InputData {
      * method to get the list of participant successors from the inputData
      * @return Arraylist of participant successors
      */
-    public ArrayList<Participant> getParticipantSuccessorList() {
+    public List<Participant> getParticipantSuccessorList() {
         return participantSuccessorList;
     }
 
@@ -362,7 +382,7 @@ public class InputData {
      * method to get the list of pair successors from the inputData
      * @return Arraylist of pair successors
      */
-    public ArrayList<Pair> getPairSuccessorList() {
+    public List<Pair> getPairSuccessorList() {
         return pairSuccessorList;
     }
 

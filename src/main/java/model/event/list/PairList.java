@@ -1,5 +1,6 @@
 package model.event.list;
 
+import model.event.collection.Group;
 import model.event.io.InputData;
 import model.event.list.weight.PairingWeights;
 import model.event.collection.Pair;
@@ -11,6 +12,8 @@ import model.person.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * The PairList class represents a collection of pairs of participants.
@@ -24,10 +27,23 @@ import java.util.List;
  */
 public class PairList extends ParticipantCollectionList<Pair> {
     private static final InputData inputData = InputData.getInstance();
-    private final IdentNumber identNumber;
-    private final List<Participant> successors = new ArrayList<>();
+    private IdentNumber<Pair> identNumber;
+    private List<Participant> successors = new ArrayList<>();
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
     private final PairingWeights pairingWeights123;
+
+    /**
+     * Copy constructor for class {@link PairList}.
+     * Copies all fields but keeps none of the {@link Group} class information.
+     * This constructor returns a deep copy (also copies the {@link Participant} successor and the {@link Pair} instances).
+     */
+    public PairList(PairList pairList) {
+        this.identNumber = new PairIdentNumber((PairIdentNumber) pairList.identNumber);
+        successors = pairList.getSuccessors().stream().map(Participant::new).collect(Collectors.toList());
+        pairIdCounter = pairList.pairIdCounter;
+        pairingWeights123 = pairList.pairingWeights123;
+        setList(new ArrayList<>(pairList.getPairs().stream().map(Pair::new).collect(Collectors.toList())));
+    }
 
     /**
      * Constructs a PairList object by sorting participants and building the best pairs.
@@ -122,7 +138,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights  the weights used for pairing criteria
      * @return the score for pairing the two participants
      */
-    public static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+    private static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         double score = 0;
         double kitchenScore = compareKitchen(participant1, testedParticipant);
         if (kitchenScore == Double.NEGATIVE_INFINITY) {
@@ -143,7 +159,6 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @return the score based on the kitchen availability comparison
      */
 
-    //TODO fix gleiche küche unmöglich
     private static double compareKitchen(Participant participant1, Participant testedParticipant) {
 	    return switch (participant1.isHasKitchen()) {
 		    case YES -> (testedParticipant.isHasKitchen() == KitchenAvailability.YES &&
@@ -301,7 +316,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      *
      * @return the identifying number for the list of pairs
      */
-    private IdentNumber deriveIdentNumber() {
+    public IdentNumber<Pair> deriveIdentNumber() {
         return new PairIdentNumber(this);
     }
 
@@ -311,7 +326,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @return the identifying number for this PairList
      */
     @Override
-    public IdentNumber getIdentNumber() {
+    public IdentNumber<Pair> getIdentNumber() {
         return identNumber;
     }
 
@@ -377,11 +392,22 @@ public class PairList extends ParticipantCollectionList<Pair> {
         System.out.println("AllVeggie: " + (veganParticipants + veggieParticipants));
     }
 
+    /**
+     * method to return and increment the pairIdCounter variable
+     * @return the incremented variable
+     */
     public int getPairIdCounterAndIncrement(){
         return pairIdCounter++;
     }
 
     public PairingWeights getPairingWeights() {
         return pairingWeights123;
+    }
+
+    /**
+     * method to update the IdentNumber object after a manual update
+     */
+    public void updateIdentNumbers() {
+        this.identNumber = deriveIdentNumber();
     }
 }

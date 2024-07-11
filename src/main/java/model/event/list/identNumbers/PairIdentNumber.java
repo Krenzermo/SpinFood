@@ -8,7 +8,15 @@ import model.event.list.ParticipantCollectionList;
  *
  * @author Daniel Hinkelmann
  */
-public class PairIdentNumber extends IdentNumber{
+public class PairIdentNumber extends IdentNumber<Pair> {
+
+
+    public PairIdentNumber(PairIdentNumber num) {
+        super(num.participantCollectionList);
+        genderDiversity = num.genderDiversity;
+        ageDifference = num.ageDifference;
+        preferenceDeviation = num.preferenceDeviation;
+    }
 
     public PairIdentNumber(PairList participantCollection) {
         super(participantCollection);
@@ -18,19 +26,19 @@ public class PairIdentNumber extends IdentNumber{
     }
 
     @Override
-    protected double calcGenderDiversity(ParticipantCollectionList participantCollection) {
+    protected double calcGenderDiversity(ParticipantCollectionList<Pair> participantCollection) {
         PairList pairList = (PairList) participantCollection;
         return pairList.getPairs().stream().mapToDouble(Pair::getGenderDeviation).sum() / numElems;
     }
 
     @Override
-    protected double calcAgeDifference(ParticipantCollectionList participantCollection) {
+    protected double calcAgeDifference(ParticipantCollectionList<Pair> participantCollection) {
         PairList pairList = (PairList) participantCollection;
         return pairList.getPairs().stream().mapToInt(Pair::getAgeDifference).sum() / (double)numElems;
     }
 
     @Override
-    protected double calcPreferenceDeviation(ParticipantCollectionList participantCollection) {
+    protected double calcPreferenceDeviation(ParticipantCollectionList<Pair> participantCollection) {
         PairList pairList = (PairList) participantCollection;
         return pairList.getPairs().stream().mapToInt(Pair::getPreferenceDeviation).sum() / (double)numElems;
     }

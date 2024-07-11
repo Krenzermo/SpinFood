@@ -40,10 +40,26 @@ public class Pair implements ParticipantCollection {
     //private static int COUNTER = 0;
     private static final InputData inputData = InputData.getInstance();
 
+    /**
+     * Constructs a Pair object with two participants and assigns an ID.
+     *
+     * @param participant1 The first participant of the pair.
+     * @param participant2 The second participant of the pair.
+     * @param idCounter    The ID counter for uniquely identifying this pair.
+     */
+
     public Pair(Participant participant1, Participant participant2, int idCounter) {
         this(participant1, participant2, false, idCounter);
     }
 
+    /**
+     * Constructs a Pair object with two participants, signed up together status, and assigns an ID.
+     *
+     * @param participant1     The first participant of the pair.
+     * @param participant2     The second participant of the pair.
+     * @param signedUpTogether Indicates if the participants signed up together.
+     * @param idCounter        The ID counter for uniquely identifying this pair.
+     */
     public Pair(Participant participant1, Participant participant2, boolean signedUpTogether, int idCounter) {
         id = idCounter;
         participants[0] = participant1;
@@ -56,8 +72,9 @@ public class Pair implements ParticipantCollection {
     }
 
     /**
-     * Creates a shallow Copy of the specified {@link Pair}.
-     * That copy does not contain the {@link Group} information of the original {@link Pair}
+     * Copy constructor for class {@link Pair}.
+     * Copies all fields but not the {@link Group} class information.
+     * This constructor returns a deep copy (also copies the {@link Participant} instances).
      *
      * @param pair the specified {@link Pair}
      */
@@ -70,6 +87,11 @@ public class Pair implements ParticipantCollection {
         this.foodType = pair.foodType;
         this.signedUpTogether = pair.signedUpTogether;
         this.id = pair.id;
+        this.kitchenOf = pair.kitchenOf;
+        this.course = pair.course;
+        this.starterNumber = pair.starterNumber;
+        this.mainNumber = pair.mainNumber;
+        this.dessertNumber = pair.dessertNumber;
     }
 
     private FoodType autoAssignFoodType() {
@@ -93,7 +115,7 @@ public class Pair implements ParticipantCollection {
     }
 
     @Override
-    public IdentNumber getIdentNumber() {
+    public IdentNumber<Pair> getIdentNumber() {
         // TODO: this
         return null;
     }
@@ -141,6 +163,11 @@ public class Pair implements ParticipantCollection {
         this.course = course;
     }
 
+    /**
+     * sets the groups for the pair
+     *
+     * @param groups the specified {@link Group} instances
+     */
     public void setGroups(Group[] groups) {
         for (Group group: groups)  {
             // TODO: may need to be changed once Group is implemented.
@@ -160,7 +187,11 @@ public class Pair implements ParticipantCollection {
      * Clears this {@link Pair} of the instances of {@link Group}.
      */
     public void clearGroups() {
-        groups = new Group[] {null, null, null};
+        groups = new Group[]{null, null, null};
+        this.setCourse(null);
+        this.setStarterNumber(0);
+        this.setMainNumber(0);
+        this.setDessertNumber(0);
     }
 
     /**
@@ -175,7 +206,7 @@ public class Pair implements ParticipantCollection {
             throw new RuntimeException("No kitchen assigned to either participant!");
         }
 
-        // assign kitchen if signedUpTogether or one does not have a kitchen
+        // assign a kitchen if signedUpTogether or one does not have a kitchen
         if (signedUpTogether) {
             kitchenOf = false;
             return participants[0].getKitchen();
@@ -209,7 +240,7 @@ public class Pair implements ParticipantCollection {
             }
         }
 
-        // here if both have a kitchen or both maybe have a kitchen
+        // here, if both have a kitchen or both maybe have a kitchen
 
         Location eventLocation = inputData.getEventLocation();
 
@@ -256,6 +287,8 @@ public class Pair implements ParticipantCollection {
     }
 
     /**
+     * Adds a participant to the pair.
+     *
      * @param participant element whose presence in this collection is to be ensured
      * @return {@code true} if the operation was successful, {@code false} otherwise
      * @throws IllegalArgumentException if this ParticipantCollection already contains the Element
@@ -310,9 +343,11 @@ public class Pair implements ParticipantCollection {
     @Override
     public String toString() {
         return "{Participant1: " + participants[0] + " Participant2: " + participants[1] + kitchen + "}";
+        //return starterNumber + " " + mainNumber + " " + dessertNumber;
     }
 
-    /** Creates an Output String for this pair object in the following format:
+    /**
+     * Creates an Output String for this pair object in the following format:
      * <p>- Name of Participant 1 </p>
      * <p> - Name of Participant 2 </p>
      * <p> - Signed up together? </p>
@@ -334,7 +369,8 @@ public class Pair implements ParticipantCollection {
         return participants[0].getName().asOutputString() + ";" + participants[1].getName().asOutputString() + ";" + signedUpTogether + ";" + kitchen.asOutputString() + ";" + foodType.getOtherName() + ";" + id + ";" + starterNumber + ";" + mainNumber + ";" + dessertNumber + ";" + kitchenOf + ";" + s;
     }
 
-    /** Calculates the deviation of Food preferences of the Participants of this Pair
+    /**
+     * Calculates the deviation of Food preferences of the Participants of this Pair
      *
      * @return The Preference deviation
      */
@@ -342,7 +378,8 @@ public class Pair implements ParticipantCollection {
         return participants[0].getFoodType().deviation.apply(participants[1].getFoodType());
     }
 
-    /** Calculates the absolute deviation from .5 of the women-to-participants ratio
+    /**
+     * Calculates the absolute deviation from .5 of the women-to-participants ratio
      *
      * @return The absolute gender deviation
      */
@@ -350,6 +387,9 @@ public class Pair implements ParticipantCollection {
         return Math.abs(getParticipants().stream().map(Participant::getGender).filter(g -> g == Gender.FEMALE).count() / 2d - .5);
     }
 
+    /**
+     * @return the distance from the pairs kitchen to the eventlocation
+     */
     public double getDistance() {
         return kitchen.location().getDistance(InputData.getInstance().getEventLocation());
     }

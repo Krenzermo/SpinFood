@@ -17,6 +17,15 @@ public class GroupWeights extends Weights {
     }
 
     /**
+     * Copy constructor
+     * @param weights The weights to copy
+     */
+    public GroupWeights(GroupWeights weights) {
+        super(weights.ageDifferenceWeight, weights.genderDifferenceWeight, weights.foodPreferenceWeight);
+        distanceWeight = weights.distanceWeight;
+    }
+
+    /**
      * Gets the weight for distance.
      *
      * @return the weight for distance

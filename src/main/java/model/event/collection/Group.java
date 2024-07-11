@@ -4,11 +4,13 @@ import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import model.event.Course;
+import model.event.list.GroupList;
 import model.event.list.identNumbers.IdentNumber;
 import model.kitchen.Kitchen;
 import model.person.AgeRange;
 import model.person.Participant;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -32,7 +34,21 @@ public class Group implements ParticipantCollection{
 	private int cookIndex;
 
 
+	/**
+	 * Constructs a Group with the specified pairs, course, and kitchen.
+	 * Sets the pair IDs and determines the cook index based on the kitchen owner.
+	 *
+	 * @param pair1 the first pair in the group
+	 * @param pair2 the second pair in the group
+	 * @param pair3 the third pair in the group
+	 * @param course the course assigned to the group
+	 * @param kitchen the kitchen assigned to the group
+	 */
 	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen) {
+		this(pair1, pair2, pair3, course, kitchen, COUNTER++);
+	}
+
+	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen, int id) {
 		id = COUNTER++;
 		this.pairs = new Pair[]{pair1, pair2, pair3};
 		this.course = course;
@@ -42,6 +58,22 @@ public class Group implements ParticipantCollection{
 		if (cookIndex < 0) {
 			throw new IllegalStateException("Couldn't find any owner of kitchen: " + kitchen);
 		}
+	}
+
+	/**
+	 * Copy constructor for class {@link Group}.
+	 * Copies all fields but does not copy the {@link Group} class information.
+	 * This constructor returns a deep copy (also copies the {@link Pair} instances).
+	 *
+	 * @param group the specified {@link Group}
+	 */
+	public Group(Group group) {
+		id = group.id;
+		course = group.course;
+		kitchen = group.kitchen;
+		cookIndex = group.cookIndex;
+		Pair[] temp = group.getPairs();
+		pairs = new Pair[]{new Pair(temp[0]), new Pair(temp[1]), new Pair(temp[2])};
 	}
 
 	private void setPairIds(){
@@ -80,7 +112,7 @@ public class Group implements ParticipantCollection{
 	 * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollection
 	 */
 	@Override
-	public IdentNumber getIdentNumber() {
+	public IdentNumber<Group> getIdentNumber() {
 		// TODO: this
 		return null;
 	}
@@ -99,7 +131,6 @@ public class Group implements ParticipantCollection{
 	 */
 	@Override
 	public Kitchen getKitchen() {
-		// TODO: this
 		return kitchen;
 	}
 
@@ -126,7 +157,6 @@ public class Group implements ParticipantCollection{
 	 */
 	@Override
 	public Course getCourse() {
-		// TODO: this
 		return course;
 	}
 
@@ -139,7 +169,7 @@ public class Group implements ParticipantCollection{
 	@Override
 	public boolean add(Participant participant) {
 		// TODO: this
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -151,25 +181,40 @@ public class Group implements ParticipantCollection{
 	@Override
 	public boolean remove(Object o) {
 		// TODO: this
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
+	/**
+	 * @return a string representation of the Group in a specific output format
+	 */
 	public String asOutputString() {
 		return id + ";" + course.getAsInt() + ";" + pairs[0].asOutputString() + ";" + pairs[1].asOutputString() + ";" + pairs[2].asOutputString();
 	}
 
+	/**
+	 * @return the pairs in this Group
+	 */
 	public Pair[] getPairs() {
 		return pairs;
 	}
 
+	/**
+	 * @return the ID of this Group
+	 */
 	public int getId() {
 		return id;
 	}
 
+	/**
+	 * @return the ID of this Group as an observable value
+	 */
 	public ObservableValue<Integer> getIdAsObservable() {
 		return new SimpleIntegerProperty(id).asObject();
 	}
 
+	/**
+	 * @return the ID of the cook pair in this Group as an observable value
+	 */
 	public ObservableValue<Integer> getCookPairIdAsObservable() {
 		return new SimpleIntegerProperty(pairs[cookIndex].getId()).asObject();
 	}

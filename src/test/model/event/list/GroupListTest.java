@@ -15,17 +15,26 @@ import org.junit.jupiter.api.Test;
 import java.security.Key;
 import java.util.*;
 import java.util.stream.Collectors;
-
+/**
+ * Unit tests for the GroupList class.
+ *
+ * Tests the creation of a groupList and the legality of the created groups and groupList.
+ */
 class GroupListTest {
 	private static PairList pairs;
-
+	/**
+	 * Sets up the test data before each test.
+	 */
 	@BeforeEach
 	void setUp() {
 		InputData inputData = InputData.getInstanceDebug();
 		PairingWeights pairingWeights = new PairingWeights(1, 1, 1);
 		pairs = new PairList(pairingWeights);
 	}
-
+	/**
+	 * Tests the creation of a GroupList with default weights of 1,1,1,1.
+	 * * Additionally tests for legality of the groupList trough helperMethods
+	 */
 	@Test
 	void groupListTest() {
 		GroupWeights weights = new GroupWeights(1,1,1,1);
@@ -35,7 +44,10 @@ class GroupListTest {
 		Assertions.assertTrue(eachGroupIdContainedThrice(groups));
 		Assertions.assertTrue(eachKitchenOnlyUsedOncePerCourse(groups));
 	}
-
+	/**
+	 * Tests the creation of a GroupList with varied group weights.
+	 * Additionally tests for legality of the groupLists trough helperMethods
+	 */
 	@Test
 	void groupedListTestVariedGroupWeights() {
 		GroupWeights weights1 = new GroupWeights(1,2,0,1);
@@ -130,6 +142,13 @@ class GroupListTest {
 				.allMatch(count -> count == 3);
 	}
 
+	/**
+	 * Checks if each kitchen is only used once per course.
+	 *
+	 * @param groupList the {@link GroupList} containing the instances of {@link Group}
+	 * @return {@code true} if each kitchen is only used once per course, {@code false} otherwise
+	 */
+
 	boolean eachKitchenOnlyUsedOncePerCourse(GroupList groupList) {
 		 return groupList.stream()
 				 .collect(Collectors.groupingBy(Group::getKitchen))
@@ -138,6 +157,12 @@ class GroupListTest {
 				 .allMatch(this::onlyOneKitchenPerCourse);
 	}
 
+	/**
+	 * Checks if only one kitchen is used per course.
+	 *
+	 * @param groupList the list of groups to be checked
+	 * @return {@code true} if only one kitchen is used per course, {@code false} otherwise
+	 */
 	boolean onlyOneKitchenPerCourse(List<Group> groupList) {
 		 return groupList.stream()
 				 .collect(Collectors.groupingBy(Group::getCourse))

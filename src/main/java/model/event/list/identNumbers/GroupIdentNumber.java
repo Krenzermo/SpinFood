@@ -7,8 +7,10 @@ import model.event.collection.Pair;
 import model.event.list.GroupList;
 import model.event.list.ParticipantCollectionList;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**A class that holds and calculates the IdentNumbers for a {@link Group}
  *
@@ -16,11 +18,30 @@ import java.util.stream.Collectors;
  * @author Davide Piacenza
  *
  */
-public class GroupIdentNumber extends IdentNumber {
-    private double averagePathLength;
+public class GroupIdentNumber extends IdentNumber<Group> {
+    private final double averagePathLength;
     private double totalPathLength;
-    private double pathLengthStdDev;
+    private final double pathLengthStdDev;
     private final GroupList groupList;
+
+
+    public GroupIdentNumber(GroupIdentNumber num) {
+        super(new GroupList(num.groupList));
+        groupList = new GroupList(num.groupList);
+        genderDiversity = num.genderDiversity;
+        ageDifference = num.ageDifference;
+        preferenceDeviation = num.preferenceDeviation;
+        averagePathLength = num.averagePathLength;
+        pathLengthStdDev = num.pathLengthStdDev;
+    }
+
+
+    /**
+     * Constructs a GroupIdentNumber object with the specified GroupList.
+     * Initializes various statistics related to group characteristics and pair paths.
+     *
+     * @param participantCollection The GroupList from which to calculate IdentNumbers.
+     */
 
     public GroupIdentNumber(GroupList participantCollection) {
         super(participantCollection);
@@ -35,7 +56,7 @@ public class GroupIdentNumber extends IdentNumber {
     }
 
     @Override
-    protected double calcGenderDiversity(ParticipantCollectionList participantCollection) {
+    protected double calcGenderDiversity(ParticipantCollectionList<Group> participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
                 .mapToDouble(this::calculateGroupGenderDeviation)
@@ -43,7 +64,7 @@ public class GroupIdentNumber extends IdentNumber {
     }
 
     @Override
-    protected double calcAgeDifference(ParticipantCollectionList participantCollection) {
+    protected double calcAgeDifference(ParticipantCollectionList<Group> participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
                 .mapToDouble(this::calculateGroupAgeDifference)
@@ -51,16 +72,23 @@ public class GroupIdentNumber extends IdentNumber {
     }
 
     @Override
-    protected double calcPreferenceDeviation(ParticipantCollectionList participantCollection) {
+    protected double calcPreferenceDeviation(ParticipantCollectionList<Group> participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
                 .mapToDouble(this::calculateGroupPreferenceDeviation)
                 .average().orElse(0.0);
     }
 
-    private double calcTotalPathLength(ParticipantCollectionList participantCollection) {
+    private double calcTotalPathLength(ParticipantCollectionList<Group> participantCollection) {
         List<Pair> pairs = getAllPairs(participantCollection);
-        return pairs.stream()
+        List<Pair> pairsNoDuplicate = new ArrayList<>();
+        for (Pair pair : pairs ){
+            if (!pairsNoDuplicate.contains(pair)){
+                pairsNoDuplicate.add(pair);
+            }
+
+        }
+        return pairsNoDuplicate.stream()
                 .mapToDouble(this::calculateTotalDistanceForPair)
                 .sum();
     }
@@ -87,10 +115,10 @@ public class GroupIdentNumber extends IdentNumber {
         return totalDistance;
     }
 
-    private double calcPathLengthStdDev(ParticipantCollectionList participantCollection) {
+    private double calcPathLengthStdDev(ParticipantCollectionList<Group> participantCollection) {
         List<Double> pathLengths = getAllPairs(participantCollection).stream()
                 .map(this::calculateTotalDistanceForPair)
-                .collect(Collectors.toList());
+                .toList();
 
         double mean = pathLengths.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
         double variance = pathLengths.stream().mapToDouble(length -> Math.pow(length - mean, 2)).average().orElse(0.0);
@@ -104,14 +132,14 @@ public class GroupIdentNumber extends IdentNumber {
                 .orElse(null);
     }
 
-    private List<Pair> getAllPairs(ParticipantCollectionList participantCollection) {
+    private List<Pair> getAllPairs(ParticipantCollectionList<Group> participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
-                .flatMap(group -> List.of(group.getPairs()).stream())
+                .flatMap(group -> Stream.of(group.getPairs()))
                 .collect(Collectors.toList());
     }
 
-    private int getTotalPairs(ParticipantCollectionList participantCollection) {
+    private int getTotalPairs(ParticipantCollectionList<Group> participantCollection) {
         return getAllPairs(participantCollection).size();
     }
 
@@ -143,14 +171,26 @@ public class GroupIdentNumber extends IdentNumber {
         return groupDeviation;
     }
 
+    /**
+     *
+     * @return the averagePathLength
+     */
     public double getAveragePathLength() {
         return averagePathLength;
     }
 
+    /**
+     *
+     * @return the totalPathLength
+     */
     public double getTotalPathLength() {
         return totalPathLength;
     }
 
+    /**
+     *
+     * @return the standard deviation of the pathLength
+     */
     public double getPathLengthStdDev() {
         return pathLengthStdDev;
     }
@@ -163,8 +203,20 @@ public class GroupIdentNumber extends IdentNumber {
                 ", Geschlechterdiversität: " + genderDiversity +
                 ", Altersunterschied: " + ageDifference +
                 ", Vorliebenabweichung: " + preferenceDeviation +
-                ", \nDurchschnittliche Pfadlänge: " + averagePathLength +
+                ", Durchschnittliche Pfadlänge: " + averagePathLength +
                 ", Gesamte Pfadlänge: " + totalPathLength +
                 ", Standardabweichung der Pfadlängen: " + pathLengthStdDev;
+    }
+    @Override
+    public List<String> asList() {
+        return List.of(
+                "Anzahl Paare:\t\t" + numElems,
+                "Anzahl Nachrücker:\t" + numSuccessors,
+                "Altersdifferenz:\t\t" + Math.round(ageDifference * 1_000_000) / 1_000_000d,
+                "Geschlechterdiversität:\t" + Math.round(genderDiversity * 1_000_000) / 1_000_000d,
+                "Vorliebenabweichung:\t" + Math.round(preferenceDeviation * 1_000_000) / 1_000_000d,
+                "Durchschnittliche Pfadlänge:\t" + Math.round(averagePathLength * 1_000_000) / 1_000_000d
+
+        );
     }
 }

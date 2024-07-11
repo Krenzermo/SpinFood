@@ -18,15 +18,16 @@ import java.util.List;
  * @author Finn Brecher
  * @author Daniel Hinkelmann
  */
-public abstract class IdentNumber {
-	//TODO: this
+public abstract class IdentNumber<E extends ParticipantCollection> {
+    protected ParticipantCollectionList<E> participantCollectionList;
     protected int numElems;
     protected int numSuccessors;
     protected double genderDiversity;
     protected double ageDifference;
     protected double preferenceDeviation;
 
-    protected IdentNumber(ParticipantCollectionList participantCollection) {
+    protected IdentNumber(ParticipantCollectionList<E> participantCollection) {
+        this.participantCollectionList = participantCollection;
         numElems = calcNumElems(participantCollection);
         numSuccessors = calcNumSuccessors(participantCollection);
     }
@@ -36,7 +37,7 @@ public abstract class IdentNumber {
      * @param participantCollection The List
      * @return Number of Participants
      */
-    private int calcNumElems(ParticipantCollectionList participantCollection) {
+    private int calcNumElems(ParticipantCollectionList<E> participantCollection) {
         List<? extends ParticipantCollection> list;
         list = participantCollection instanceof PairList pairList ? pairList.getPairs() :
                                                                     ((GroupList)participantCollection).getGroups();
@@ -48,7 +49,7 @@ public abstract class IdentNumber {
      * @param participantCollection The List
      * @return The number of Successors
      */
-    private int calcNumSuccessors(ParticipantCollectionList participantCollection) {
+    private int calcNumSuccessors(ParticipantCollectionList<E> participantCollection) {
         List<Participant> list;
         list = participantCollection instanceof PairList pairList ? pairList.getSuccessors() :
                                                                     ((GroupList)participantCollection).getSuccessors();
@@ -60,27 +61,31 @@ public abstract class IdentNumber {
      * @param participantCollection The List
      * @return The gender diversity
      */
-    protected abstract double calcGenderDiversity(ParticipantCollectionList participantCollection);
+    protected abstract double calcGenderDiversity(ParticipantCollectionList<E> participantCollection);
 
     /** Calculates the average age difference for a ParticipantCollectionList
      *
      * @param participantCollection The List
      * @return The age difference
      */
-    protected abstract double calcAgeDifference(ParticipantCollectionList participantCollection);
+    protected abstract double calcAgeDifference(ParticipantCollectionList<E> participantCollection);
 
     /** Calculates the deviation in food preferences of this ParticipantCollectionList
      *
      * @param participantCollection The List
      * @return The deviation in food preferences
      */
-    protected abstract double calcPreferenceDeviation(ParticipantCollectionList participantCollection);
+    protected abstract double calcPreferenceDeviation(ParticipantCollectionList<E> participantCollection);
 
     @Override
     public String toString() {
         return "Anzahl: " + numElems + " Nachrücker: " + numSuccessors + " Geschlechterdiversität: " + genderDiversity + " Altersunterschied: " + ageDifference + " Vorliebenabweichung: " + preferenceDeviation;
     }
 
+    /**
+     *
+     * @return the identNumbers as a list for the GUI
+     */
     public List<String> asList() {
         return List.of(
                 "Anzahl Paare:\t\t" + numElems,

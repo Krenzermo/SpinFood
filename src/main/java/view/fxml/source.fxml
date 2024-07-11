@@ -32,7 +32,7 @@
                         <MenuItem fx:id="savePairListMenuItem" mnemonicParsing="false" onAction="#savePairList" text="Paarliste Speichern" />
                         <MenuItem fx:id="saveGroupListMenuItem" mnemonicParsing="false" onAction="#saveGroupList" text="Gruppenliste Speichern" />
                         <MenuItem fx:id="savePartSuccessorsMenuItem" mnemonicParsing="false" onAction="#saveParticipantSuccessors" text="Nachfolgerliste Speichern" />
-                        <MenuItem fx:id="savePairSuccessorsMenuItem" mnemonicParsing="false" onAction="#savePairSuccessorsMenuItem" text="Nachfolger-Paar Liste Speichern" />
+                        <MenuItem fx:id="savePairSuccessorsMenuItem" mnemonicParsing="false" onAction="#savePairSuccessors" text="Nachfolger-Paar Liste Speichern" />
                   </items>
                 </Menu>
                 <Menu mnemonicParsing="false" text="Erstellen">
@@ -77,6 +77,7 @@
                                        <children>
                                           <ButtonBar nodeOrientation="RIGHT_TO_LEFT" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                             <buttons>
+                                                <Button fx:id="undo" mnemonicParsing="false" onAction="#goBackState" text="Zurück" />
                                                 <Button fx:id="splitPairButton" disable="true" mnemonicParsing="false" onAction="#splitPair" text="Paar trennen" />
                                               <Button fx:id="createPairButton" disable="true" mnemonicParsing="false" onAction="#createPair" text="Paar erstellen" />
                                                 <Button fx:id="doPairSuccessorsButton" disable="true" mnemonicParsing="false" onAction="#doPairSuccessorsMethod" text="Nachfolger Paaren" />
