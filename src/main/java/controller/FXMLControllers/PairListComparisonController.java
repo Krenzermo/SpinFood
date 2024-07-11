@@ -115,12 +115,16 @@ public class PairListComparisonController extends Dialog<PairList> {
     @FXML
     private ListView<String> identNumbersList2;
 
+    @FXML
+    private ButtonType acceptList1ButtonType;
+
+    @FXML
+    private ButtonType acceptList2ButtonType;
+
     private PairList pairList1;
     private IdentNumber pairIdentNumber1;
     private PairList pairList2;
     private IdentNumber pairIdentNumber2;
-    private ButtonType acceptList1ButtonType;
-    private ButtonType acceptList2ButtonType;
 
     @FXML
     private void initialize() {

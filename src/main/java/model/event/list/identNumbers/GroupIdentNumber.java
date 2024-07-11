@@ -10,6 +10,7 @@ import model.event.list.ParticipantCollectionList;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**A class that holds and calculates the IdentNumbers for a {@link Group}
  *
@@ -17,10 +18,10 @@ import java.util.stream.Collectors;
  * @author Davide Piacenza
  *
  */
-public class GroupIdentNumber extends IdentNumber {
-    private double averagePathLength;
+public class GroupIdentNumber extends IdentNumber<Group> {
+    private final double averagePathLength;
     private double totalPathLength;
-    private double pathLengthStdDev;
+    private final double pathLengthStdDev;
     private final GroupList groupList;
 
 
@@ -55,7 +56,7 @@ public class GroupIdentNumber extends IdentNumber {
     }
 
     @Override
-    protected double calcGenderDiversity(ParticipantCollectionList participantCollection) {
+    protected double calcGenderDiversity(ParticipantCollectionList<Group> participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
                 .mapToDouble(this::calculateGroupGenderDeviation)
@@ -63,7 +64,7 @@ public class GroupIdentNumber extends IdentNumber {
     }
 
     @Override
-    protected double calcAgeDifference(ParticipantCollectionList participantCollection) {
+    protected double calcAgeDifference(ParticipantCollectionList<Group> participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
                 .mapToDouble(this::calculateGroupAgeDifference)
@@ -71,14 +72,14 @@ public class GroupIdentNumber extends IdentNumber {
     }
 
     @Override
-    protected double calcPreferenceDeviation(ParticipantCollectionList participantCollection) {
+    protected double calcPreferenceDeviation(ParticipantCollectionList<Group> participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
                 .mapToDouble(this::calculateGroupPreferenceDeviation)
                 .average().orElse(0.0);
     }
 
-    private double calcTotalPathLength(ParticipantCollectionList participantCollection) {
+    private double calcTotalPathLength(ParticipantCollectionList<Group> participantCollection) {
         List<Pair> pairs = getAllPairs(participantCollection);
         List<Pair> pairsNoDuplicate = new ArrayList<>();
         for (Pair pair : pairs ){
@@ -114,10 +115,10 @@ public class GroupIdentNumber extends IdentNumber {
         return totalDistance;
     }
 
-    private double calcPathLengthStdDev(ParticipantCollectionList participantCollection) {
+    private double calcPathLengthStdDev(ParticipantCollectionList<Group> participantCollection) {
         List<Double> pathLengths = getAllPairs(participantCollection).stream()
                 .map(this::calculateTotalDistanceForPair)
-                .collect(Collectors.toList());
+                .toList();
 
         double mean = pathLengths.stream().mapToDouble(Double::doubleValue).average().orElse(0.0);
         double variance = pathLengths.stream().mapToDouble(length -> Math.pow(length - mean, 2)).average().orElse(0.0);
@@ -131,14 +132,14 @@ public class GroupIdentNumber extends IdentNumber {
                 .orElse(null);
     }
 
-    private List<Pair> getAllPairs(ParticipantCollectionList participantCollection) {
+    private List<Pair> getAllPairs(ParticipantCollectionList<Group> participantCollection) {
         GroupList groupList = (GroupList) participantCollection;
         return groupList.getGroups().stream()
-                .flatMap(group -> List.of(group.getPairs()).stream())
+                .flatMap(group -> Stream.of(group.getPairs()))
                 .collect(Collectors.toList());
     }
 
-    private int getTotalPairs(ParticipantCollectionList participantCollection) {
+    private int getTotalPairs(ParticipantCollectionList<Group> participantCollection) {
         return getAllPairs(participantCollection).size();
     }
 

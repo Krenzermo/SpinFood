@@ -10,6 +10,7 @@ import model.kitchen.Kitchen;
 import model.person.AgeRange;
 import model.person.Participant;
 
+import javax.naming.OperationNotSupportedException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -44,6 +45,10 @@ public class Group implements ParticipantCollection{
 	 * @param kitchen the kitchen assigned to the group
 	 */
 	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen) {
+		this(pair1, pair2, pair3, course, kitchen, COUNTER++);
+	}
+
+	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen, int id) {
 		id = COUNTER++;
 		this.pairs = new Pair[]{pair1, pair2, pair3};
 		this.course = course;
@@ -55,12 +60,20 @@ public class Group implements ParticipantCollection{
 		}
 	}
 
-	public Group(Pair pair1, Pair pair2, Pair pair3, Course course, Kitchen kitchen, int id) {
-		this.id = id;
-		this.pairs = new Pair[]{pair1, pair2, pair3};
-		this.course = course;
-		this.kitchen = kitchen;
-		cookIndex = getKitchenOwner(kitchen);
+	/**
+	 * Copy constructor for class {@link Group}.
+	 * Copies all fields but does not copy the {@link Group} class information.
+	 * This constructor returns a deep copy (also copies the {@link Pair} instances).
+	 *
+	 * @param group the specified {@link Group}
+	 */
+	public Group(Group group) {
+		id = group.id;
+		course = group.course;
+		kitchen = group.kitchen;
+		cookIndex = group.cookIndex;
+		Pair[] temp = group.getPairs();
+		pairs = new Pair[]{new Pair(temp[0]), new Pair(temp[1]), new Pair(temp[2])};
 	}
 
 	private void setPairIds(){
@@ -99,7 +112,7 @@ public class Group implements ParticipantCollection{
 	 * @return the {@link IdentNumber} (Identifying Numbers) of this ParticipantCollection
 	 */
 	@Override
-	public IdentNumber getIdentNumber() {
+	public IdentNumber<Group> getIdentNumber() {
 		// TODO: this
 		return null;
 	}
@@ -118,7 +131,6 @@ public class Group implements ParticipantCollection{
 	 */
 	@Override
 	public Kitchen getKitchen() {
-		// TODO: this
 		return kitchen;
 	}
 
@@ -145,7 +157,6 @@ public class Group implements ParticipantCollection{
 	 */
 	@Override
 	public Course getCourse() {
-		// TODO: this
 		return course;
 	}
 
@@ -158,7 +169,7 @@ public class Group implements ParticipantCollection{
 	@Override
 	public boolean add(Participant participant) {
 		// TODO: this
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -170,7 +181,7 @@ public class Group implements ParticipantCollection{
 	@Override
 	public boolean remove(Object o) {
 		// TODO: this
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	/**

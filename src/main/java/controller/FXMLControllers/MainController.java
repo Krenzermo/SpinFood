@@ -52,15 +52,15 @@ public class MainController {
     private final LanguageController languageController = LanguageController.getInstance();
     private PairList pairList;
     private GroupList groupList; // Added groupList for group-related operations
-    private IdentNumber pairIdentNumber;
-    private IdentNumber groupIdentNumber;
+    private IdentNumber<Pair> pairIdentNumber;
+	private IdentNumber<Group> groupIdentNumber;
     private PairingWeights pairingWeights;
     private GroupWeights groupWeights; // Added groupWeights for group-related operations
 
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
 
-    private State state = new State(pairList, groupList);
+    private static State state;
 
     @FXML
     private VBox root;
@@ -377,6 +377,7 @@ public class MainController {
         });
 
          */
+        state = new State(groupList, pairList);
     }
 
     private void bindAllComponents() {
@@ -385,7 +386,6 @@ public class MainController {
 
         // TODO: this
     }
-
 
     protected static <E> void addListenersToTable(TableView<E> tableView) {
         tableView.widthProperty().addListener((observableValue, oldValue, newValue) -> MainController.adjustColumnWidths(tableView));
@@ -413,7 +413,7 @@ public class MainController {
         }
     }
 
-    private TableColumn<?, ?> getClickedColumn(MouseEvent event, TableView<?> tableView) {
+    private static TableColumn<?, ?> getClickedColumn(MouseEvent event, TableView<?> tableView) {
         TableColumn<?, ?> column = null;
         double x = event.getX();
 
@@ -484,7 +484,7 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartList(ActionEvent event) {
-        undo.setDisable(true);
+        //undo.setDisable(true);
         FileChooser fileChooser = new FileChooser();
         ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
         ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
@@ -571,10 +571,12 @@ public class MainController {
 
 
 
+
     /**
      * method to change language to english
      * @param event that triggered the menu item
      */
+
     @FXML
     void changeLanguageToEnglish(ActionEvent event) {
         if (!languageController.getLanguage().equals(Locale.ENGLISH)) {
@@ -583,10 +585,12 @@ public class MainController {
     }
 
 
+
     /**
      * method to save the pairlist to a csv file
      * @param event that triggered the menu item
      */
+
     @FXML
     void savePairList(ActionEvent event) {
         if (groupList == null) {
@@ -638,7 +642,7 @@ public class MainController {
     }
 
     @FXML
-    void savePairSuccessorsMenuItem(ActionEvent event) {
+    void savePairSuccessors(ActionEvent event) {
         // TODO: this
     }
 
@@ -650,7 +654,7 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartLoc(ActionEvent event) {
-        undo.setDisable(true);
+        //undo.setDisable(true);
         FileChooser fileChooser = new FileChooser();
         ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
         ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
@@ -716,7 +720,7 @@ public class MainController {
                 return;
             }
         }
-        state.updateState(pairList, groupWeights);
+        updateState();
         event.consume();
     }
 
@@ -744,6 +748,8 @@ public class MainController {
 
                 replaceGroupData();
                 updateTables();
+                state.init(pairList, groupList);
+                undo.setDisable(true);
 
                 tabPane.getSelectionModel().select(pairTab);
             } catch (NullPointerException e) {
@@ -755,9 +761,7 @@ public class MainController {
                 return;
             }
         }
-        if (groupList != null) {
-            state.updateState(pairList, groupWeights);
-        }
+
         event.consume();
     }
 
@@ -775,10 +779,7 @@ public class MainController {
         replaceGroupData();
         updateTables();
 
-        if (groupList != null) {
-            undo.setDisable(false);
-            state.updateState(pairList, groupWeights);
-        }
+		updateState();
     }
 
     /**
@@ -799,21 +800,18 @@ public class MainController {
             groupList.getSuccessorPairs().add(pair);
             pairList.getSuccessors().removeAll(participants);
 
-            replaceGroupData();
-            updateTables();
+	        replaceGroupData();
+	        updateTables();
         } catch (NullPointerException e) {
-            Alert alert = new Alert(Alert.AlertType.ERROR);
-            alert.setTitle("Fehler");
-            alert.setHeaderText("Ein Fehler ist aufgetreten!");
-            alert.setContentText("Es wurden noch keine Gruppenliste erstellt.");
-            alert.showAndWait();
-            return;
+	        Alert alert = new Alert(Alert.AlertType.ERROR);
+	        alert.setTitle("Fehler");
+	        alert.setHeaderText("Ein Fehler ist aufgetreten!");
+	        alert.setContentText("Es wurden noch keine Gruppenliste erstellt.");
+	        alert.showAndWait();
+	        return;
         }
 
-        if (groupList != null) {
-            undo.setDisable(false);
-            state.updateState(pairList, groupWeights);
-        }
+		updateState();
     }
 
     /**
@@ -833,8 +831,7 @@ public class MainController {
         // replaceGroupData(); // this would make the button do absolutely nothing
         updateTables();
 
-        undo.setDisable(true);
-        state.updateState(pairList, groupWeights);
+        updateState();
     }
 
     /**
@@ -874,8 +871,7 @@ public class MainController {
         }
         updateTables();
 
-        undo.setDisable(true);
-        state.updateState(pairList, groupWeights);
+		updateState();
     }
 
     /**
@@ -993,7 +989,7 @@ public class MainController {
                     if (course == null) {
                         return new SimpleStringProperty("n.V.");
                     }
-                    return course.asProperty();
+                    return course.asObservable();
                 }
         );
         foodTypeColPair.setCellValueFactory(cell -> cell.getValue().getFoodType().asObservable());
@@ -1006,7 +1002,7 @@ public class MainController {
         pairTwoColGroup.setCellValueFactory(cell -> cell.getValue().getPairs()[1].getIdAsObservable());
         pairThreeColGroup.setCellValueFactory(cell -> cell.getValue().getPairs()[2].getIdAsObservable());
         kitchenColGroup.setCellValueFactory(cell -> cell.getValue().getKitchen().asObservable());
-        courseColGroup.setCellValueFactory(cell -> cell.getValue().getCourse().asProperty());
+        courseColGroup.setCellValueFactory(cell -> cell.getValue().getCourse().asObservable());
         cookIDColGroup.setCellValueFactory(cell -> cell.getValue().getCookPairIdAsObservable());
     }
 
@@ -1109,6 +1105,9 @@ public class MainController {
         try {
             PairList temp = dialog.showAndWait().orElse(pairList);
             if (temp != pairList) {
+                if (pairList != null) {
+                    updateState();
+                }
                 pairList = temp;
                 this.pairIdentNumber = pairList.getIdentNumber();
 
@@ -1122,8 +1121,6 @@ public class MainController {
             return;
         }
         MainFrame.stage.show();
-
-        state.updateState(pairList, groupWeights);
     }
 
     /**
@@ -1132,8 +1129,8 @@ public class MainController {
      */
     @FXML
     void compareGroupList(ActionEvent event) {
-        undo.setDisable(true);
-        MainFrame.stage.hide();
+        //undo.setDisable(true);
+		MainFrame.stage.hide();
         GroupListComparisonController dialog = new GroupListComparisonController();
 
         dialog.init(root.getScene().getWindow(), pairList);
@@ -1153,6 +1150,7 @@ public class MainController {
                 pairIdentNumber = pairList.getIdentNumber();
 
                 updateTables();
+				updateState();
 
                 tabPane.getSelectionModel().select(groupTab);
             }
@@ -1161,12 +1159,9 @@ public class MainController {
             return;
         }
         MainFrame.stage.show();
-
-        state.updateState(pairList, groupWeights);
     }
 
     private void showUnsubscriberDialog(Participant participant) {
-        undo.setDisable(true);
         try {
             String relPath = "src/main/java/view/fxml/Unsubscriber.fxml";
             File file = new File(relPath);
@@ -1185,16 +1180,15 @@ public class MainController {
 
             replaceGroupData();
 			updateTables(); // Update tables after the dialog is closed to reflect changes
-
-            state.updateState(pairList, groupWeights);
-        } catch (IOException e) {
+			updateState();
+		} catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void replaceGroupData() {
         if (!Objects.isNull(groupList) && !groupTable.getItems().isEmpty()) {
-            List<Pair> successors = groupList.getSuccessorPairs();
+            //List<Pair> successors = groupList.getSuccessorPairs();
             this.groupList = new GroupList(pairList, groupWeights);
             //groupList.getSuccessorPairs().addAll(successors);
             this.groupIdentNumber = groupList.getIdentNumber();
@@ -1220,7 +1214,15 @@ public class MainController {
             updatePairTable();
         }
         if (!Objects.isNull(groupList)) {
+            assert !Objects.isNull(pairList);
             updateGroupTable();
+        }
+    }
+
+    private void updateState() {
+        if (!Objects.isNull(pairList)) {
+            undo.setDisable(false);
+            state.updateState(pairList, groupList);
         }
     }
 
@@ -1245,19 +1247,22 @@ public class MainController {
 
     @FXML
     void goBackState(ActionEvent event) {
-        this.state = state.revertState(groupWeights);
+        state = state.revertState();
+        pairList = state.getPairList();
+        groupList = state.getGroupList();
 
-        groupList = new GroupList(state.getPairList(), (Weights) groupWeights);
-        pairList = groupList.getPairList();
+        replaceGroupData();
 
-        groupIdentNumber = groupList.getIdentNumber();
-        pairIdentNumber = pairList.getIdentNumber();
-
-        updatePairTable();
-        updateGroupTable();
-
-        if (state.getPrev() == null) {
-            undo.setDisable(true);
+        if (pairList.containsAll(inputData.getPairInputData()) && pairList.containsAll(inputData.getPairSuccessorList()) && !Objects.isNull(groupList)) {
+            for (Pair pair: inputData.getPairSuccessorList()) {
+                if (!groupList.getSuccessorPairs().contains(pair)) {
+                    groupList.getSuccessorPairs().add(pair);
+                }
+            }
         }
+
+        updateTables();
+        updateState();
+        undo.setDisable(true);
     }
 }

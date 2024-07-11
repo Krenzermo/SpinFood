@@ -72,8 +72,9 @@ public class Pair implements ParticipantCollection {
     }
 
     /**
-     * Creates a shallow Copy of the specified {@link Pair}.
-     * That copy does not contain the {@link Group} information of the original {@link Pair}
+     * Copy constructor for class {@link Pair}.
+     * Copies all fields but not the {@link Group} class information.
+     * This constructor returns a deep copy (also copies the {@link Participant} instances).
      *
      * @param pair the specified {@link Pair}
      */
@@ -86,6 +87,7 @@ public class Pair implements ParticipantCollection {
         this.foodType = pair.foodType;
         this.signedUpTogether = pair.signedUpTogether;
         this.id = pair.id;
+        this.kitchenOf = pair.kitchenOf;
         this.course = pair.course;
         this.starterNumber = pair.starterNumber;
         this.mainNumber = pair.mainNumber;
@@ -113,7 +115,7 @@ public class Pair implements ParticipantCollection {
     }
 
     @Override
-    public IdentNumber getIdentNumber() {
+    public IdentNumber<Pair> getIdentNumber() {
         // TODO: this
         return null;
     }
@@ -164,10 +166,10 @@ public class Pair implements ParticipantCollection {
     /**
      * sets the groups for the pair
      *
-     * @param groups
+     * @param groups the specified {@link Group} instances
      */
     public void setGroups(Group[] groups) {
-        for (Group group : groups) {
+        for (Group group: groups)  {
             // TODO: may need to be changed once Group is implemented.
             if (!Arrays.asList(group.getPairs()).contains(this)) {
                 throw new RuntimeException("cannot assign a Group to this Pair if the group does not contain the Pair");
@@ -204,7 +206,7 @@ public class Pair implements ParticipantCollection {
             throw new RuntimeException("No kitchen assigned to either participant!");
         }
 
-        // assign kitchen if signedUpTogether or one does not have a kitchen
+        // assign a kitchen if signedUpTogether or one does not have a kitchen
         if (signedUpTogether) {
             kitchenOf = false;
             return participants[0].getKitchen();
@@ -238,7 +240,7 @@ public class Pair implements ParticipantCollection {
             }
         }
 
-        // here if both have a kitchen or both maybe have a kitchen
+        // here, if both have a kitchen or both maybe have a kitchen
 
         Location eventLocation = inputData.getEventLocation();
 
@@ -257,7 +259,7 @@ public class Pair implements ParticipantCollection {
      * @param newParticipant the new participant to be added to the pair
      * @throws IllegalArgumentException if the old participant is not in the pair
      * @throws IllegalArgumentException if the new participant is already in the pair
-     * @throws NullPointerException     if the new participant is null
+     * @throws NullPointerException if the new participant is null
      */
     public void replaceParticipant(Participant oldParticipant, Participant newParticipant) {
         if (newParticipant == null) {
@@ -290,7 +292,7 @@ public class Pair implements ParticipantCollection {
      * @param participant element whose presence in this collection is to be ensured
      * @return {@code true} if the operation was successful, {@code false} otherwise
      * @throws IllegalArgumentException if this ParticipantCollection already contains the Element
-     * @throws NullPointerException     if the element is null
+     * @throws NullPointerException if the element is null
      */
     @Override
     public boolean add(Participant participant) {
@@ -340,8 +342,8 @@ public class Pair implements ParticipantCollection {
 
     @Override
     public String toString() {
-        //return "{Participant1: " + participants[0] + " Participant2: " + participants[1] + kitchen + "}";
-        return starterNumber + " " + mainNumber + " " + dessertNumber;
+        return "{Participant1: " + participants[0] + " Participant2: " + participants[1] + kitchen + "}";
+        //return starterNumber + " " + mainNumber + " " + dessertNumber;
     }
 
     /**

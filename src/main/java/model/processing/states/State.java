@@ -6,16 +6,41 @@ import model.event.list.PairList;
 import model.event.list.weight.GroupWeights;
 import model.event.list.weight.Weights;
 
-public class State {
+import java.util.Objects;
 
+public class State {
     private State prev;
     private PairList pairList;
     private GroupList groupList;
 
-    public State(PairList pairList, GroupList groupList) {
-        prev = null;
+    public void init(PairList pairList, GroupList groupList) {
+        if (groupList != null) {
+            this.groupList = new GroupList(groupList);
+            this.pairList = new PairList(pairList);
+        } else {
+            this.pairList = new PairList(pairList);
+        }
+    }
+
+    public State(GroupList groupList, PairList pairList) {
         this.pairList = pairList;
         this.groupList = groupList;
+    }
+
+    private State() {
+        prev = null;
+        pairList = null;
+        groupList = null;
+    }
+
+    private State(State prev) {
+        this.prev = prev;
+        if (prev.groupList != null) {
+            groupList = new GroupList(prev.getGroupList());
+            pairList = groupList.getPairList();
+        } else if (prev.pairList != null) {
+            pairList = new PairList(prev.getPairList());
+        }
     }
 
     public void updateState(PairList pairList, GroupList groupList) {
@@ -24,30 +49,21 @@ public class State {
             return;
         }
 
-        prev = new State(this.pairList, this.groupList);
+        prev = new State(this);
+        prev.prev = null;
 
-        this.groupList = new GroupList(groupList);
-        this.pairList = this.groupList.getPairList();
-
+        if (groupList != null) {
+            this.groupList = new GroupList(groupList);
+            this.pairList = this.groupList.getPairList();
+        } else {
+            this.pairList = new PairList(pairList);
+        }
     }
 
-    public void updateState(PairList pairList, Weights weights) {
-        prev = new State(this.pairList, this.groupList);
-
-        this.groupList = new GroupList(pairList, weights);
-        this.pairList = groupList.getPairList();
-    }
-
-
-    public State revertState(Weights weights) {
-        var gl = new GroupList(prev.pairList, weights);
-        var pl = gl.getPairList();
-
-        var gl2 = new GroupList(pairList, weights);
-        prev = new State(gl2.getPairList(), gl2);
-
-        pairList = pl;
-        groupList = gl;
+    public State revertState() {
+        this.pairList = prev.pairList;
+        this.groupList = prev.groupList;
+        prev = null;
 
         return this;
     }
