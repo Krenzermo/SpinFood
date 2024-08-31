@@ -1,6 +1,5 @@
 package model.event.list;
 
-import model.event.collection.Group;
 import model.event.io.InputData;
 import model.event.list.weight.PairingWeights;
 import model.event.collection.Pair;
@@ -12,7 +11,6 @@ import model.person.Participant;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.stream.Collectors;
 
 /**
@@ -27,15 +25,14 @@ import java.util.stream.Collectors;
  */
 public class PairList extends ParticipantCollectionList<Pair> {
     private static final InputData inputData = InputData.getInstance();
-    private IdentNumber<Pair> identNumber;
+
+    private  IdentNumber identNumber;
     private List<Participant> successors = new ArrayList<>();
     private int pairIdCounter = inputData.getPairInputData().size() + inputData.getPairSuccessorList().size();
     private final PairingWeights pairingWeights123;
 
     /**
-     * Copy constructor for class {@link PairList}.
-     * Copies all fields but keeps none of the {@link Group} class information.
-     * This constructor returns a deep copy (also copies the {@link Participant} successor and the {@link Pair} instances).
+     * Copy constructor
      */
     public PairList(PairList pairList) {
         this.identNumber = new PairIdentNumber((PairIdentNumber) pairList.identNumber);
@@ -138,7 +135,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @param pairingWeights  the weights used for pairing criteria
      * @return the score for pairing the two participants
      */
-    private static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
+    public static double calculatePairScore(Participant participant1, Participant testedParticipant, PairingWeights pairingWeights) {
         double score = 0;
         double kitchenScore = compareKitchen(participant1, testedParticipant);
         if (kitchenScore == Double.NEGATIVE_INFINITY) {
@@ -159,6 +156,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @return the score based on the kitchen availability comparison
      */
 
+    //TODO fix gleiche küche unmöglich
     private static double compareKitchen(Participant participant1, Participant testedParticipant) {
 	    return switch (participant1.isHasKitchen()) {
 		    case YES -> (testedParticipant.isHasKitchen() == KitchenAvailability.YES &&
@@ -316,7 +314,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      *
      * @return the identifying number for the list of pairs
      */
-    public IdentNumber<Pair> deriveIdentNumber() {
+    public IdentNumber deriveIdentNumber() {
         return new PairIdentNumber(this);
     }
 
@@ -326,7 +324,7 @@ public class PairList extends ParticipantCollectionList<Pair> {
      * @return the identifying number for this PairList
      */
     @Override
-    public IdentNumber<Pair> getIdentNumber() {
+    public IdentNumber getIdentNumber() {
         return identNumber;
     }
 

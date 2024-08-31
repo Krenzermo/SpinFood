@@ -1,14 +1,17 @@
 package controller.FXMLControllers;
 
 import controller.LanguageController;
+import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.stage.Modality;
+import javafx.stage.Stage;
 import javafx.stage.Window;
 import model.event.Course;
 import model.event.collection.Pair;
@@ -17,6 +20,9 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * PairsFromGroupController handles the logistics of showing more information about the make-up of a chosen group
+ */
 public class PairsFromGroupController extends Dialog<Object>{
     private final LanguageController languageController = LanguageController.getInstance();
 
@@ -60,6 +66,11 @@ public class PairsFromGroupController extends Dialog<Object>{
         // TODO: this
     }
 
+    /**
+     * initialize window
+     * @param owner caller of window
+     * @param pairs pairs to be shown in detail
+     */
     public void init(Window owner, Pair[] pairs) {
         try {
             String relPath = "src/main/java/view/fxml/pairsFromGroup.fxml";
@@ -117,7 +128,7 @@ public class PairsFromGroupController extends Dialog<Object>{
                     if (course == null) {
                         return new SimpleStringProperty("n.V.");
                     }
-                    return course.asObservable();
+                    return course.asProperty();
                 }
         );
     }

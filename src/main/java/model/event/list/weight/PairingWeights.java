@@ -9,7 +9,9 @@ package model.event.list.weight;
  * @author Krenzerm
  */
 public class PairingWeights extends Weights {
+
     public PairingWeights(double pairAgeDifferenceWeight, double pairGenderDifferenceWeight, double pairFoodPreferenceWeight) {
         super(pairAgeDifferenceWeight, pairGenderDifferenceWeight, pairFoodPreferenceWeight);
     }
+
 }

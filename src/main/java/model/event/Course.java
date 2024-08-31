@@ -3,8 +3,8 @@ package model.event;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 
-/**
- * A simple enum representing the Course of the evening.
+/** A simple enum representing a Course of the evening.
+ *
  * @author Daniel Hinkelmann
  * @author Finn Brecher
  */
@@ -37,7 +37,7 @@ public enum Course {
 	 *
 	 * @return the Course enum as SimpleStringProperty
 	 */
-    public ObservableValue<String> asObservable() {
+    public SimpleStringProperty asProperty() {
 		return new SimpleStringProperty(this.name());
     }
 }

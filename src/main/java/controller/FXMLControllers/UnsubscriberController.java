@@ -19,6 +19,9 @@ import model.person.Participant;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * UnsubscriberController handles the logistics of removing canceled participants from the pairList and groupList
+ */
 public class UnsubscriberController extends Dialog<PairList> {
     private static final LanguageController languageController = LanguageController.getInstance();
 
@@ -50,6 +53,13 @@ public class UnsubscriberController extends Dialog<PairList> {
         // TODO: this
     }
 
+    /** initialize window
+     *
+     * @param participant to be removed
+     * @param pairList to be removed form
+     * @param groupList to be removed from
+     * @param owner caller of window
+     */
     public void initData(Participant participant, PairList pairList, GroupList groupList, Window owner) {
         this.participant = participant;
         this.pairList = pairList;
@@ -73,11 +83,11 @@ public class UnsubscriberController extends Dialog<PairList> {
     }
 
     private List<Participant> getSuccessorList() {
-        return pairList != null ? new ArrayList<>(pairList.getSuccessors()) : new ArrayList<>();
+        return new ArrayList<>(pairList.getSuccessors());
     }
 
     @FXML
-    void handleLogOut(ActionEvent event) {
+    private void handleLogOut(ActionEvent event) {
         Pair affectedPair = participant.getPair();
 
         CancellationHandler cancellationHandler = new CancellationHandler(pairList, groupList);
@@ -87,7 +97,7 @@ public class UnsubscriberController extends Dialog<PairList> {
     }
 
     @FXML
-    void handleSubstitute(ActionEvent event) {
+    private void handleSubstitute(ActionEvent event) {
         Participant successor = comboBoxSuccessor.getValue();
         if (successor != null) {
             replaceParticipant(participant, successor);
@@ -96,7 +106,7 @@ public class UnsubscriberController extends Dialog<PairList> {
     }
 
     @FXML
-    void handleLogOutAsPair(ActionEvent event) {
+    private void handleLogOutAsPair(ActionEvent event) {
         Pair affectedPair = participant.getPair();
         if (affectedPair != null) {
 

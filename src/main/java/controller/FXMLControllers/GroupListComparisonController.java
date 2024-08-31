@@ -15,11 +15,16 @@ import model.event.list.GroupList;
 import model.event.list.PairList;
 import model.event.list.identNumbers.IdentNumber;
 import model.event.list.weight.GroupWeights;
+import model.event.list.weight.PairingWeights;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
+/**
+ * GroupListComparisonController handles the logistic of comparing two groups with different weights against each other
+ * and choosing the better one
+ */
 public class GroupListComparisonController extends Dialog<GroupList>{
     private static final LanguageController languageController = LanguageController.getInstance();
 
@@ -91,12 +96,8 @@ public class GroupListComparisonController extends Dialog<GroupList>{
     @FXML
     private TableView<Group> tableTwo;
 
-    @FXML
     private ButtonType acceptList1ButtonType;
-
-    @FXML
     private ButtonType acceptList2ButtonType;
-
     private GroupList groupListOne;
     private GroupList groupListTwo;
     private PairList pairList;
@@ -119,6 +120,11 @@ public class GroupListComparisonController extends Dialog<GroupList>{
         // TODO: this
     }
 
+    /**
+     * method to initialize the grouplist comparison window
+     * @param owner caller of the window
+     * @param pairList the pairlist from which the groups are build
+     */
     public void init(Window owner, PairList pairList) {
         this.pairList = pairList;
         try {
@@ -152,7 +158,7 @@ public class GroupListComparisonController extends Dialog<GroupList>{
             initOwner(owner);
             initModality(Modality.APPLICATION_MODAL);
             setResizable(true);
-            setTitle("Paar Listen vergleichen");
+            setTitle("Gruppen Listen vergleichen");
             setDialogPane(dialogPane);
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -167,7 +173,10 @@ public class GroupListComparisonController extends Dialog<GroupList>{
         return this.groupListOne;
     }
 
-
+    /**
+     * method to edit the weights of the first list
+     * @param event that triggered the menu item
+     */
     @FXML
     void editWeightsList1(ActionEvent event) {
         GroupWeightsController dialog = new GroupWeightsController();
@@ -191,6 +200,10 @@ public class GroupListComparisonController extends Dialog<GroupList>{
         }
     }
 
+    /**
+     * method to edit the weights of the second list
+     * @param event that triggered the menu item
+     */
     @FXML
     void editWeightsList2(ActionEvent event) {
         GroupWeightsController dialog = new GroupWeightsController();
@@ -262,7 +275,7 @@ public class GroupListComparisonController extends Dialog<GroupList>{
         pairTwoColGroup.setCellValueFactory(cell -> cell.getValue().getPairs()[1].getIdAsObservable());
         pairThreeColGroup.setCellValueFactory(cell -> cell.getValue().getPairs()[2].getIdAsObservable());
         kitchenColGroup.setCellValueFactory(cell -> cell.getValue().getKitchen().asObservable());
-        courseColGroup.setCellValueFactory(cell -> cell.getValue().getCourse().asObservable());
+        courseColGroup.setCellValueFactory(cell -> cell.getValue().getCourse().asProperty());
         cookIDColGroup.setCellValueFactory(cell -> cell.getValue().getCookPairIdAsObservable());
     }
 

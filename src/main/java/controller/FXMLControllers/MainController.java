@@ -52,15 +52,15 @@ public class MainController {
     private final LanguageController languageController = LanguageController.getInstance();
     private PairList pairList;
     private GroupList groupList; // Added groupList for group-related operations
-    private IdentNumber<Pair> pairIdentNumber;
-	private IdentNumber<Group> groupIdentNumber;
+    private IdentNumber pairIdentNumber;
+    private IdentNumber groupIdentNumber;
     private PairingWeights pairingWeights;
     private GroupWeights groupWeights; // Added groupWeights for group-related operations
 
     private volatile String participantListPath = null;
     private volatile String locationPath = null;
 
-    private static State state;
+    private State state = new State(pairList, groupList);
 
     @FXML
     private VBox root;
@@ -260,6 +260,9 @@ public class MainController {
 
     //private Stage primaryStage = (Stage) root.getScene().getWindow();
 
+    /**
+     * method to initialize the GUI
+     */
     @FXML
     public void initialize() {
         bindAllComponents();
@@ -374,7 +377,6 @@ public class MainController {
         });
 
          */
-        state = new State(groupList, pairList);
     }
 
     private void bindAllComponents() {
@@ -383,6 +385,7 @@ public class MainController {
 
         // TODO: this
     }
+
 
     protected static <E> void addListenersToTable(TableView<E> tableView) {
         tableView.widthProperty().addListener((observableValue, oldValue, newValue) -> MainController.adjustColumnWidths(tableView));
@@ -410,7 +413,7 @@ public class MainController {
         }
     }
 
-    private static TableColumn<?, ?> getClickedColumn(MouseEvent event, TableView<?> tableView) {
+    private TableColumn<?, ?> getClickedColumn(MouseEvent event, TableView<?> tableView) {
         TableColumn<?, ?> column = null;
         double x = event.getX();
 
@@ -481,7 +484,7 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartList(ActionEvent event) {
-        //undo.setDisable(true);
+        undo.setDisable(true);
         FileChooser fileChooser = new FileChooser();
         ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
         ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
@@ -502,6 +505,10 @@ public class MainController {
         }
     }
 
+    /**
+     * opens a file chooser for the file of cancelling participants
+     * @param event that triggered the menu item
+     */
     @FXML
     void openFileChooserCancellationsList(ActionEvent event) {
         FileChooser fileChooser = new FileChooser();
@@ -551,6 +558,10 @@ public class MainController {
         }
     }
 
+    /**
+     * method to change language to german
+     * @param event that triggered the menu item
+     */
     @FXML
     void changeLanguageToGerman(ActionEvent event) {
         if (!languageController.getLanguage().equals(Locale.GERMAN)) {
@@ -558,6 +569,12 @@ public class MainController {
         }
     }
 
+
+
+    /**
+     * method to change language to english
+     * @param event that triggered the menu item
+     */
     @FXML
     void changeLanguageToEnglish(ActionEvent event) {
         if (!languageController.getLanguage().equals(Locale.ENGLISH)) {
@@ -565,6 +582,11 @@ public class MainController {
         }
     }
 
+
+    /**
+     * method to save the pairlist to a csv file
+     * @param event that triggered the menu item
+     */
     @FXML
     void savePairList(ActionEvent event) {
         if (groupList == null) {
@@ -586,6 +608,10 @@ public class MainController {
         System.exit(0);
     }
 
+    /**
+     * method to save the groupList to a named csv file
+     * @param event that triggered the menu item
+     */
     @FXML
     void saveGroupList(ActionEvent event) {
         if (groupList == null) {
@@ -606,15 +632,6 @@ public class MainController {
         System.exit(0);
     }
 
-    @FXML
-    void saveParticipantSuccessors(ActionEvent event) {
-        // TODO: this
-    }
-
-    @FXML
-    void savePairSuccessors(ActionEvent event) {
-        // TODO: this
-    }
 
     /**
      * Opens a file chooser for selecting the party location file.
@@ -624,7 +641,7 @@ public class MainController {
      */
     @FXML
     void openFileChooserPartLoc(ActionEvent event) {
-        //undo.setDisable(true);
+        undo.setDisable(true);
         FileChooser fileChooser = new FileChooser();
         ExtensionFilter csvFilter = new ExtensionFilter("CSV-Dateien (*.csv)", "*.csv");
         ExtensionFilter txtFilter = new ExtensionFilter("Textdateien (*.txt)", "*.txt");
@@ -690,7 +707,7 @@ public class MainController {
                 return;
             }
         }
-        updateState();
+        state.updateState(pairList, groupWeights);
         event.consume();
     }
 
@@ -718,8 +735,6 @@ public class MainController {
 
                 replaceGroupData();
                 updateTables();
-                state.init(pairList, groupList);
-                undo.setDisable(true);
 
                 tabPane.getSelectionModel().select(pairTab);
             } catch (NullPointerException e) {
@@ -731,10 +746,16 @@ public class MainController {
                 return;
             }
         }
-
+        if (groupList != null) {
+            state.updateState(pairList, groupWeights);
+        }
         event.consume();
     }
 
+    /**
+     * method to split pairs manually
+     *
+     */
     @FXML
     void splitPair(ActionEvent event) {
         Pair pair = pairTable.getSelectionModel().getSelectedItem();
@@ -745,9 +766,16 @@ public class MainController {
         replaceGroupData();
         updateTables();
 
-		updateState();
+        if (groupList != null) {
+            undo.setDisable(false);
+            state.updateState(pairList, groupWeights);
+        }
     }
 
+    /**
+     * method to create pairs manually
+     * @param event that triggered the menu item
+     */
     @FXML
     void createPair(ActionEvent event) {
         try {
@@ -762,20 +790,27 @@ public class MainController {
             groupList.getSuccessorPairs().add(pair);
             pairList.getSuccessors().removeAll(participants);
 
-	        replaceGroupData();
-	        updateTables();
+            replaceGroupData();
+            updateTables();
         } catch (NullPointerException e) {
-	        Alert alert = new Alert(Alert.AlertType.ERROR);
-	        alert.setTitle("Fehler");
-	        alert.setHeaderText("Ein Fehler ist aufgetreten!");
-	        alert.setContentText("Es wurden noch keine Gruppenliste erstellt.");
-	        alert.showAndWait();
-	        return;
+            Alert alert = new Alert(Alert.AlertType.ERROR);
+            alert.setTitle("Fehler");
+            alert.setHeaderText("Ein Fehler ist aufgetreten!");
+            alert.setContentText("Es wurden noch keine Gruppenliste erstellt.");
+            alert.showAndWait();
+            return;
         }
 
-		updateState();
+        if (groupList != null) {
+            undo.setDisable(false);
+            state.updateState(pairList, groupWeights);
+        }
     }
 
+    /**
+     * method to split groups manually
+     * @param event that triggered the menu item
+     */
     @FXML
     public void splitGroup(ActionEvent event) {
         Group group = groupTable.getSelectionModel().getSelectedItem();
@@ -789,9 +824,14 @@ public class MainController {
         // replaceGroupData(); // this would make the button do absolutely nothing
         updateTables();
 
-        updateState();
+        undo.setDisable(true);
+        state.updateState(pairList, groupWeights);
     }
 
+    /**
+     * method to create groups manually
+     * @param event that triggered the menu item
+     */
     @FXML
     public void createGroup(ActionEvent event) {
         List<Pair> pairs = groupList.getSuccessorPairs().stream()
@@ -825,9 +865,14 @@ public class MainController {
         }
         updateTables();
 
-		updateState();
+        undo.setDisable(true);
+        state.updateState(pairList, groupWeights);
     }
 
+    /**
+     * method to split pairs in the successors tab
+     * @param event that triggered the menu item
+     */
     @FXML
     void splitPairSuccessor(ActionEvent event) {
         Pair pair = successorsGroupList.getSelectionModel().getSelectedItem();
@@ -860,6 +905,11 @@ public class MainController {
         }
     }
 
+    /**
+     * method to remove a whole group clusters group at once
+     * @param groups the groups to be removed
+     * @param groupList the grouplist from which the groups should be removed
+     */
     public static void removeGroupCluster(List<Group> groups, GroupList groupList) {
         if (groups.size() != 9) {
             throw new IllegalStateException("More or less than 9 successor groups were selected. Total: " + groups.size());
@@ -934,7 +984,7 @@ public class MainController {
                     if (course == null) {
                         return new SimpleStringProperty("n.V.");
                     }
-                    return course.asObservable();
+                    return course.asProperty();
                 }
         );
         foodTypeColPair.setCellValueFactory(cell -> cell.getValue().getFoodType().asObservable());
@@ -947,7 +997,7 @@ public class MainController {
         pairTwoColGroup.setCellValueFactory(cell -> cell.getValue().getPairs()[1].getIdAsObservable());
         pairThreeColGroup.setCellValueFactory(cell -> cell.getValue().getPairs()[2].getIdAsObservable());
         kitchenColGroup.setCellValueFactory(cell -> cell.getValue().getKitchen().asObservable());
-        courseColGroup.setCellValueFactory(cell -> cell.getValue().getCourse().asObservable());
+        courseColGroup.setCellValueFactory(cell -> cell.getValue().getCourse().asProperty());
         cookIDColGroup.setCellValueFactory(cell -> cell.getValue().getCookPairIdAsObservable());
     }
 
@@ -1029,6 +1079,10 @@ public class MainController {
         });
     }
 
+    /**
+     * method to compare 2 pairLists and choose the better one
+     * @param event that triggered the menu item
+     */
     @FXML
     void comparePairList(ActionEvent event) {
         undo.setDisable(true);
@@ -1046,9 +1100,6 @@ public class MainController {
         try {
             PairList temp = dialog.showAndWait().orElse(pairList);
             if (temp != pairList) {
-                if (pairList != null) {
-                    updateState();
-                }
                 pairList = temp;
                 this.pairIdentNumber = pairList.getIdentNumber();
 
@@ -1062,12 +1113,18 @@ public class MainController {
             return;
         }
         MainFrame.stage.show();
+
+        state.updateState(pairList, groupWeights);
     }
 
+    /**
+     * method to compare to groupLists and choose the better one
+     * @param event that triggered the menu item
+     */
     @FXML
     void compareGroupList(ActionEvent event) {
-        //undo.setDisable(true);
-		MainFrame.stage.hide();
+        undo.setDisable(true);
+        MainFrame.stage.hide();
         GroupListComparisonController dialog = new GroupListComparisonController();
 
         dialog.init(root.getScene().getWindow(), pairList);
@@ -1087,7 +1144,6 @@ public class MainController {
                 pairIdentNumber = pairList.getIdentNumber();
 
                 updateTables();
-				updateState();
 
                 tabPane.getSelectionModel().select(groupTab);
             }
@@ -1096,9 +1152,12 @@ public class MainController {
             return;
         }
         MainFrame.stage.show();
+
+        state.updateState(pairList, groupWeights);
     }
 
     private void showUnsubscriberDialog(Participant participant) {
+        undo.setDisable(true);
         try {
             String relPath = "src/main/java/view/fxml/Unsubscriber.fxml";
             File file = new File(relPath);
@@ -1117,15 +1176,16 @@ public class MainController {
 
             replaceGroupData();
 			updateTables(); // Update tables after the dialog is closed to reflect changes
-			updateState();
-		} catch (IOException e) {
+
+            state.updateState(pairList, groupWeights);
+        } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
     private void replaceGroupData() {
         if (!Objects.isNull(groupList) && !groupTable.getItems().isEmpty()) {
-            //List<Pair> successors = groupList.getSuccessorPairs();
+            List<Pair> successors = groupList.getSuccessorPairs();
             this.groupList = new GroupList(pairList, groupWeights);
             //groupList.getSuccessorPairs().addAll(successors);
             this.groupIdentNumber = groupList.getIdentNumber();
@@ -1151,15 +1211,7 @@ public class MainController {
             updatePairTable();
         }
         if (!Objects.isNull(groupList)) {
-            assert !Objects.isNull(pairList);
             updateGroupTable();
-        }
-    }
-
-    private void updateState() {
-        if (!Objects.isNull(pairList)) {
-            undo.setDisable(false);
-            state.updateState(pairList, groupList);
         }
     }
 
@@ -1184,22 +1236,19 @@ public class MainController {
 
     @FXML
     void goBackState(ActionEvent event) {
-        state = state.revertState();
-        pairList = state.getPairList();
-        groupList = state.getGroupList();
+        this.state = state.revertState(groupWeights);
+
+        groupList = new GroupList(state.getPairList(), (Weights) groupWeights);
+        pairList = groupList.getPairList();
+
+        groupIdentNumber = groupList.getIdentNumber();
+        pairIdentNumber = pairList.getIdentNumber();
 
         replaceGroupData();
-
-        if (pairList.containsAll(inputData.getPairInputData()) && pairList.containsAll(inputData.getPairSuccessorList()) && !Objects.isNull(groupList)) {
-            for (Pair pair: inputData.getPairSuccessorList()) {
-                if (!groupList.getSuccessorPairs().contains(pair)) {
-                    groupList.getSuccessorPairs().add(pair);
-                }
-            }
-        }
-
         updateTables();
-        updateState();
-        undo.setDisable(true);
+
+        if (state.getPrev() == null) {
+            undo.setDisable(true);
+        }
     }
 }

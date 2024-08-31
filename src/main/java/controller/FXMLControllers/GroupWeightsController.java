@@ -14,6 +14,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
 
+/**
+ * GroupWeightsController handels the logistics of changing the groupWeights for creating a groupList
+ */
 public class GroupWeightsController extends Dialog<GroupWeights> {
 	private final LanguageController languageController = LanguageController.getInstance();
 
@@ -61,6 +64,10 @@ public class GroupWeightsController extends Dialog<GroupWeights> {
 		// TODO: this
 	}
 
+	/**
+	 * method to initialize the groupWeight controller window
+	 * @param owner caller of this window
+	 */
 	public void init(Window owner) {
 		try {
 			String relPath = "src/main/java/view/fxml/groupWeights.fxml";
